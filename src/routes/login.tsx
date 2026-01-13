@@ -1,17 +1,40 @@
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
-import { useState } from "react";
+
+import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+
+const loginSchema = z.object({
+	email: z.email(),
+	password: z.string().min(8),
+});
+
+// mock
+const loginApi = async (data: z.infer<typeof loginSchema>) => {
+	await new Promise((resolve) => setTimeout(resolve, 1000));
+
+	if (data.email === "error@example.com") {
+		throw new Error("oops!");
+	}
+
+	return { token: "fake-jwt-token", user: { name: "User" } };
+};
 
 export const Route = createFileRoute("/login")({
 	component: LoginPage,
@@ -19,81 +42,111 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
 	const router = useRouter();
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 
-	// In a real app, you might use a form library like react-hook-form + zod
-	const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setIsLoading(true);
-		setError(null);
+	const loginMutation = useMutation({
+		mutationFn: loginApi,
+		onSuccess: () => {
+			router.navigate({ to: "/dashboard" });
+		},
+	});
 
-		const formData = new FormData(e.currentTarget);
-		const email = formData.get("email");
-		const password = formData.get("password");
-
-		try {
-			// Mock API call
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-
-			// Assuming we have access to auth context via router context
-			// Note: In TanStack Router, accessing context like this depends on how it's passed.
-			// Based on __root.tsx, we have an 'auth' object in context.
-			// @ts-ignore - Verify context typing if needed, but for now assuming it matches __root.tsx
-			const auth = router.state.context.auth;
-
-			if (auth && auth.login) {
-				auth.login(email); // Pass user info if needed
-			}
-
-			// Redirect to dashboard or previous location
-			// We can get search params for redirect URL if we implemented that in _auth.tsx
-			// For now, hardcode to dashboard as requested/implied
-			await router.navigate({ to: "/dashboard" });
-		} catch (err) {
-			setError("Failed to login. Please try again.");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	const form = useForm({
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+		validators: {
+			onChange: loginSchema,
+		},
+		onSubmit: async ({ value }) => {
+			await loginMutation.mutateAsync(value);
+		},
+	});
 
 	return (
-		<div className="flex min-h-screen w-full items-center justify-center p-4">
-			<Card className="w-full max-w-sm">
-				<CardHeader>
-					<CardTitle className="text-2xl">Login</CardTitle>
-					<CardDescription>
-						Enter your email below to login to your account.
-					</CardDescription>
-				</CardHeader>
-				<form onSubmit={handleLogin}>
-					<CardContent className="grid gap-4">
-						<div className="grid gap-2">
-							<Label htmlFor="email">Email</Label>
-							<Input
-								id="email"
-								name="email"
-								type="email"
-								placeholder="m@example.com"
-								required
-							/>
-						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="password">Password</Label>
-							<Input id="password" name="password" type="password" required />
-						</div>
-						{error && (
-							<div className="text-sm text-red-500 font-medium">{error}</div>
-						)}
-					</CardContent>
-					<CardFooter>
-						<Button className="w-full" type="submit" disabled={isLoading}>
-							{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-							Sign in
-						</Button>
-					</CardFooter>
-				</form>
-			</Card>
+		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+			<div className="w-full max-w-sm">
+				<div className="flex flex-col gap-6">
+					<Card>
+						<CardHeader>
+							<CardTitle>Login to your account</CardTitle>
+							<CardDescription>
+								Enter your email below to login to your account
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<form
+								onSubmit={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									form.handleSubmit();
+								}}
+							>
+								<FieldGroup>
+									<form.Field
+										name="email"
+										children={(field) => (
+											<Field>
+												<FieldLabel htmlFor="email">Email</FieldLabel>
+												<Input
+													id={field.name}
+													name={field.name}
+													value={field.state.value}
+													onBlur={field.handleBlur}
+													onChange={(e) => field.handleChange(e.target.value)}
+													placeholder="m@example.com"
+													type="email"
+												/>
+												{!field.state.meta.isValid && (
+													<FieldError>
+														{field.state.meta.errors
+															.map((error) => error?.message)
+															.join(", ")}
+													</FieldError>
+												)}
+											</Field>
+										)}
+									/>
+
+									<form.Field
+										name="password"
+										children={(field) => (
+											<Field>
+												<FieldLabel htmlFor="password">Password</FieldLabel>
+												<Input
+													id={field.name}
+													name={field.name}
+													value={field.state.value}
+													onBlur={field.handleBlur}
+													onChange={(e) => field.handleChange(e.target.value)}
+													type="password"
+												/>
+												{!field.state.meta.isValid && (
+													<FieldError>
+														{field.state.meta.errors.join(", ")}
+													</FieldError>
+												)}
+											</Field>
+										)}
+									/>
+
+									<Field>
+										<Button type="submit" disabled={loginMutation.isPending}>
+											{loginMutation.isPending ? "Logging in..." : "Login"}
+										</Button>
+										<Button variant="outline" type="button">
+											Login with Google
+										</Button>
+										<FieldDescription className="text-center">
+											Don&apos;t have an account? <Link to="/wip">Sign up</Link>
+										</FieldDescription>
+									</Field>
+								</FieldGroup>
+							</form>
+						</CardContent>
+					</Card>
+				</div>
+			</div>
 		</div>
 	);
 }

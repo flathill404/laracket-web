@@ -16,6 +16,13 @@
 			"!**/src/styles.css"
 		]
 	},
+	  "linter": {
+    "rules": {
+      "correctness": {
+        "noChildrenProp": "off"
+      }
+    }
+  },
 	"assist": {
 		"actions": {
 			"source": {
