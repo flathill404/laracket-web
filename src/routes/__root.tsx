@@ -6,14 +6,14 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 
 interface RouterContext {
 	queryClient: QueryClient;
 	auth: {
 		isAuthenticated: boolean;
-		user: any;
+		user?: { id: string; name: string };
 		login: () => void;
 		logout: () => void;
 	};
@@ -61,7 +61,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							name: "Tanstack Router",
 							render: <TanStackRouterDevtoolsPanel />,
 						},
-						TanStackQueryDevtools,
+						{
+							name: "Tanstack Query",
+							render: <ReactQueryDevtoolsPanel />,
+						},
 					]}
 				/>
 				<Scripts />

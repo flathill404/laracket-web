@@ -10,18 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GuestRouteImport } from './routes/_guest'
-import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as GuestIndexRouteImport } from './routes/_guest/index'
 import { Route as GuestWipRouteImport } from './routes/_guest/wip'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
-import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const GuestRoute = GuestRouteImport.update({
   id: '/_guest',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/_auth',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GuestIndexRoute = GuestIndexRouteImport.update({
@@ -39,29 +39,29 @@ const GuestLoginRoute = GuestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => GuestRoute,
 } as any)
-const AuthDashboardRoute = AuthDashboardRouteImport.update({
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/dashboard': typeof AuthDashboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/login': typeof GuestLoginRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
 }
 export interface FileRoutesByTo {
-  '/dashboard': typeof AuthDashboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/login': typeof GuestLoginRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_auth': typeof AuthRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_guest': typeof GuestRouteWithChildren
-  '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/wip': typeof GuestWipRoute
   '/_guest/': typeof GuestIndexRoute
@@ -73,16 +73,16 @@ export interface FileRouteTypes {
   to: '/dashboard' | '/login' | '/wip' | '/'
   id:
     | '__root__'
-    | '/_auth'
+    | '/_authenticated'
     | '/_guest'
-    | '/_auth/dashboard'
+    | '/_authenticated/dashboard'
     | '/_guest/login'
     | '/_guest/wip'
     | '/_guest/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   GuestRoute: typeof GuestRouteWithChildren
 }
 
@@ -95,11 +95,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth': {
-      id: '/_auth'
+    '/_authenticated': {
+      id: '/_authenticated'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_guest/': {
@@ -123,25 +123,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRoute
     }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
-interface AuthRouteChildren {
-  AuthDashboardRoute: typeof AuthDashboardRoute
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthDashboardRoute: AuthDashboardRoute,
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface GuestRouteChildren {
   GuestLoginRoute: typeof GuestLoginRoute
@@ -158,7 +160,7 @@ const GuestRouteChildren: GuestRouteChildren = {
 const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthRoute: AuthRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   GuestRoute: GuestRouteWithChildren,
 }
 export const routeTree = rootRouteImport
