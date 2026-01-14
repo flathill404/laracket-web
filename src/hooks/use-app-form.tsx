@@ -17,7 +17,7 @@ function InputField({
 }) {
 	const field = useFieldContext();
 
-	const hasError = !field.state.meta.isValid;
+	const hasError = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
 		<Field>
