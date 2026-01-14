@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_guest")({
 
 function GuestLayout() {
 	return (
-		<div className="">
+		<div className="min-h-screen bg-background font-sans antialiased">
 			<Outlet />
 		</div>
 	);
