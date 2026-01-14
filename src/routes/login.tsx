@@ -1,5 +1,7 @@
+import { revalidateLogic } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -8,17 +10,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	Field,
-	FieldDescription,
-	FieldError,
-	FieldGroup,
-	FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-
-import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
+import { useAppForm } from "@/hooks/use-app-form";
 
 const loginSchema = z.object({
 	email: z.email(),
@@ -50,13 +43,14 @@ function LoginPage() {
 		},
 	});
 
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			email: "",
 			password: "",
 		},
+		validationLogic: revalidateLogic(),
 		validators: {
-			onChange: loginSchema,
+			onDynamic: loginSchema,
 		},
 		onSubmit: async ({ value }) => {
 			await loginMutation.mutateAsync(value);
@@ -78,62 +72,34 @@ function LoginPage() {
 							<form
 								onSubmit={(e) => {
 									e.preventDefault();
-									e.stopPropagation();
 									form.handleSubmit();
 								}}
 							>
 								<FieldGroup>
-									<form.Field
+									<form.AppField
 										name="email"
 										children={(field) => (
-											<Field>
-												<FieldLabel htmlFor="email">Email</FieldLabel>
-												<Input
-													id={field.name}
-													name={field.name}
-													value={field.state.value}
-													onBlur={field.handleBlur}
-													onChange={(e) => field.handleChange(e.target.value)}
-													placeholder="m@example.com"
-													type="email"
-												/>
-												{!field.state.meta.isValid && (
-													<FieldError>
-														{field.state.meta.errors
-															.map((error) => error?.message)
-															.join(", ")}
-													</FieldError>
-												)}
-											</Field>
+											<field.InputField
+												label="Email"
+												placeholder="m@example.com"
+												type="email"
+											/>
 										)}
 									/>
-
-									<form.Field
+									<form.AppField
 										name="password"
 										children={(field) => (
-											<Field>
-												<FieldLabel htmlFor="password">Password</FieldLabel>
-												<Input
-													id={field.name}
-													name={field.name}
-													value={field.state.value}
-													onBlur={field.handleBlur}
-													onChange={(e) => field.handleChange(e.target.value)}
-													type="password"
-												/>
-												{!field.state.meta.isValid && (
-													<FieldError>
-														{field.state.meta.errors.join(", ")}
-													</FieldError>
-												)}
-											</Field>
+											<field.InputField
+												label="password"
+												placeholder="m@example.com"
+												type="password"
+											/>
 										)}
 									/>
-
 									<Field>
-										<Button type="submit" disabled={loginMutation.isPending}>
-											{loginMutation.isPending ? "Logging in..." : "Login"}
-										</Button>
+										<form.AppForm>
+											<form.SubscribeButton label="Login" />
+										</form.AppForm>
 										<Button variant="outline" type="button">
 											Login with Google
 										</Button>

@@ -1,3 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { AlertTriangle, HardHat, Rocket } from "lucide-react";
+import { useId } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +18,6 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
-import { createFileRoute } from "@tanstack/react-router";
-import { AlertTriangle, HardHat, Rocket } from "lucide-react";
-import { useId } from "react";
 
 export const Route = createFileRoute("/wip")({
 	component: WipPage,
