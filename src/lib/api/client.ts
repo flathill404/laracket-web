@@ -41,7 +41,7 @@ const BASE_URL = "http://localhost:8000";
 export async function request(
 	method: "GET" | "POST" | "PUT" | "DELETE",
 	endpoint: string,
-	body?: BodyInit,
+	body?: unknown,
 ): Promise<Response> {
 	if (!method) {
 		throw new Error("Method is required");
@@ -54,6 +54,7 @@ export async function request(
 	const defaultHeaders = {
 		"Content-Type": "application/json",
 		Accept: "application/json",
+		"Key-Inflection": "camel",
 		"X-XSRF-TOKEN": getCookie("XSRF-TOKEN") || "",
 	};
 
@@ -64,7 +65,7 @@ export async function request(
 	};
 
 	if (body) {
-		config.body = body;
+		config.body = JSON.stringify(body);
 	}
 
 	const response = await fetch(`${BASE_URL}${endpoint}`, config);
@@ -77,6 +78,6 @@ export async function request(
 export const client = {
 	get: (endpoint: string) => request("GET", endpoint),
 	delete: (endpoint: string) => request("DELETE", endpoint),
-	post: (endpoint: string, body?: BodyInit) => request("POST", endpoint, body),
-	put: (endpoint: string, body?: BodyInit) => request("PUT", endpoint, body),
+	post: (endpoint: string, body?: unknown) => request("POST", endpoint, body),
+	put: (endpoint: string, body?: unknown) => request("PUT", endpoint, body),
 };
