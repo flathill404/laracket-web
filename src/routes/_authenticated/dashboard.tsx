@@ -158,7 +158,7 @@ function Dashboard() {
 				</Card>
 			</div>
 		</div>
-	)
+	);
 }
 
 function RecentSales() {
@@ -219,5 +219,5 @@ function RecentSales() {
 				<div className="ml-auto font-medium">+$39.00</div>
 			</div>
 		</div>
-	)
+	);
 }
