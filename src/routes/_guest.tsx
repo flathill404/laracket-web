@@ -1,20 +1,20 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_auth")({
+export const Route = createFileRoute("/_guest")({
 	beforeLoad: ({ context, location }) => {
-		if (!context.auth.isAuthenticated) {
+		if (context.auth.isAuthenticated) {
 			throw redirect({
-				to: "/login",
+				to: "/dashboard",
 				search: {
 					redirect: location.href,
 				},
 			});
 		}
 	},
-	component: AuthLayout,
+	component: GuestLayout,
 });
 
-function AuthLayout() {
+function GuestLayout() {
 	return (
 		<div className="">
 			<Outlet />

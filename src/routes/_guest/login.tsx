@@ -29,7 +29,7 @@ const loginApi = async (data: z.infer<typeof loginSchema>) => {
 	return { token: "fake-jwt-token", user: { name: "User" } };
 };
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/_guest/login")({
 	component: LoginPage,
 });
 
@@ -41,7 +41,7 @@ function LoginPage() {
 		onSuccess: () => {
 			router.navigate({ to: "/dashboard" });
 		},
-	});
+	})
 
 	const form = useAppForm({
 		defaultValues: {
@@ -55,7 +55,7 @@ function LoginPage() {
 		onSubmit: async ({ value }) => {
 			await loginMutation.mutateAsync(value);
 		},
-	});
+	})
 
 	return (
 		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -71,8 +71,8 @@ function LoginPage() {
 						<CardContent>
 							<form
 								onSubmit={(e) => {
-									e.preventDefault();
-									form.handleSubmit();
+									e.preventDefault()
+									form.handleSubmit()
 								}}
 							>
 								<FieldGroup>
@@ -114,5 +114,5 @@ function LoginPage() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

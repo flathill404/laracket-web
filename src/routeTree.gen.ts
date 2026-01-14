@@ -9,30 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WipRouteImport } from './routes/wip'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as GuestIndexRouteImport } from './routes/_guest/index'
+import { Route as GuestWipRouteImport } from './routes/_guest/wip'
+import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as AuthDashboardRouteImport } from './routes/_auth/dashboard'
 
-const WipRoute = WipRouteImport.update({
-  id: '/wip',
-  path: '/wip',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const GuestRoute = GuestRouteImport.update({
+  id: '/_guest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const GuestIndexRoute = GuestIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestWipRoute = GuestWipRouteImport.update({
+  id: '/wip',
+  path: '/wip',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestLoginRoute = GuestLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => GuestRoute,
 } as any)
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
@@ -41,54 +46,53 @@ const AuthDashboardRoute = AuthDashboardRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/wip': typeof WipRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/login': typeof GuestLoginRoute
+  '/wip': typeof GuestWipRoute
+  '/': typeof GuestIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/wip': typeof WipRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/login': typeof GuestLoginRoute
+  '/wip': typeof GuestWipRoute
+  '/': typeof GuestIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/login': typeof LoginRoute
-  '/wip': typeof WipRoute
+  '/_guest': typeof GuestRouteWithChildren
   '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_guest/login': typeof GuestLoginRoute
+  '/_guest/wip': typeof GuestWipRoute
+  '/_guest/': typeof GuestIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/wip' | '/dashboard'
+  fullPaths: '/dashboard' | '/login' | '/wip' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/wip' | '/dashboard'
-  id: '__root__' | '/' | '/_auth' | '/login' | '/wip' | '/_auth/dashboard'
+  to: '/dashboard' | '/login' | '/wip' | '/'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_guest'
+    | '/_auth/dashboard'
+    | '/_guest/login'
+    | '/_guest/wip'
+    | '/_guest/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  WipRoute: typeof WipRoute
+  GuestRoute: typeof GuestRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wip': {
-      id: '/wip'
-      path: '/wip'
-      fullPath: '/wip'
-      preLoaderRoute: typeof WipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/_guest': {
+      id: '/_guest'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof GuestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -98,12 +102,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_guest/': {
+      id: '/_guest/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof GuestIndexRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/_guest/wip': {
+      id: '/_guest/wip'
+      path: '/wip'
+      fullPath: '/wip'
+      preLoaderRoute: typeof GuestWipRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/_guest/login': {
+      id: '/_guest/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof GuestLoginRouteImport
+      parentRoute: typeof GuestRoute
     }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
@@ -125,11 +143,23 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface GuestRouteChildren {
+  GuestLoginRoute: typeof GuestLoginRoute
+  GuestWipRoute: typeof GuestWipRoute
+  GuestIndexRoute: typeof GuestIndexRoute
+}
+
+const GuestRouteChildren: GuestRouteChildren = {
+  GuestLoginRoute: GuestLoginRoute,
+  GuestWipRoute: GuestWipRoute,
+  GuestIndexRoute: GuestIndexRoute,
+}
+
+const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  LoginRoute: LoginRoute,
-  WipRoute: WipRoute,
+  GuestRoute: GuestRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

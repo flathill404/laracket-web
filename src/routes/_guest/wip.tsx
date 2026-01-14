@@ -19,7 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 
-export const Route = createFileRoute("/wip")({
+export const Route = createFileRoute("/_guest/wip")({
 	component: WipPage,
 });
 
