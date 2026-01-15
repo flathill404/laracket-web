@@ -1,5 +1,5 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import type { QueryClient } from "@tanstack/react-query";
+import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import {
 	createRootRouteWithContext,
@@ -8,24 +8,9 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import appCss from "../styles.css?url";
-import { useAuth } from "@/hooks/use-auth";
-
-type AutheticatedContext = {
-	isAuthenticated: true;
-	user: { id: string; name: string };
-	isLoading: boolean;
-};
-
-type UnautheticatedContext = {
-	isAuthenticated: false;
-	isLoading: boolean;
-};
-
-type AuthContext = AutheticatedContext | UnautheticatedContext;
 
 interface RouterContext {
 	queryClient: QueryClient;
-	auth: AuthContext;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -54,30 +39,33 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	useAuth();
+	const { queryClient } = Route.useRouteContext();
+
 	return (
 		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
 			<body>
-				{children}
-				<TanStackDevtools
-					config={{
-						position: "bottom-right",
-					}}
-					plugins={[
-						{
-							name: "Tanstack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-						{
-							name: "Tanstack Query",
-							render: <ReactQueryDevtoolsPanel />,
-						},
-					]}
-				/>
-				<Scripts />
+				<QueryClientProvider client={queryClient}>
+					{children}
+					<TanStackDevtools
+						config={{
+							position: "bottom-right",
+						}}
+						plugins={[
+							{
+								name: "Tanstack Router",
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+							{
+								name: "Tanstack Query",
+								render: <ReactQueryDevtoolsPanel />,
+							},
+						]}
+					/>
+					<Scripts />
+				</QueryClientProvider>
 			</body>
 		</html>
 	);
