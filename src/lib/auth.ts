@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { fetchUser } from "./api/auth";
+import { UnauthorizedError } from "./api/errors";
 
 export const userQueryOptions = queryOptions({
 	queryKey: ["user"],
@@ -8,8 +9,11 @@ export const userQueryOptions = queryOptions({
 		try {
 			return await fetchUser();
 		} catch (e) {
-			console.debug(e);
-			return null;
+			// UnauthorizedError is expected
+			if (e instanceof UnauthorizedError) {
+				return null;
+			}
+			throw e;
 		}
 	},
 	staleTime: Infinity,

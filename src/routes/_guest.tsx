@@ -5,7 +5,6 @@ export const Route = createFileRoute("/_guest")({
 	beforeLoad: async ({ context }) => {
 		const queryClient = context.queryClient;
 		const user = await queryClient.ensureQueryData(userQueryOptions);
-		console.log("guest user", user);
 		if (user) {
 			throw redirect({
 				to: "/dashboard",
