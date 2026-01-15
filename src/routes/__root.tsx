@@ -8,15 +8,24 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import appCss from "../styles.css?url";
+import { useAuth } from "@/hooks/use-auth";
+
+type AutheticatedContext = {
+	isAuthenticated: true;
+	user: { id: string; name: string };
+	isLoading: boolean;
+};
+
+type UnautheticatedContext = {
+	isAuthenticated: false;
+	isLoading: boolean;
+};
+
+type AuthContext = AutheticatedContext | UnautheticatedContext;
 
 interface RouterContext {
 	queryClient: QueryClient;
-	auth: {
-		isAuthenticated: boolean;
-		user?: { id: string; name: string };
-		login: () => void;
-		logout: () => void;
-	};
+	auth: AuthContext;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -45,6 +54,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	useAuth();
 	return (
 		<html lang="en">
 			<head>

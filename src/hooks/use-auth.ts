@@ -1,9 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { client } from "@/lib/api/client";
+import { z } from "zod";
+
+const userSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+});
 
 const fetchUser = async () => {
-	return await client.get("/api/user");
+	const res = await client.get("/api/user");
+	const user = await res.json();
+	return userSchema.parse(user);
 };
 
 export const useAuth = () => {
