@@ -26,7 +26,6 @@ const loginFormSchema = z.object({
 
 function LoginPage() {
 	const router = useRouter();
-
 	const { login } = useAuth();
 
 	const form = useAppForm({
@@ -40,8 +39,12 @@ function LoginPage() {
 			onDynamic: loginFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await login(value);
-			await router.navigate({ to: "/dashboard" });
+			const res = await login(value);
+			if (res.two_factor) {
+				await router.navigate({ to: "/two-factor-challenge" });
+			} else {
+				await router.navigate({ to: "/dashboard" });
+			}
 		},
 	});
 

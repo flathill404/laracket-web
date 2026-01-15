@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { userQueryOptions } from "@/lib/auth";
-import { login, logout } from "@/lib/api/auth";
+import { login, logout, twoFactorChallenge } from "@/lib/api/auth";
 
 export const loginSchema = z.object({
 	email: z.email(),
@@ -31,11 +31,19 @@ export const useAuth = () => {
 		},
 	});
 
+	const twoFactorChallengeMutation = useMutation({
+		mutationFn: twoFactorChallenge,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["user"] });
+		},
+	});
+
 	return {
 		user,
 		isAuthenticated: !!user,
 		isLoading,
 		login: loginMutation.mutateAsync,
 		logout: logoutMutation.mutateAsync,
+		twoFactorChallenge: twoFactorChallengeMutation.mutateAsync,
 	};
 };

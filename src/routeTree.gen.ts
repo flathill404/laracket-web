@@ -13,6 +13,7 @@ import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as GuestIndexRouteImport } from './routes/_guest/index'
 import { Route as GuestWipRouteImport } from './routes/_guest/wip'
+import { Route as GuestTwoFactorChallengeRouteImport } from './routes/_guest/two-factor-challenge'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -34,6 +35,11 @@ const GuestWipRoute = GuestWipRouteImport.update({
   path: '/wip',
   getParentRoute: () => GuestRoute,
 } as any)
+const GuestTwoFactorChallengeRoute = GuestTwoFactorChallengeRouteImport.update({
+  id: '/two-factor-challenge',
+  path: '/two-factor-challenge',
+  getParentRoute: () => GuestRoute,
+} as any)
 const GuestLoginRoute = GuestLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -48,12 +54,14 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/login': typeof GuestLoginRoute
+  '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
 }
 export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/login': typeof GuestLoginRoute
+  '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
 }
@@ -63,20 +71,22 @@ export interface FileRoutesById {
   '/_guest': typeof GuestRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_guest/login': typeof GuestLoginRoute
+  '/_guest/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/_guest/wip': typeof GuestWipRoute
   '/_guest/': typeof GuestIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/dashboard' | '/login' | '/wip' | '/'
+  fullPaths: '/dashboard' | '/login' | '/two-factor-challenge' | '/wip' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/dashboard' | '/login' | '/wip' | '/'
+  to: '/dashboard' | '/login' | '/two-factor-challenge' | '/wip' | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_guest'
     | '/_authenticated/dashboard'
     | '/_guest/login'
+    | '/_guest/two-factor-challenge'
     | '/_guest/wip'
     | '/_guest/'
   fileRoutesById: FileRoutesById
@@ -116,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestWipRouteImport
       parentRoute: typeof GuestRoute
     }
+    '/_guest/two-factor-challenge': {
+      id: '/_guest/two-factor-challenge'
+      path: '/two-factor-challenge'
+      fullPath: '/two-factor-challenge'
+      preLoaderRoute: typeof GuestTwoFactorChallengeRouteImport
+      parentRoute: typeof GuestRoute
+    }
     '/_guest/login': {
       id: '/_guest/login'
       path: '/login'
@@ -147,12 +164,14 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 
 interface GuestRouteChildren {
   GuestLoginRoute: typeof GuestLoginRoute
+  GuestTwoFactorChallengeRoute: typeof GuestTwoFactorChallengeRoute
   GuestWipRoute: typeof GuestWipRoute
   GuestIndexRoute: typeof GuestIndexRoute
 }
 
 const GuestRouteChildren: GuestRouteChildren = {
   GuestLoginRoute: GuestLoginRoute,
+  GuestTwoFactorChallengeRoute: GuestTwoFactorChallengeRoute,
   GuestWipRoute: GuestWipRoute,
   GuestIndexRoute: GuestIndexRoute,
 }
