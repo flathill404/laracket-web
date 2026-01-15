@@ -1,29 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { client } from "@/lib/api/client";
-import { z } from "zod";
-
-const userSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-});
-
-const fetchUser = async () => {
-	const res = await client.get("/api/user");
-	const user = await res.json();
-	return userSchema.parse(user);
-};
+import { userQueryOptions } from "@/lib/auth";
 
 export const useAuth = () => {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
-	const { data: user, isLoading } = useQuery({
-		queryKey: ["user"],
-		queryFn: fetchUser,
-		retry: false,
-		staleTime: Infinity,
-	});
+	const { data: user, isLoading } = useQuery(userQueryOptions);
 
 	const loginMutation = useMutation({
 		mutationFn: async (credentials: { email: string; password: string }) => {
