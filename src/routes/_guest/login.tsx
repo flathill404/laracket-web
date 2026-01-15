@@ -1,5 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
+
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -12,48 +12,36 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/use-app-form";
-
-const loginSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8),
-});
-
-// mock
-const loginApi = async (data: z.infer<typeof loginSchema>) => {
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-
-	if (data.email === "error@example.com") {
-		throw new Error("oops!");
-	}
-
-	return { token: "fake-jwt-token", user: { name: "User" } };
-};
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_guest/login")({
 	component: LoginPage,
 });
 
+const loginFormSchema = z.object({
+	email: z.email(),
+	password: z.string().min(8),
+	remember: z.boolean(),
+});
+
 function LoginPage() {
 	const router = useRouter();
 
-	const loginMutation = useMutation({
-		mutationFn: loginApi,
-		onSuccess: () => {
-			router.navigate({ to: "/dashboard" });
-		},
-	});
+	const { login } = useAuth();
 
 	const form = useAppForm({
 		defaultValues: {
 			email: "",
 			password: "",
+			remember: false,
 		},
 		validationLogic: revalidateLogic(),
 		validators: {
-			onDynamic: loginSchema,
+			onDynamic: loginFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await loginMutation.mutateAsync(value);
+			await login(value);
+			await router.navigate({ to: "/dashboard" });
 		},
 	});
 
@@ -94,6 +82,12 @@ function LoginPage() {
 												placeholder="m@example.com"
 												type="password"
 											/>
+										)}
+									/>
+									<form.AppField
+										name="remember"
+										children={(field) => (
+											<field.CheckboxField label="Remember me" />
 										)}
 									/>
 									<Field>
