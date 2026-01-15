@@ -36,7 +36,7 @@ async function checkGeneralResponse(response: Response) {
 	throw new UnknownError();
 }
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "http://localhost:8000/api";
 
 export async function request(
 	method: "GET" | "POST" | "PUT" | "DELETE",

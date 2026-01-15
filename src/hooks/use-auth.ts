@@ -18,7 +18,7 @@ export const useAuth = () => {
 
 	const loginMutation = useMutation({
 		mutationFn: async (credentials: z.infer<typeof loginSchema>) => {
-			await client.get("/sanctum/csrf-cookie");
+			await client.get("/csrf-cookie");
 			await client.post("/login", credentials);
 		},
 		onSuccess: () => {
