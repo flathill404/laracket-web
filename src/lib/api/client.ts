@@ -17,6 +17,11 @@ async function checkGeneralResponse(response: Response) {
 		return;
 	}
 
+	// きもい
+	if (response.status === 302) {
+		return;
+	}
+
 	if (response.status === 401) {
 		throw new UnauthorizedError();
 	}
@@ -62,6 +67,7 @@ export async function request(
 		method,
 		headers: defaultHeaders,
 		credentials: "include",
+		redirect: "manual",
 	};
 
 	if (body) {

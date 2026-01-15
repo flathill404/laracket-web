@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { client } from "@/lib/api/client";
 import { userQueryOptions } from "@/lib/auth";
+import { login, logout } from "@/lib/api/auth";
 
 export const loginSchema = z.object({
 	email: z.email(),
@@ -17,19 +17,14 @@ export const useAuth = () => {
 	const { data: user, isLoading } = useQuery(userQueryOptions);
 
 	const loginMutation = useMutation({
-		mutationFn: async (credentials: z.infer<typeof loginSchema>) => {
-			await client.get("/csrf-cookie");
-			await client.post("/login", credentials);
-		},
+		mutationFn: login,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 	});
 
 	const logoutMutation = useMutation({
-		mutationFn: async () => {
-			await client.post("/logout");
-		},
+		mutationFn: logout,
 		onSuccess: () => {
 			queryClient.setQueryData(["user"], null);
 			navigate({ to: "/login" });
