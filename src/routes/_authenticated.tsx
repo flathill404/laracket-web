@@ -126,7 +126,7 @@ function AuthLayout() {
 											].map((project) => (
 												<Link
 													key={project.id}
-													to="/projects/$projectId"
+													to="/projects/$projectId/tickets"
 													params={{ projectId: project.id }}
 													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
 												>
@@ -153,7 +153,7 @@ function AuthLayout() {
 											].map((team) => (
 												<Link
 													key={team.id}
-													to="/teams/$teamId"
+													to="/teams/$teamId/tickets"
 													params={{ teamId: team.id }}
 													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
 												>
