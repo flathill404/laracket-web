@@ -4,9 +4,10 @@ import { client } from "@/lib/api/client";
 const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
+	displayName: z.string().nullable().optional(), // Added display_name
 	email: z.email(),
-	avator_url: z.string().optional(),
-	two_factor_confirmed_at: z.string().nullable().optional(),
+	avatorUrl: z.string().optional(),
+	twoFactorConfirmedAt: z.string().nullable().optional(),
 });
 
 /**
@@ -50,7 +51,8 @@ const logout = async () => {
 };
 
 const updateProfileInformationInputSchema = z.object({
-	name: z.string(),
+	// name: z.string(), // Removed name as it is fixed
+	displayName: z.string(),
 	email: z.string().email(),
 });
 

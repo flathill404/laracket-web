@@ -7,7 +7,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { useAppForm, formContext } from "@/hooks/use-app-form";
+import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { updatePassword } from "@/lib/api/auth";
 
 export function PasswordForm() {

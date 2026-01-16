@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { ImageCropDialog } from "@/components/image-crop-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { FieldLabel } from "@/components/ui/field";
-import { useAppForm, formContext } from "@/hooks/use-app-form";
+import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { useAuth } from "@/hooks/use-auth";
 import {
 	deleteAvator,
@@ -24,6 +25,8 @@ export function ProfileForm() {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [cropDialogOpen, setCropDialogOpen] = useState(false);
+	const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
 
 	const updateProfileMutation = useMutation({
 		mutationFn: updateProfileInformation,
@@ -63,7 +66,7 @@ export function ProfileForm() {
 
 	const form = useAppForm({
 		defaultValues: {
-			name: user?.name ?? "",
+			display_name: user?.display_name ?? "",
 			email: user?.email ?? "",
 		},
 		onSubmit: async ({ value }) => {
@@ -74,8 +77,23 @@ export function ProfileForm() {
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			await updateAvatorMutation.mutateAsync(file);
+			if (file.size > 20 * 1024 * 1024) {
+				toast.error("File size must be less than 20MB");
+				return;
+			}
+			const reader = new FileReader();
+			reader.onload = () => {
+				setSelectedImageSrc(reader.result as string);
+				setCropDialogOpen(true);
+			};
+			reader.readAsDataURL(file);
+			// Reset input so valid change triggers again if needed
+			e.target.value = "";
 		}
+	};
+
+	const handleCropComplete = async (croppedFile: File) => {
+		await updateAvatorMutation.mutateAsync(croppedFile);
 	};
 
 	const handleDeleteAvator = async () => {
@@ -97,10 +115,10 @@ export function ProfileForm() {
 				<div className="flex items-center gap-6">
 					<div className="relative">
 						<Avatar className="h-20 w-20">
-							<AvatarImage src={user?.avator_url} alt={user?.name} />
+							<AvatarImage src={user?.avatorUrl} alt={user?.name} />
 							<AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
 						</Avatar>
-						{user?.avator_url && (
+						{user?.avatorUrl && (
 							<Button
 								variant="destructive"
 								size="icon"
@@ -135,7 +153,7 @@ export function ProfileForm() {
 							/>
 						</div>
 						<p className="text-[0.8rem] text-muted-foreground">
-							JPG, GIF or PNG. 1MB max.
+							JPG, GIF or PNG. 20MB max.
 						</p>
 					</div>
 				</div>
@@ -149,10 +167,23 @@ export function ProfileForm() {
 						}}
 						className="space-y-4"
 					>
+						<div className="space-y-2">
+							<FieldLabel>Name</FieldLabel>
+							<div className="p-2 border rounded-md bg-muted text-muted-foreground text-sm">
+								{user?.name || "No name"}
+							</div>
+							<p className="text-[0.8rem] text-muted-foreground">
+								Username cannot be changed.
+							</p>
+						</div>
+
 						<form.AppField
-							name="name"
+							name="display_name"
 							children={(field) => (
-								<field.InputField label="Name" placeholder="Your Name" />
+								<field.InputField
+									label="Display Name"
+									placeholder="Your Display Name"
+								/>
 							)}
 						/>
 						<form.AppField
@@ -170,6 +201,13 @@ export function ProfileForm() {
 						</div>
 					</form>
 				</formContext.Provider>
+
+				<ImageCropDialog
+					isOpen={cropDialogOpen}
+					onClose={() => setCropDialogOpen(false)}
+					imageSrc={selectedImageSrc}
+					onCropComplete={handleCropComplete}
+				/>
 			</CardContent>
 		</Card>
 	);
