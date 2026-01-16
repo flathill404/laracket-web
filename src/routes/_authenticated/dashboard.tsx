@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, CreditCard, DollarSign, Plus, Users } from "lucide-react";
+import { ArrowUpDown, Circle, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
 	component: Dashboard,
@@ -15,192 +17,133 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
 	return (
-		<div className="flex flex-col gap-8 p-8">
-			{/* Header Section */}
-			<div className="flex items-center justify-between">
-				<div>
-					<h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-					<p className="text-muted-foreground">
-						Overview of your project's performance and recent activities.
-					</p>
+		<div className="flex flex-col h-full bg-background">
+			{/* Page Header */}
+			<div className="flex items-center justify-between border-b px-6 py-5">
+				<h1 className="text-2xl font-semibold tracking-tight">My Work</h1>
+				<Button>
+					<Plus className="mr-2 h-4 w-4" /> New Ticket
+				</Button>
+			</div>
+
+			{/* Control Bar */}
+			<div className="flex flex-col gap-4 border-b px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+				<div className="flex items-center gap-2 w-full sm:w-auto">
+					<div className="relative w-full sm:w-64">
+						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Input
+							type="search"
+							placeholder="Filter tickets..."
+							className="h-9 w-full pl-9"
+						/>
+					</div>
 				</div>
-				<div className="flex items-center gap-2">
-					<Button>
-						<Plus className="mr-2 h-4 w-4" /> New Project
-					</Button>
+
+				<div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
+					<div className="flex items-center rounded-lg bg-muted p-1">
+						<Button
+							variant="ghost"
+							size="sm"
+							className="rounded-md bg-background px-3 py-1 text-xs font-medium shadow-sm"
+						>
+							All
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
+						>
+							Unassigned
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
+						>
+							In Progress
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
+						>
+							Done
+						</Button>
+					</div>
+
+					<Separator orientation="vertical" className="mx-2 h-6" />
+
+					<Select defaultValue="newest">
+						<SelectTrigger className="h-9 w-[140px] border-dashed border-zinc-300 shadow-sm">
+							<div className="flex items-center gap-2 text-xs">
+								<ArrowUpDown className="h-3.5 w-3.5" />
+								<SelectValue placeholder="Sort by" />
+							</div>
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="newest">Newest</SelectItem>
+							<SelectItem value="oldest">Oldest</SelectItem>
+							<SelectItem value="priority">Priority</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</div>
 
-			{/* Stats Section */}
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-						<DollarSign className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">$45,231.89</div>
-						<p className="text-xs text-muted-foreground">
-							+20.1% from last month
-						</p>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
-						<Users className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">+2350</div>
-						<p className="text-xs text-muted-foreground">
-							+180.1% from last month
-						</p>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Sales</CardTitle>
-						<CreditCard className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">+12,234</div>
-						<p className="text-xs text-muted-foreground">
-							+19% from last month
-						</p>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-sm font-medium">Active Now</CardTitle>
-						<Activity className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">+573</div>
-						<p className="text-xs text-muted-foreground">
-							+201 since last hour
-						</p>
-					</CardContent>
-				</Card>
-			</div>
+			{/* Content List View (Placeholder) */}
+			<div className="flex-1 overflow-auto bg-muted/5 p-6">
+				<div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+					{/* Table Header Placeholder */}
+					<div className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground">
+						<div>Subject</div>
+						<div>Status</div>
+						<div>Priority</div>
+						<div>Assignee</div>
+					</div>
 
-			{/* Main Content Area */}
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-				{/* Recent Sales / Activity */}
-				<Card className="col-span-4">
-					<CardHeader>
-						<CardTitle>Recent Sales</CardTitle>
-						<CardDescription>You made 265 sales this month.</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<RecentSales />
-					</CardContent>
-				</Card>
-
-				{/* Recent Activity / System Status or something else */}
-				<Card className="col-span-3">
-					<CardHeader>
-						<CardTitle>Recent Activity</CardTitle>
-						<CardDescription>
-							Latest actions performed across the system.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-8">
-							<div className="flex items-center">
-								<span className="relative flex h-2 w-2 mr-4">
-									<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-									<span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-								</span>
-								<div className="ml-4 space-y-1">
-									<p className="text-sm font-medium leading-none">
-										System System
-									</p>
-									<p className="text-sm text-muted-foreground">
-										All systems operational
-									</p>
+					{/* Ticket Rows Placeholder */}
+					<div className="divide-y">
+						{[1, 2, 3, 4, 5, 6].map((i) => (
+							<div
+								key={i}
+								className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors"
+							>
+								<div className="flex flex-col gap-1">
+									<div className="flex items-center gap-2">
+										<span className="font-medium">
+											[T-{1000 + i}] Login page authentication error
+										</span>
+										{i === 1 && (
+											<span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80">
+												Urgent
+											</span>
+										)}
+									</div>
+									<span className="text-xs text-muted-foreground line-clamp-1">
+										User reported that they cannot login when using the legacy
+										portal...
+									</span>
+								</div>
+								<div className="flex items-center gap-2">
+									<Circle className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+									<span className="text-sm">In Progress</span>
+								</div>
+								<div className="text-sm text-muted-foreground">High</div>
+								<div className="flex items-center gap-2">
+									<div className="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">
+										JD
+									</div>
+									<span className="text-sm text-muted-foreground">
+										John Doe
+									</span>
 								</div>
 							</div>
-							{/* Mock items */}
-							{[1, 2, 3].map((i) => (
-								<div key={i} className="flex items-center">
-									<div className="flex h-9 w-9 items-center justify-center rounded-full border bg-background">
-										<Activity className="h-4 w-4 text-muted-foreground" />
-									</div>
-									<div className="ml-4 space-y-1">
-										<p className="text-sm font-medium leading-none">
-											New user registered
-										</p>
-										<p className="text-sm text-muted-foreground">
-											uid: user_{i}123
-										</p>
-									</div>
-									<div className="ml-auto font-medium">Just now</div>
-								</div>
-							))}
-						</div>
-					</CardContent>
-				</Card>
-			</div>
-		</div>
-	);
-}
+						))}
+					</div>
 
-function RecentSales() {
-	return (
-		<div className="space-y-8">
-			<div className="flex items-center">
-				<div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center">
-					<span className="text-xs font-bold">OM</span>
+					<div className="border-t p-4 text-center text-xs text-muted-foreground">
+						Showing 6 of 24 tickets
+					</div>
 				</div>
-				<div className="ml-4 space-y-1">
-					<p className="text-sm font-medium leading-none">Olivia Martin</p>
-					<p className="text-sm text-muted-foreground">
-						olivia.martin@email.com
-					</p>
-				</div>
-				<div className="ml-auto font-medium">+$1,999.00</div>
-			</div>
-			<div className="flex items-center">
-				<div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center">
-					<span className="text-xs font-bold">JL</span>
-				</div>
-				<div className="ml-4 space-y-1">
-					<p className="text-sm font-medium leading-none">Jackson Lee</p>
-					<p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
-				</div>
-				<div className="ml-auto font-medium">+$39.00</div>
-			</div>
-			<div className="flex items-center">
-				<div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center">
-					<span className="text-xs font-bold">IN</span>
-				</div>
-				<div className="ml-4 space-y-1">
-					<p className="text-sm font-medium leading-none">Isabella Nguyen</p>
-					<p className="text-sm text-muted-foreground">
-						isabella.nguyen@email.com
-					</p>
-				</div>
-				<div className="ml-auto font-medium">+$299.00</div>
-			</div>
-			<div className="flex items-center">
-				<div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center">
-					<span className="text-xs font-bold">WK</span>
-				</div>
-				<div className="ml-4 space-y-1">
-					<p className="text-sm font-medium leading-none">William Kim</p>
-					<p className="text-sm text-muted-foreground">will@email.com</p>
-				</div>
-				<div className="ml-auto font-medium">+$99.00</div>
-			</div>
-			<div className="flex items-center">
-				<div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center">
-					<span className="text-xs font-bold">SD</span>
-				</div>
-				<div className="ml-4 space-y-1">
-					<p className="text-sm font-medium leading-none">Sofia Davis</p>
-					<p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
-				</div>
-				<div className="ml-auto font-medium">+$39.00</div>
 			</div>
 		</div>
 	);
