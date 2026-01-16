@@ -4,6 +4,9 @@ import { client } from "@/lib/api/client";
 const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
+	email: z.email(),
+	avator_url: z.string().optional(),
+	two_factor_confirmed_at: z.string().nullable().optional(),
 });
 
 /**
@@ -44,6 +47,69 @@ const login = async (input: z.infer<typeof loginInputSchema>) => {
  */
 const logout = async () => {
 	await client.post("/logout");
+};
+
+const updateProfileInformationInputSchema = z.object({
+	name: z.string(),
+	email: z.string().email(),
+});
+
+/**
+ * Updates the user's profile information.
+ * @param input - The name and email.
+ */
+const updateProfileInformation = async (
+	input: z.infer<typeof updateProfileInformationInputSchema>,
+) => {
+	await client.put("/user/profile-information", input);
+};
+
+const updatePasswordInputSchema = z.object({
+	current_password: z.string(),
+	password: z.string().min(8),
+	password_confirmation: z.string().min(8),
+});
+
+/**
+ * Updates the user's password.
+ * @param input - The current and new password.
+ */
+const updatePassword = async (
+	input: z.infer<typeof updatePasswordInputSchema>,
+) => {
+	await client.put("/user/password", input);
+};
+
+/**
+ * Updates the user's avator.
+ * @param file - The new avator file.
+ */
+const updateAvator = async (file: File) => {
+	const formData = new FormData();
+	formData.append("avator", file);
+
+	// We use global fetch to support FormData and avoid JSON stringification from client.post
+	const BASE_URL = "http://localhost:8000/api";
+	const csrfToken = document.cookie.match(/(^| )XSRF-TOKEN=([^;]+)/)?.[2] || "";
+
+	await fetch(`${BASE_URL}/user/avator`, {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Key-Inflection": "camel",
+			"X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+		},
+		body: formData,
+		credentials: "include",
+	});
+};
+
+/**
+ * Deletes the user's avator.
+ */
+const deleteAvator = async () => {
+	// User said "avator" for "profile-photo".
+	await client.delete("/user/avator");
 };
 
 /**
@@ -119,6 +185,10 @@ export {
 	fetchUser,
 	login,
 	logout,
+	updateProfileInformation,
+	updatePassword,
+	updateAvator,
+	deleteAvator,
 	// 2FA functions
 	enableTwoFactor,
 	disableTwoFactor,
