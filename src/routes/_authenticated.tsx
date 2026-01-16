@@ -26,6 +26,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/use-auth";
 import { userQueryOptions } from "@/lib/auth";
 import { projectsQueryOptions } from "@/lib/projects";
 import { teamsQueryOptions } from "@/lib/teams";
@@ -51,12 +52,14 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthLayout() {
-	const { data: user } = useSuspenseQuery(userQueryOptions);
+	const { user } = useAuth();
 	const userId = user?.id ?? "";
 
 	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
 
+	// We can safely assume user is not null here because of beforeLoad check
+	// But typescript might complain if type includes null (and useAuth returns user | undefined)
 	if (!user) return null;
 
 	return (
