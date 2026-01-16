@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
 	createFileRoute,
 	Link,
@@ -26,6 +27,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { userQueryOptions } from "@/lib/auth";
+import { projectsQueryOptions } from "@/lib/projects";
+import { teamsQueryOptions } from "@/lib/teams";
 
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: async ({ context, location }) => {
@@ -34,17 +37,28 @@ export const Route = createFileRoute("/_authenticated")({
 		if (!user) {
 			throw redirect({
 				to: "/login",
-				search: {
-					redirect: location.href,
-				},
+				search: { redirect: location.href },
 			});
 		}
+		const promises = [
+			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
+			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
+		];
+		await Promise.all(promises);
 	},
 	component: AuthLayout,
 	notFoundComponent: AuthenticatedNotFound,
 });
 
 function AuthLayout() {
+	const { data: user } = useSuspenseQuery(userQueryOptions);
+	const userId = user?.id ?? "";
+
+	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
+	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
+
+	if (!user) return null;
+
 	return (
 		<div className="flex min-h-screen flex-col bg-background">
 			{/* Global Header */}
@@ -121,11 +135,7 @@ function AuthLayout() {
 									</AccordionTrigger>
 									<AccordionContent className="pb-0">
 										<div className="flex flex-col gap-1 pl-9">
-											{[
-												{ id: "website-redesign", name: "Website Redesign" },
-												{ id: "mobile-app", name: "Mobile App" },
-												{ id: "compliance", name: "Compliance" },
-											].map((project) => (
+											{projects.map((project) => (
 												<Link
 													key={project.id}
 													to="/projects/$projectId/tickets"
@@ -148,11 +158,7 @@ function AuthLayout() {
 									</AccordionTrigger>
 									<AccordionContent className="pb-0">
 										<div className="flex flex-col gap-1 pl-9">
-											{[
-												{ id: "engineering", name: "Engineering" },
-												{ id: "design", name: "Design" },
-												{ id: "marketing", name: "Marketing" },
-											].map((team) => (
+											{teams.map((team) => (
 												<Link
 													key={team.id}
 													to="/teams/$teamId/tickets"
