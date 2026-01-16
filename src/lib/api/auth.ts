@@ -13,7 +13,7 @@ const userSchema = z.object({
 const fetchUser = async () => {
 	const response = await client.get("/user");
 	const json = await response.json();
-	return userSchema.parse(json);
+	return userSchema.parse(json.data);
 };
 
 const loginInputSchema = z.object({
