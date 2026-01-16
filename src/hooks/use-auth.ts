@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { userQueryOptions } from "@/lib/auth";
 import { login, logout, twoFactorChallenge } from "@/lib/api/auth";
+import { userQueryOptions } from "@/lib/auth";
 
 export const loginSchema = z.object({
 	email: z.email(),

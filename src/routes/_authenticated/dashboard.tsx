@@ -1,13 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-	Activity,
-	ArrowUpRight,
-	CreditCard,
-	DollarSign,
-	Plus,
-	Users,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Activity, CreditCard, DollarSign, Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -16,14 +8,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
 	component: Dashboard,
