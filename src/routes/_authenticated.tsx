@@ -48,10 +48,7 @@ function AuthLayout() {
 			{/* Global Header */}
 			<header className="sticky top-0 z-50 flex h-14 items-center gap-4 border-b bg-background px-6">
 				<div className="flex items-center gap-2 font-semibold">
-					<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-						{/* Logo Placeholder */}
-						<span className="text-lg font-bold">L</span>
-					</div>
+					<img src="/logo.svg" alt="Laracket" className="h-8 w-8" />
 					<span className="hidden sm:inline-block">Laracket</span>
 				</div>
 
