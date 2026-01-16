@@ -89,21 +89,21 @@ function AuthLayout() {
 						<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
 							<Link
 								to="/dashboard"
-								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
 							>
 								<LayoutDashboard className="h-4 w-4" />
 								Dashboard
 							</Link>
 							<Link
-								to="/dashboard"
-								className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+								to="/my-work"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
 							>
 								<Inbox className="h-4 w-4" />
 								My Work
 							</Link>
 							<Link
-								to="/dashboard"
-								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+								to="/tickets"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
 							>
 								<Files className="h-4 w-4" />
 								All Tickets
@@ -119,17 +119,20 @@ function AuthLayout() {
 									</AccordionTrigger>
 									<AccordionContent className="pb-0">
 										<div className="flex flex-col gap-1 pl-9">
-											{["Website Redesign", "Mobile App", "Compliance"].map(
-												(project) => (
-													<Link
-														key={project}
-														to="/dashboard"
-														className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-													>
-														{project}
-													</Link>
-												),
-											)}
+											{[
+												{ id: "website-redesign", name: "Website Redesign" },
+												{ id: "mobile-app", name: "Mobile App" },
+												{ id: "compliance", name: "Compliance" },
+											].map((project) => (
+												<Link
+													key={project.id}
+													to="/projects/$projectId"
+													params={{ projectId: project.id }}
+													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
+												>
+													{project.name}
+												</Link>
+											))}
 										</div>
 									</AccordionContent>
 								</AccordionItem>
@@ -143,13 +146,18 @@ function AuthLayout() {
 									</AccordionTrigger>
 									<AccordionContent className="pb-0">
 										<div className="flex flex-col gap-1 pl-9">
-											{["Engineering", "Design", "Marketing"].map((team) => (
+											{[
+												{ id: "engineering", name: "Engineering" },
+												{ id: "design", name: "Design" },
+												{ id: "marketing", name: "Marketing" },
+											].map((team) => (
 												<Link
-													key={team}
-													to="/dashboard"
-													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+													key={team.id}
+													to="/teams/$teamId"
+													params={{ teamId: team.id }}
+													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
 												>
-													{team}
+													{team.name}
 												</Link>
 											))}
 										</div>
@@ -161,8 +169,8 @@ function AuthLayout() {
 
 					<div className="mt-auto border-t p-4">
 						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary"
+							to="/settings"
+							className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
 						>
 							<Settings className="h-4 w-4" />
 							Settings
