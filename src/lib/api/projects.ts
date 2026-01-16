@@ -17,7 +17,7 @@ const projectsSchema = z.array(projectSchema);
  * @returns An array of projects.
  */
 export const fetchProjects = async (userId: string) => {
-	const response = await client.get(`/user/${userId}/projects`);
+	const response = await client.get(`/users/${userId}/projects`);
 	const json = await response.json();
 	return projectsSchema.parse(json.data);
 };

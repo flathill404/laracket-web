@@ -17,7 +17,7 @@ const teamsSchema = z.array(teamSchema);
  * @returns An array of teams.
  */
 export const fetchTeams = async (userId: string) => {
-	const response = await client.get(`/user/${userId}/teams`);
+	const response = await client.get(`/users/${userId}/teams`);
 	const json = await response.json();
 	return teamsSchema.parse(json.data);
 };
