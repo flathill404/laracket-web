@@ -15,6 +15,7 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
+import { AuthenticatedNotFound } from "@/components/authenticated-not-found";
 import {
 	Accordion,
 	AccordionContent,
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/_authenticated")({
 		}
 	},
 	component: AuthLayout,
+	notFoundComponent: AuthenticatedNotFound,
 });
 
 function AuthLayout() {
