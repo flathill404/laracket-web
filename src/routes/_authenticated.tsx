@@ -5,16 +5,22 @@ import {
 	redirect,
 } from "@tanstack/react-router";
 import {
-	BarChart3,
 	Bell,
 	Files,
+	Folder,
 	HelpCircle,
 	Inbox,
 	LayoutDashboard,
 	Search,
 	Settings,
-	Ticket,
+	Users,
 } from "lucide-react";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,50 +88,89 @@ function AuthLayout() {
 			<div className="flex flex-1 overflow-hidden">
 				{/* Left Sidebar */}
 				<aside className="hidden w-[240px] flex-col border-r bg-muted/10 md:flex">
-					<nav className="flex flex-col gap-2 p-4 text-sm font-medium">
+					<div className="flex-1 overflow-auto py-4">
+						<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
+							<Link
+								to="/dashboard"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+							>
+								<LayoutDashboard className="h-4 w-4" />
+								Dashboard
+							</Link>
+							<Link
+								to="/dashboard"
+								className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+							>
+								<Inbox className="h-4 w-4" />
+								My Work
+							</Link>
+							<Link
+								to="/dashboard"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+							>
+								<Files className="h-4 w-4" />
+								All Tickets
+							</Link>
+
+							<Accordion type="multiple" className="w-full">
+								<AccordionItem value="projects" className="border-b-0">
+									<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
+										<div className="flex items-center gap-3 px-3">
+											<Folder className="h-4 w-4" />
+											Projects
+										</div>
+									</AccordionTrigger>
+									<AccordionContent className="pb-0">
+										<div className="flex flex-col gap-1 pl-9">
+											{["Website Redesign", "Mobile App", "Compliance"].map(
+												(project) => (
+													<Link
+														key={project}
+														to="/dashboard"
+														className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+													>
+														{project}
+													</Link>
+												),
+											)}
+										</div>
+									</AccordionContent>
+								</AccordionItem>
+
+								<AccordionItem value="teams" className="border-b-0">
+									<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
+										<div className="flex items-center gap-3 px-3">
+											<Users className="h-4 w-4" />
+											Teams
+										</div>
+									</AccordionTrigger>
+									<AccordionContent className="pb-0">
+										<div className="flex flex-col gap-1 pl-9">
+											{["Engineering", "Design", "Marketing"].map((team) => (
+												<Link
+													key={team}
+													to="/dashboard"
+													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+												>
+													{team}
+												</Link>
+											))}
+										</div>
+									</AccordionContent>
+								</AccordionItem>
+							</Accordion>
+						</nav>
+					</div>
+
+					<div className="mt-auto border-t p-4">
 						<Link
 							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-						>
-							<LayoutDashboard className="h-4 w-4" />
-							Dashboard
-						</Link>
-						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-						>
-							<Inbox className="h-4 w-4" />
-							My Work
-						</Link>
-						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-						>
-							<Ticket className="h-4 w-4" />
-							Unassigned
-						</Link>
-						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-						>
-							<Files className="h-4 w-4" />
-							All Tickets
-						</Link>
-						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-						>
-							<BarChart3 className="h-4 w-4" />
-							Reports
-						</Link>
-						<Link
-							to="/dashboard"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+							className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary"
 						>
 							<Settings className="h-4 w-4" />
 							Settings
 						</Link>
-					</nav>
+					</div>
 				</aside>
 
 				{/* Main Content Area */}
