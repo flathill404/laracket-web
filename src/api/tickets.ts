@@ -36,6 +36,7 @@ export const ticketSchema = z.object({
 	status: ticketStatusSchema,
 	assignees: z.array(assigneeSchema),
 	reviewers: z.array(reviewerSchema),
+	projectId: z.string(), // Added projectId
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
 });
@@ -46,4 +47,10 @@ export const fetchTicket = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}`);
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
+};
+
+export const fetchUserTickets = async (userId: string) => {
+	const response = await client.get(`/users/${userId}/tickets`);
+	const json = await response.json();
+	return ticketsSchema.parse(json.data);
 };
