@@ -1,6 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowUpDown, Circle, Plus, Search } from "lucide-react";
+import { Circle, Plus } from "lucide-react";
 import * as React from "react";
 import { fetchUserTickets } from "@/api";
 import { RocketMascot } from "@/components/illustrations/rocket-mascot";
@@ -14,15 +14,6 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/use-auth";
 import { userQueryOptions } from "@/lib/auth";
 
@@ -70,15 +61,18 @@ export const Route = createFileRoute("/_authenticated/my-work")({
 function MyWork() {
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	if (!user) {
+		throw new Error("User must be defined in authenticated route");
+	}
 
 	// We can safely assume user is defined here because of the route protection
-	const { data: allTickets } = useSuspenseQuery(userTicketsQuery(user!.id));
+	const { data: allTickets } = useSuspenseQuery(userTicketsQuery(user.id));
 
 	// Filter tickets where user is assignee or reviewer
 	const myTickets = React.useMemo(() => {
 		return allTickets.filter((ticket) => {
-			const isAssignee = ticket.assignees.some((a) => a.id === user!.id);
-			const isReviewer = ticket.reviewers.some((r) => r.id === user!.id);
+			const isAssignee = ticket.assignees.some((a) => a.id === user.id);
+			const isReviewer = ticket.reviewers.some((r) => r.id === user.id);
 			return isAssignee || isReviewer;
 		});
 	}, [allTickets, user]);

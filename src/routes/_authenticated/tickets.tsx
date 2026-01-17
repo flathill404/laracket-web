@@ -61,9 +61,12 @@ export const Route = createFileRoute("/_authenticated/tickets")({
 function AllTickets() {
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	if (!user) {
+		throw new Error("User must be defined in authenticated route");
+	}
 
 	// We can safely assume user is defined here because of the route protection
-	const { data: tickets } = useSuspenseQuery(userTicketsQuery(user!.id));
+	const { data: tickets } = useSuspenseQuery(userTicketsQuery(user.id));
 
 	return (
 		<div className="flex flex-col h-full bg-background">
