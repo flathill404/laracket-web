@@ -27,7 +27,6 @@ export function ImageCropDialog({
 }: ImageCropDialogProps) {
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
-	const [rotation, setRotation] = useState(0);
 	const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
 	const onCropChange = (crop: { x: number; y: number }) => {
@@ -132,7 +131,6 @@ export function ImageCropDialog({
 							image={imageSrc}
 							crop={crop}
 							zoom={zoom}
-							rotation={rotation}
 							aspect={1}
 							cropShape="round"
 							onCropChange={onCropChange}
