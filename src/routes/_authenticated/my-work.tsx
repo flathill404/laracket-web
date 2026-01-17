@@ -1,6 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowUpDown, Circle, Plus, Search } from "lucide-react";
+import * as React from "react";
+import { fetchUserTickets } from "@/api";
+import { RocketMascot } from "@/components/illustrations/rocket-mascot";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import {
 	Select,
@@ -10,138 +23,167 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useAuth } from "@/hooks/use-auth";
+import { userQueryOptions } from "@/lib/auth";
+
+// Helper to define types for the status based on the API
+const getStatusColor = (status: string) => {
+	switch (status) {
+		case "open":
+		case "reopened":
+			return "text-green-500 fill-green-500";
+		case "in_progress":
+			return "text-yellow-500 fill-yellow-500";
+		case "resolved":
+		case "closed":
+			return "text-slate-500 fill-slate-500";
+		case "in_review":
+			return "text-blue-500 fill-blue-500";
+		default:
+			return "text-slate-500 fill-slate-500";
+	}
+};
+
+const getStatusLabel = (status: string) => {
+	return status
+		.split("_")
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(" ");
+};
+
+const userTicketsQuery = (userId: string) =>
+	queryOptions({
+		queryKey: ["users", userId, "tickets"],
+		queryFn: () => fetchUserTickets(userId),
+	});
 
 export const Route = createFileRoute("/_authenticated/my-work")({
+	loader: async ({ context: { queryClient } }) => {
+		const user = await queryClient.ensureQueryData(userQueryOptions);
+		if (user) {
+			await queryClient.ensureQueryData(userTicketsQuery(user.id));
+		}
+	},
 	component: MyWork,
 });
 
 function MyWork() {
+	const navigate = useNavigate();
+	const { user } = useAuth();
+
+	// We can safely assume user is defined here because of the route protection
+	const { data: allTickets } = useSuspenseQuery(userTicketsQuery(user!.id));
+
+	// Filter tickets where user is assignee or reviewer
+	const myTickets = React.useMemo(() => {
+		return allTickets.filter((ticket) => {
+			const isAssignee = ticket.assignees.some((a) => a.id === user!.id);
+			const isReviewer = ticket.reviewers.some((r) => r.id === user!.id);
+			return isAssignee || isReviewer;
+		});
+	}, [allTickets, user]);
+
 	return (
 		<div className="flex flex-col h-full bg-background">
 			{/* Page Header */}
-			<div className="flex items-center justify-between border-b px-6 py-5">
+			<div className="flex items-center justify-between border-b px-6 py-5 shrink-0">
 				<h1 className="text-2xl font-semibold tracking-tight">My Work</h1>
 				<Button>
 					<Plus className="mr-2 h-4 w-4" /> New Ticket
 				</Button>
 			</div>
 
-			{/* Control Bar */}
-			<div className="flex flex-col gap-4 border-b px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-				<div className="flex items-center gap-2 w-full sm:w-auto">
-					<div className="relative w-full sm:w-64">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Filter tickets..."
-							className="h-9 w-full pl-9"
-						/>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-					<div className="flex items-center rounded-lg bg-muted p-1">
-						<Button
-							variant="ghost"
-							size="sm"
-							className="rounded-md bg-background px-3 py-1 text-xs font-medium shadow-sm"
-						>
-							All
-						</Button>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
-						>
-							Unassigned
-						</Button>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
-						>
-							In Progress
-						</Button>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="rounded-md px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-background/50"
-						>
-							Done
-						</Button>
-					</div>
-
-					<Separator orientation="vertical" className="mx-2 h-6" />
-
-					<Select defaultValue="newest">
-						<SelectTrigger className="h-9 w-[140px] border-dashed border-zinc-300 shadow-sm">
-							<div className="flex items-center gap-2 text-xs">
-								<ArrowUpDown className="h-3.5 w-3.5" />
-								<SelectValue placeholder="Sort by" />
-							</div>
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="newest">Newest</SelectItem>
-							<SelectItem value="oldest">Oldest</SelectItem>
-							<SelectItem value="priority">Priority</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-			</div>
-
-			{/* Content List View (Placeholder) */}
-			<div className="flex-1 overflow-auto bg-muted/5 p-6">
-				<div className="rounded-xl border bg-card text-card-foreground shadow-sm">
-					{/* Table Header Placeholder */}
-					<div className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground">
+			{/* Content List View */}
+			<div className="flex-1 overflow-hidden bg-muted/5 p-6">
+				<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+					{/* Table Header */}
+					<div className="grid grid-cols-[1fr_100px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground bg-muted/30">
 						<div>Subject</div>
 						<div>Status</div>
-						<div>Priority</div>
 						<div>Assignee</div>
 					</div>
 
-					{/* Ticket Rows Placeholder */}
-					<div className="divide-y">
-						{[1, 2, 3, 4, 5, 6].map((i) => (
-							<div
-								key={i}
-								className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors"
+					{/* Ticket Rows */}
+					<div className="flex-1 overflow-auto divide-y">
+						{myTickets.map((ticket) => (
+							<button
+								key={ticket.id}
+								onClick={() =>
+									navigate({
+										to: "/tickets/$ticketId",
+										params: { ticketId: ticket.id },
+									})
+								}
+								type="button"
+								className="grid w-full text-left grid-cols-[1fr_100px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors cursor-pointer focus:outline-none focus:bg-muted/50"
 							>
 								<div className="flex flex-col gap-1">
 									<div className="flex items-center gap-2">
 										<span className="font-medium">
-											[T-{1000 + i}] Login page authentication error
+											[T-{ticket.id.slice(0, 8)}] {ticket.title}
 										</span>
-										{i === 1 && (
-											<span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80">
-												Urgent
-											</span>
-										)}
 									</div>
 									<span className="text-xs text-muted-foreground line-clamp-1">
-										User reported that they cannot login when using the legacy
-										portal...
+										{ticket.description}
 									</span>
 								</div>
 								<div className="flex items-center gap-2">
-									<Circle className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-									<span className="text-sm">In Progress</span>
-								</div>
-								<div className="text-sm text-muted-foreground">High</div>
-								<div className="flex items-center gap-2">
-									<div className="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">
-										JD
-									</div>
-									<span className="text-sm text-muted-foreground">
-										John Doe
+									<Circle
+										className={`h-3 w-3 ${getStatusColor(ticket.status)}`}
+									/>
+									<span className="text-sm">
+										{getStatusLabel(ticket.status)}
 									</span>
 								</div>
-							</div>
+								<div className="flex items-center gap-2">
+									{ticket.assignees.length > 0 ? (
+										ticket.assignees.map((assignee) => (
+											<div
+												key={assignee.id}
+												className="flex items-center gap-2"
+											>
+												<Avatar className="h-6 w-6">
+													<AvatarImage src={assignee.avatarUrl ?? undefined} />
+													<AvatarFallback className="text-[10px]">
+														{assignee.name.slice(0, 2).toUpperCase()}
+													</AvatarFallback>
+												</Avatar>
+												<span className="text-sm text-muted-foreground">
+													{assignee.name}
+												</span>
+											</div>
+										))
+									) : (
+										<span className="text-sm text-muted-foreground">
+											Unassigned
+										</span>
+									)}
+								</div>
+							</button>
 						))}
+						{myTickets.length === 0 && (
+							<Empty>
+								<EmptyMedia>
+									<RocketMascot className="size-24" />
+								</EmptyMedia>
+								<EmptyHeader>
+									<EmptyTitle>No active work</EmptyTitle>
+									<EmptyDescription>
+										Your plate is clean! Check "All Tickets" to find something
+										new to pick up.
+									</EmptyDescription>
+								</EmptyHeader>
+								<EmptyContent>
+									<Button onClick={() => navigate({ to: "/tickets" })}>
+										Browse Requests
+									</Button>
+								</EmptyContent>
+							</Empty>
+						)}
 					</div>
 
-					<div className="border-t p-4 text-center text-xs text-muted-foreground">
-						Showing 6 of 24 tickets
+					<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
+						Showing {myTickets.length} tickets
 					</div>
 				</div>
 			</div>
