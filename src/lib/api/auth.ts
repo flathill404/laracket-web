@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { client } from "@/lib/api/client";
+import { getCookie } from "@/lib/cookie";
 
 const userSchema = z.object({
 	id: z.string(),
@@ -92,14 +93,14 @@ const updateAvatar = async (file: File) => {
 
 	// We use global fetch to support FormData and avoid JSON stringification from client.post
 	const BASE_URL = "http://localhost:8000/api";
-	const csrfToken = document.cookie.match(/(^| )XSRF-TOKEN=([^;]+)/)?.[2] || "";
+	const csrfToken = getCookie("XSRF-TOKEN") || "";
 
 	await fetch(`${BASE_URL}/user/avatar`, {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
 			"Key-Inflection": "camel",
-			"X-XSRF-TOKEN": decodeURIComponent(csrfToken),
+			"X-XSRF-TOKEN": csrfToken,
 		},
 		body: formData,
 		credentials: "include",
