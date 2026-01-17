@@ -22,6 +22,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets.$ticketId'
 import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams.$teamId.tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects.$projectId.tickets'
+import { Route as AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport } from './routes/_authenticated/teams.$teamId.tickets.$ticketId'
 import { Route as AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport } from './routes/_authenticated/projects.$projectId.tickets.$ticketId'
 
 const GuestRoute = GuestRouteImport.update({
@@ -90,6 +91,12 @@ const AuthenticatedProjectsProjectIdTicketsRoute =
     path: '/projects/$projectId/tickets',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedTeamsTeamIdTicketsTicketIdRoute =
+  AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport.update({
+    id: '/$ticketId',
+    path: '/$ticketId',
+    getParentRoute: () => AuthenticatedTeamsTeamIdTicketsRoute,
+  } as any)
 const AuthenticatedProjectsProjectIdTicketsTicketIdRoute =
   AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport.update({
     id: '/$ticketId',
@@ -108,8 +115,9 @@ export interface FileRoutesByFullPath {
   '/': typeof GuestIndexRoute
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
-  '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
+  '/teams/$teamId/tickets/$ticketId': typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -122,8 +130,9 @@ export interface FileRoutesByTo {
   '/': typeof GuestIndexRoute
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
-  '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
+  '/teams/$teamId/tickets/$ticketId': typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,8 +148,9 @@ export interface FileRoutesById {
   '/_guest/': typeof GuestIndexRoute
   '/_authenticated/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/_authenticated/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
-  '/_authenticated/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/_authenticated/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/_authenticated/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
+  '/_authenticated/teams/$teamId/tickets/$ticketId': typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
     | '/projects/$projectId/tickets/$ticketId'
+    | '/teams/$teamId/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/dashboard'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
     | '/projects/$projectId/tickets/$ticketId'
+    | '/teams/$teamId/tickets/$ticketId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -187,6 +199,7 @@ export interface FileRouteTypes {
     | '/_authenticated/projects/$projectId/tickets'
     | '/_authenticated/teams/$teamId/tickets'
     | '/_authenticated/projects/$projectId/tickets/$ticketId'
+    | '/_authenticated/teams/$teamId/tickets/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsProjectIdTicketsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/teams/$teamId/tickets/$ticketId': {
+      id: '/_authenticated/teams/$teamId/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/teams/$teamId/tickets/$ticketId'
+      preLoaderRoute: typeof AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport
+      parentRoute: typeof AuthenticatedTeamsTeamIdTicketsRoute
+    }
     '/_authenticated/projects/$projectId/tickets/$ticketId': {
       id: '/_authenticated/projects/$projectId/tickets/$ticketId'
       path: '/$ticketId'
@@ -323,13 +343,28 @@ const AuthenticatedProjectsProjectIdTicketsRouteWithChildren =
     AuthenticatedProjectsProjectIdTicketsRouteChildren,
   )
 
+interface AuthenticatedTeamsTeamIdTicketsRouteChildren {
+  AuthenticatedTeamsTeamIdTicketsTicketIdRoute: typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
+}
+
+const AuthenticatedTeamsTeamIdTicketsRouteChildren: AuthenticatedTeamsTeamIdTicketsRouteChildren =
+  {
+    AuthenticatedTeamsTeamIdTicketsTicketIdRoute:
+      AuthenticatedTeamsTeamIdTicketsTicketIdRoute,
+  }
+
+const AuthenticatedTeamsTeamIdTicketsRouteWithChildren =
+  AuthenticatedTeamsTeamIdTicketsRoute._addFileChildren(
+    AuthenticatedTeamsTeamIdTicketsRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyWorkRoute: typeof AuthenticatedMyWorkRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRouteWithChildren
   AuthenticatedProjectsProjectIdTicketsRoute: typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
-  AuthenticatedTeamsTeamIdTicketsRoute: typeof AuthenticatedTeamsTeamIdTicketsRoute
+  AuthenticatedTeamsTeamIdTicketsRoute: typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -339,7 +374,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedTicketsRoute: AuthenticatedTicketsRouteWithChildren,
   AuthenticatedProjectsProjectIdTicketsRoute:
     AuthenticatedProjectsProjectIdTicketsRouteWithChildren,
-  AuthenticatedTeamsTeamIdTicketsRoute: AuthenticatedTeamsTeamIdTicketsRoute,
+  AuthenticatedTeamsTeamIdTicketsRoute:
+    AuthenticatedTeamsTeamIdTicketsRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

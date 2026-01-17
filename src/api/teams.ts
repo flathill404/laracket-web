@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { client } from "@/api/client";
+import { ticketsSchema } from "./tickets";
 
 export const teamSchema = z.object({
 	id: z.string(),
@@ -20,4 +21,16 @@ export const fetchTeams = async (userId: string) => {
 	const response = await client.get(`/users/${userId}/teams`);
 	const json = await response.json();
 	return teamsSchema.parse(json.data);
+};
+
+export const fetchTeam = async (teamId: string) => {
+	const response = await client.get(`/teams/${teamId}`);
+	const json = await response.json();
+	return teamSchema.parse(json.data);
+};
+
+export const fetchTeamTickets = async (teamId: string) => {
+	const response = await client.get(`/teams/${teamId}/tickets`);
+	const json = await response.json();
+	return ticketsSchema.parse(json.data);
 };
