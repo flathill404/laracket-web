@@ -6,7 +6,7 @@ const userSchema = z.object({
 	name: z.string(),
 	displayName: z.string().nullable().optional(), // Added display_name
 	email: z.email(),
-	avatorUrl: z.string().optional(),
+	avatarUrl: z.string().optional(),
 	twoFactorConfirmedAt: z.string().nullable().optional(),
 });
 
@@ -83,18 +83,18 @@ const updatePassword = async (
 };
 
 /**
- * Updates the user's avator.
- * @param file - The new avator file.
+ * Updates the user's avatar.
+ * @param file - The new avatar file.
  */
-const updateAvator = async (file: File) => {
+const updateAvatar = async (file: File) => {
 	const formData = new FormData();
-	formData.append("avator", file);
+	formData.append("avatar", file);
 
 	// We use global fetch to support FormData and avoid JSON stringification from client.post
 	const BASE_URL = "http://localhost:8000/api";
 	const csrfToken = document.cookie.match(/(^| )XSRF-TOKEN=([^;]+)/)?.[2] || "";
 
-	await fetch(`${BASE_URL}/user/avator`, {
+	await fetch(`${BASE_URL}/user/avatar`, {
 		method: "POST",
 		headers: {
 			Accept: "application/json",
@@ -107,11 +107,11 @@ const updateAvator = async (file: File) => {
 };
 
 /**
- * Deletes the user's avator.
+ * Deletes the user's avatar.
  */
-const deleteAvator = async () => {
-	// User said "avator" for "profile-photo".
-	await client.delete("/user/avator");
+const deleteAvatar = async () => {
+	// User said "avatar" for "profile-photo".
+	await client.delete("/user/avatar");
 };
 
 /**
@@ -189,8 +189,8 @@ export {
 	logout,
 	updateProfileInformation,
 	updatePassword,
-	updateAvator,
-	deleteAvator,
+	updateAvatar,
+	deleteAvatar,
 	// 2FA functions
 	enableTwoFactor,
 	disableTwoFactor,

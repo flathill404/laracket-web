@@ -91,7 +91,7 @@ export function ImageCropDialog({
 						return;
 					}
 					// Create a file from blob
-					const file = new File([blob], "avator.webp", {
+					const file = new File([blob], "avatar.webp", {
 						type: "image/webp",
 					});
 					resolve(file);
@@ -123,7 +123,7 @@ export function ImageCropDialog({
 				<DialogHeader>
 					<DialogTitle>Crop Image</DialogTitle>
 					<DialogDescription>
-						Adjust the image to fit the avator area.
+						Adjust the image to fit the avatar area.
 					</DialogDescription>
 				</DialogHeader>
 				<div className="relative h-64 w-full">

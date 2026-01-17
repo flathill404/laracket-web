@@ -16,8 +16,8 @@ import { FieldLabel } from "@/components/ui/field";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { useAuth } from "@/hooks/use-auth";
 import {
-	deleteAvator,
-	updateAvator,
+	deleteAvatar,
+	updateAvatar,
 	updateProfileInformation,
 } from "@/lib/api/auth";
 
@@ -39,28 +39,28 @@ export function ProfileForm() {
 		},
 	});
 
-	const updateAvatorMutation = useMutation({
-		mutationFn: updateAvator,
+	const updateAvatarMutation = useMutation({
+		mutationFn: updateAvatar,
 		onSuccess: () => {
-			toast.success("Avator updated");
+			toast.success("Avatar updated");
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 		onError: () => {
-			toast.error("Failed to update avator");
+			toast.error("Failed to update avatar");
 		},
 	});
 
-	const deleteAvatorMutation = useMutation({
-		mutationFn: deleteAvator,
+	const deleteAvatarMutation = useMutation({
+		mutationFn: deleteAvatar,
 		onSuccess: () => {
-			toast.success("Avator deleted");
+			toast.success("Avatar deleted");
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 			if (fileInputRef.current) {
 				fileInputRef.current.value = "";
 			}
 		},
 		onError: () => {
-			toast.error("Failed to delete avator");
+			toast.error("Failed to delete avatar");
 		},
 	});
 
@@ -93,12 +93,12 @@ export function ProfileForm() {
 	};
 
 	const handleCropComplete = async (croppedFile: File) => {
-		await updateAvatorMutation.mutateAsync(croppedFile);
+		await updateAvatarMutation.mutateAsync(croppedFile);
 	};
 
-	const handleDeleteAvator = async () => {
-		if (confirm("Are you sure you want to delete your avator?")) {
-			await deleteAvatorMutation.mutateAsync();
+	const handleDeleteAvatar = async () => {
+		if (confirm("Are you sure you want to delete your avatar?")) {
+			await deleteAvatarMutation.mutateAsync();
 		}
 	};
 
@@ -111,36 +111,36 @@ export function ProfileForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-6">
-				{/* Avator Section */}
+				{/* Avatar Section */}
 				<div className="flex items-center gap-6">
 					<div className="relative">
 						<Avatar className="h-20 w-20">
-							<AvatarImage src={user?.avatorUrl} alt={user?.name} />
+							<AvatarImage src={user?.avatarUrl} alt={user?.name} />
 							<AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
 						</Avatar>
-						{user?.avatorUrl && (
+						{user?.avatarUrl && (
 							<Button
 								variant="destructive"
 								size="icon"
 								className="absolute -right-2 -top-2 h-6 w-6 rounded-full shadow-sm"
-								onClick={handleDeleteAvator}
-								disabled={deleteAvatorMutation.isPending}
+								onClick={handleDeleteAvatar}
+								disabled={deleteAvatarMutation.isPending}
 							>
 								<X className="h-3 w-3" />
-								<span className="sr-only">Delete avator</span>
+								<span className="sr-only">Delete avatar</span>
 							</Button>
 						)}
 					</div>
 					<div className="flex flex-col gap-2">
-						<FieldLabel>Avator</FieldLabel>
+						<FieldLabel>Avatar</FieldLabel>
 						<div className="flex items-center gap-2">
 							<Button
 								variant="outline"
 								size="sm"
 								onClick={() => fileInputRef.current?.click()}
-								disabled={updateAvatorMutation.isPending}
+								disabled={updateAvatarMutation.isPending}
 							>
-								{updateAvatorMutation.isPending
+								{updateAvatarMutation.isPending
 									? "Uploading..."
 									: "Select New Photo"}
 							</Button>

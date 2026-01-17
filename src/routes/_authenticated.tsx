@@ -93,8 +93,10 @@ function AuthLayout() {
 					</Button>
 					<div className="h-8 w-8 rounded-full bg-muted">
 						<Avatar className="h-8 w-8">
-							<AvatarImage src="/placeholder-user.jpg" alt="User" />
-							<AvatarFallback>U</AvatarFallback>
+							<AvatarImage src={user.avatarUrl} alt={user.name} />
+							<AvatarFallback>
+								{user.name.charAt(0).toUpperCase()}
+							</AvatarFallback>
 						</Avatar>
 					</div>
 				</div>
