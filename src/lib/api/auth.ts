@@ -4,7 +4,7 @@ import { client } from "@/lib/api/client";
 const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	displayName: z.string().nullable().optional(), // Added display_name
+	displayName: z.string().nullable().optional(), // Added displayName
 	email: z.email(),
 	avatarUrl: z.string().optional(),
 	twoFactorConfirmedAt: z.string().nullable().optional(),

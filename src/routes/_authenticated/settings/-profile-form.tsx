@@ -66,7 +66,7 @@ export function ProfileForm() {
 
 	const form = useAppForm({
 		defaultValues: {
-			display_name: user?.display_name ?? "",
+			displayName: user?.displayName ?? "",
 			email: user?.email ?? "",
 		},
 		onSubmit: async ({ value }) => {
@@ -178,7 +178,7 @@ export function ProfileForm() {
 						</div>
 
 						<form.AppField
-							name="display_name"
+							name="displayName"
 							children={(field) => (
 								<field.InputField
 									label="Display Name"
