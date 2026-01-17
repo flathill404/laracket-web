@@ -20,9 +20,9 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedMyWorkRouteImport } from './routes/_authenticated/my-work'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets.$ticketId'
-import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams.$teamId.tickets'
+import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams/$teamId/tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects/$projectId/tickets'
-import { Route as AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport } from './routes/_authenticated/teams.$teamId.tickets.$ticketId'
+import { Route as AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport } from './routes/_authenticated/teams/$teamId/tickets.$ticketId'
 import { Route as AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport } from './routes/_authenticated/projects/$projectId/tickets.$ticketId'
 
 const GuestRoute = GuestRouteImport.update({
