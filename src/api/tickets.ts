@@ -20,6 +20,7 @@ const assigneeSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	displayName: z.string(),
+	avatarUrl: z.string().nullish(),
 });
 const reviewerSchema = z.object({
 	id: z.string(),

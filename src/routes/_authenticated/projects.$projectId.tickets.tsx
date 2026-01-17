@@ -1,7 +1,10 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Circle } from "lucide-react";
-import { fetchProjectTickets } from "@/api";
+import { Circle, Plus, Search } from "lucide-react";
+import { fetchProject, fetchProjectTickets } from "@/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // Helper to define types for the status based on the API
 const getStatusColor = (status: string) => {
@@ -34,27 +37,57 @@ const ticketsQuery = (projectId: string) =>
 		queryFn: () => fetchProjectTickets(projectId),
 	});
 
+const projectQuery = (projectId: string) =>
+	queryOptions({
+		queryKey: ["projects", projectId],
+		queryFn: () => fetchProject(projectId),
+	});
+
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets",
 )({
-	loader: ({ context: { queryClient }, params: { projectId } }) =>
-		queryClient.ensureQueryData(ticketsQuery(projectId)),
+	loader: async ({ context: { queryClient }, params: { projectId } }) => {
+		await Promise.all([
+			queryClient.ensureQueryData(ticketsQuery(projectId)),
+			queryClient.ensureQueryData(projectQuery(projectId)),
+		]);
+	},
 	component: ProjectDetail,
 });
 
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
 	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId));
+	const { data: project } = useSuspenseQuery(projectQuery(projectId));
 
 	return (
 		<div className="flex flex-col h-full bg-background">
+			{/* Page Header */}
+			<div className="flex items-center justify-between border-b px-6 py-5">
+				<h1 className="text-2xl font-semibold tracking-tight">
+					{project.name}
+				</h1>
+				<div className="flex items-center gap-2">
+					<div className="relative w-64">
+						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Input
+							type="search"
+							placeholder="Search tickets..."
+							className="h-9 w-full pl-9"
+						/>
+					</div>
+					<Button>
+						<Plus className="mr-2 h-4 w-4" /> New Ticket
+					</Button>
+				</div>
+			</div>
+
 			<div className="flex-1 overflow-auto bg-muted/5 p-6">
 				<div className="rounded-xl border bg-card text-card-foreground shadow-sm">
 					{/* Table Header */}
-					<div className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground">
+					<div className="grid grid-cols-[1fr_100px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground">
 						<div>Subject</div>
 						<div>Status</div>
-						<div>Priority</div>
 						<div>Assignee</div>
 					</div>
 
@@ -63,7 +96,7 @@ function ProjectDetail() {
 						{tickets.map((ticket) => (
 							<div
 								key={ticket.id}
-								className="grid grid-cols-[1fr_100px_140px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors"
+								className="grid grid-cols-[1fr_100px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors"
 							>
 								<div className="flex flex-col gap-1">
 									<div className="flex items-center gap-2">
@@ -83,8 +116,6 @@ function ProjectDetail() {
 										{getStatusLabel(ticket.status)}
 									</span>
 								</div>
-								{/* TODO: Add priority to API/Schema */}
-								<div className="text-sm text-muted-foreground">-</div>
 								<div className="flex items-center gap-2">
 									{ticket.assignees.length > 0 ? (
 										ticket.assignees.map((assignee) => (
@@ -92,9 +123,12 @@ function ProjectDetail() {
 												key={assignee.id}
 												className="flex items-center gap-2"
 											>
-												<div className="h-6 w-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">
-													{assignee.name.slice(0, 2).toUpperCase()}
-												</div>
+												<Avatar className="h-6 w-6">
+													<AvatarImage src={assignee.avatarUrl} />
+													<AvatarFallback className="text-[10px]">
+														{assignee.name.slice(0, 2).toUpperCase()}
+													</AvatarFallback>
+												</Avatar>
 												<span className="text-sm text-muted-foreground">
 													{assignee.name}
 												</span>
