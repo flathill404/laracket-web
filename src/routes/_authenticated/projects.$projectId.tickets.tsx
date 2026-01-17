@@ -124,7 +124,7 @@ function ProjectDetail() {
 												className="flex items-center gap-2"
 											>
 												<Avatar className="h-6 w-6">
-													<AvatarImage src={assignee.avatarUrl} />
+													<AvatarImage src={assignee.avatarUrl ?? undefined} />
 													<AvatarFallback className="text-[10px]">
 														{assignee.name.slice(0, 2).toUpperCase()}
 													</AvatarFallback>
