@@ -2,8 +2,17 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Circle, Plus, Search } from "lucide-react";
 import { fetchProject, fetchProjectTickets } from "@/api";
+import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 
 // Helper to define types for the status based on the API
@@ -143,9 +152,23 @@ function ProjectDetail() {
 							</div>
 						))}
 						{tickets.length === 0 && (
-							<div className="p-8 text-center text-muted-foreground">
-								No tickets found for this project.
-							</div>
+							<Empty>
+								<EmptyMedia>
+									<RocketMascot className="size-24" />
+								</EmptyMedia>
+								<EmptyHeader>
+									<EmptyTitle>No tickets yet!</EmptyTitle>
+									<EmptyDescription>
+										Everything is looking clean. Ready to blast off with a new
+										task?
+									</EmptyDescription>
+								</EmptyHeader>
+								<EmptyContent>
+									<Button>
+										<Plus className="mr-2 h-4 w-4" /> Create your first ticket
+									</Button>
+								</EmptyContent>
+							</Empty>
 						)}
 					</div>
 
