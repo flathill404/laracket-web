@@ -1,6 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+	confirmTwoFactor,
+	disableTwoFactor,
+	enableTwoFactor,
+	fetchTwoFactorQrCode,
+	fetchTwoFactorRecoveryCodes,
+} from "@/api/auth";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -24,13 +31,6 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
-import {
-	confirmTwoFactor,
-	disableTwoFactor,
-	enableTwoFactor,
-	fetchTwoFactorQrCode,
-	fetchTwoFactorRecoveryCodes,
-} from "@/lib/api/auth";
 
 export function TwoFactorForm() {
 	const { user } = useAuth();

@@ -1,4 +1,4 @@
-import { getCookie } from "../cookie";
+import { getCookie } from "../lib/cookie";
 import {
 	ForbiddenError,
 	NotFoundError,

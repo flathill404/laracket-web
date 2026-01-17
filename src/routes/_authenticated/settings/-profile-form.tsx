@@ -2,6 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+	deleteAvatar,
+	updateAvatar,
+	updateProfileInformation,
+} from "@/api/auth";
 import { ImageCropDialog } from "@/components/image-crop-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -15,11 +20,6 @@ import {
 import { FieldLabel } from "@/components/ui/field";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { useAuth } from "@/hooks/use-auth";
-import {
-	deleteAvatar,
-	updateAvatar,
-	updateProfileInformation,
-} from "@/lib/api/auth";
 
 export function ProfileForm() {
 	const { user } = useAuth();

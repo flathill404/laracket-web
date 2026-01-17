@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { updatePassword } from "@/api/auth";
 import {
 	Card,
 	CardContent,
@@ -8,7 +9,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
-import { updatePassword } from "@/lib/api/auth";
 
 export function PasswordForm() {
 	const updatePasswordMutation = useMutation({

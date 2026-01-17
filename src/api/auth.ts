@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { client } from "@/lib/api/client";
+import { client } from "@/api/client";
 import { getCookie } from "@/lib/cookie";
 
 const userSchema = z.object({
