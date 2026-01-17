@@ -8,7 +8,9 @@
 		"serve": "bun --bun vite preview",
 		"format": "bunx biome format --write",
 		"lint": "bunx biome lint --write",
-		"check": "bunx biome check --write"
+		"check": "bunx biome check --write",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run --passWithNoTests"
 	},
 	"dependencies": {
 		"@faker-js/faker": "^10.0.0",
