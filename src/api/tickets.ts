@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { client } from "./client";
 
 enum TicketStatus {
 	Open = "open",
@@ -28,7 +29,7 @@ const reviewerSchema = z.object({
 	displayName: z.string(),
 });
 
-const ticketSchema = z.object({
+export const ticketSchema = z.object({
 	id: z.string(),
 	title: z.string(),
 	description: z.string(),
@@ -40,3 +41,9 @@ const ticketSchema = z.object({
 });
 
 export const ticketsSchema = z.array(ticketSchema);
+
+export const fetchTicket = async (ticketId: string) => {
+	const response = await client.get(`/tickets/${ticketId}`);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
