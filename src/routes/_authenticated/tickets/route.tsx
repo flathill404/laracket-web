@@ -1,7 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
-import * as React from "react";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { Plus, Search } from "lucide-react";
 import { fetchUserTickets } from "@/api";
 import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { TicketList } from "@/components/tickets/ticket-list";
@@ -14,6 +13,7 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { userQueryOptions } from "@/lib/auth";
 
@@ -23,17 +23,17 @@ const userTicketsQuery = (userId: string) =>
 		queryFn: () => fetchUserTickets(userId),
 	});
 
-export const Route = createFileRoute("/_authenticated/my-work")({
+export const Route = createFileRoute("/_authenticated/tickets")({
 	loader: async ({ context: { queryClient } }) => {
 		const user = await queryClient.ensureQueryData(userQueryOptions);
 		if (user) {
 			await queryClient.ensureQueryData(userTicketsQuery(user.id));
 		}
 	},
-	component: MyWork,
+	component: AllTickets,
 });
 
-function MyWork() {
+function AllTickets() {
 	const navigate = useNavigate();
 	const { user } = useAuth();
 	if (!user) {
@@ -41,34 +41,32 @@ function MyWork() {
 	}
 
 	// We can safely assume user is defined here because of the route protection
-	const { data: allTickets } = useSuspenseQuery(userTicketsQuery(user.id));
-
-	// Filter tickets where user is assignee or reviewer
-	const myTickets = React.useMemo(() => {
-		return allTickets.filter((ticket) => {
-			const isAssignee = ticket.assignees.some((a) => a.id === user.id);
-			const isReviewer = ticket.reviewers.some((r) => r.id === user.id);
-			return isAssignee || isReviewer;
-		});
-	}, [allTickets, user]);
+	const { data: tickets } = useSuspenseQuery(userTicketsQuery(user.id));
 
 	return (
 		<div className="flex flex-col h-full bg-background">
 			{/* Page Header */}
 			<div className="flex items-center justify-between border-b px-6 py-5 shrink-0">
-				<h1 className="text-2xl font-semibold tracking-tight">My Work</h1>
-				<Button>
-					<Plus className="mr-2 h-4 w-4" /> New Ticket
-				</Button>
+				<h1 className="text-2xl font-semibold tracking-tight">All Tickets</h1>
+				<div className="flex items-center gap-2">
+					<div className="relative w-64">
+						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Input
+							type="search"
+							placeholder="Search tickets..."
+							className="h-9 w-full pl-9"
+						/>
+					</div>
+					<Button>
+						<Plus className="mr-2 h-4 w-4" /> New Ticket
+					</Button>
+				</div>
 			</div>
 
-			{/* Content List View */}
 			<TicketList
-				tickets={myTickets}
+				tickets={tickets}
 				onTicketClick={(ticket) =>
 					navigate({
-						// Relative path that should work for general ticket viewing, or specific route?
-						// In the original file it was: "/tickets/$ticketId"
 						to: "/tickets/$ticketId",
 						params: { ticketId: ticket.id },
 					})
@@ -79,20 +77,21 @@ function MyWork() {
 							<RocketMascot className="size-24" />
 						</EmptyMedia>
 						<EmptyHeader>
-							<EmptyTitle>No active work</EmptyTitle>
+							<EmptyTitle>No tickets yet!</EmptyTitle>
 							<EmptyDescription>
-								Your plate is clean! Check "All Tickets" to find something new
-								to pick up.
+								Your ticket queue is empty. Time to relax or start something
+								new!
 							</EmptyDescription>
 						</EmptyHeader>
 						<EmptyContent>
-							<Button onClick={() => navigate({ to: "/tickets" })}>
-								Browse Requests
+							<Button>
+								<Plus className="mr-2 h-4 w-4" /> Create your first ticket
 							</Button>
 						</EmptyContent>
 					</Empty>
 				}
 			/>
+			<Outlet />
 		</div>
 	);
 }

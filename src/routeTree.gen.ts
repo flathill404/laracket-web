@@ -15,11 +15,11 @@ import { Route as GuestIndexRouteImport } from './routes/_guest/index'
 import { Route as GuestWipRouteImport } from './routes/_guest/wip'
 import { Route as GuestTwoFactorChallengeRouteImport } from './routes/_guest/two-factor-challenge'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
-import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMyWorkRouteImport } from './routes/_authenticated/my-work'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets.$ticketId'
+import { Route as AuthenticatedTicketsRouteRouteImport } from './routes/_authenticated/tickets/route'
+import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets/$ticketId'
 import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams/$teamId/tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects/$projectId/tickets'
 import { Route as AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport } from './routes/_authenticated/teams/$teamId/tickets.$ticketId'
@@ -53,11 +53,6 @@ const GuestLoginRoute = GuestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => GuestRoute,
 } as any)
-const AuthenticatedTicketsRoute = AuthenticatedTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -73,11 +68,17 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTicketsRouteRoute =
+  AuthenticatedTicketsRouteRouteImport.update({
+    id: '/tickets',
+    path: '/tickets',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedTicketsTicketIdRoute =
   AuthenticatedTicketsTicketIdRouteImport.update({
     id: '/$ticketId',
     path: '/$ticketId',
-    getParentRoute: () => AuthenticatedTicketsRoute,
+    getParentRoute: () => AuthenticatedTicketsRouteRoute,
   } as any)
 const AuthenticatedTeamsTeamIdTicketsRoute =
   AuthenticatedTeamsTeamIdTicketsRouteImport.update({
@@ -105,10 +106,10 @@ const AuthenticatedProjectsProjectIdTicketsTicketIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/tickets': typeof AuthenticatedTicketsRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
@@ -120,10 +121,10 @@ export interface FileRoutesByFullPath {
   '/teams/$teamId/tickets/$ticketId': typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
+  '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/tickets': typeof AuthenticatedTicketsRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
@@ -138,10 +139,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_guest': typeof GuestRouteWithChildren
+  '/_authenticated/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/my-work': typeof AuthenticatedMyWorkRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/_authenticated/tickets': typeof AuthenticatedTicketsRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/_guest/wip': typeof GuestWipRoute
@@ -155,10 +156,10 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/tickets'
     | '/dashboard'
     | '/my-work'
     | '/settings'
-    | '/tickets'
     | '/login'
     | '/two-factor-challenge'
     | '/wip'
@@ -170,10 +171,10 @@ export interface FileRouteTypes {
     | '/teams/$teamId/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/tickets'
     | '/dashboard'
     | '/my-work'
     | '/settings'
-    | '/tickets'
     | '/login'
     | '/two-factor-challenge'
     | '/wip'
@@ -187,10 +188,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/_guest'
+    | '/_authenticated/tickets'
     | '/_authenticated/dashboard'
     | '/_authenticated/my-work'
     | '/_authenticated/settings'
-    | '/_authenticated/tickets'
     | '/_guest/login'
     | '/_guest/two-factor-challenge'
     | '/_guest/wip'
@@ -251,13 +252,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRoute
     }
-    '/_authenticated/tickets': {
-      id: '/_authenticated/tickets'
-      path: '/tickets'
-      fullPath: '/tickets'
-      preLoaderRoute: typeof AuthenticatedTicketsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -279,12 +273,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/tickets': {
+      id: '/_authenticated/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AuthenticatedTicketsRouteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/tickets/$ticketId': {
       id: '/_authenticated/tickets/$ticketId'
       path: '/$ticketId'
       fullPath: '/tickets/$ticketId'
       preLoaderRoute: typeof AuthenticatedTicketsTicketIdRouteImport
-      parentRoute: typeof AuthenticatedTicketsRoute
+      parentRoute: typeof AuthenticatedTicketsRouteRoute
     }
     '/_authenticated/teams/$teamId/tickets': {
       id: '/_authenticated/teams/$teamId/tickets'
@@ -317,16 +318,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedTicketsRouteChildren {
+interface AuthenticatedTicketsRouteRouteChildren {
   AuthenticatedTicketsTicketIdRoute: typeof AuthenticatedTicketsTicketIdRoute
 }
 
-const AuthenticatedTicketsRouteChildren: AuthenticatedTicketsRouteChildren = {
-  AuthenticatedTicketsTicketIdRoute: AuthenticatedTicketsTicketIdRoute,
-}
+const AuthenticatedTicketsRouteRouteChildren: AuthenticatedTicketsRouteRouteChildren =
+  {
+    AuthenticatedTicketsTicketIdRoute: AuthenticatedTicketsTicketIdRoute,
+  }
 
-const AuthenticatedTicketsRouteWithChildren =
-  AuthenticatedTicketsRoute._addFileChildren(AuthenticatedTicketsRouteChildren)
+const AuthenticatedTicketsRouteRouteWithChildren =
+  AuthenticatedTicketsRouteRoute._addFileChildren(
+    AuthenticatedTicketsRouteRouteChildren,
+  )
 
 interface AuthenticatedProjectsProjectIdTicketsRouteChildren {
   AuthenticatedProjectsProjectIdTicketsTicketIdRoute: typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
@@ -359,19 +363,19 @@ const AuthenticatedTeamsTeamIdTicketsRouteWithChildren =
   )
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedTicketsRouteRoute: typeof AuthenticatedTicketsRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyWorkRoute: typeof AuthenticatedMyWorkRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRouteWithChildren
   AuthenticatedProjectsProjectIdTicketsRoute: typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   AuthenticatedTeamsTeamIdTicketsRoute: typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedTicketsRouteRoute: AuthenticatedTicketsRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMyWorkRoute: AuthenticatedMyWorkRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedTicketsRoute: AuthenticatedTicketsRouteWithChildren,
   AuthenticatedProjectsProjectIdTicketsRoute:
     AuthenticatedProjectsProjectIdTicketsRouteWithChildren,
   AuthenticatedTeamsTeamIdTicketsRoute:
