@@ -21,6 +21,7 @@ import { Route as AuthenticatedMyWorkRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams.$teamId.tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects.$projectId.tickets'
+import { Route as AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport } from './routes/_authenticated/projects.$projectId.tickets.$ticketId'
 
 const GuestRoute = GuestRouteImport.update({
   id: '/_guest',
@@ -82,6 +83,12 @@ const AuthenticatedProjectsProjectIdTicketsRoute =
     path: '/projects/$projectId/tickets',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedProjectsProjectIdTicketsTicketIdRoute =
+  AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport.update({
+    id: '/$ticketId',
+    path: '/$ticketId',
+    getParentRoute: () => AuthenticatedProjectsProjectIdTicketsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -92,8 +99,9 @@ export interface FileRoutesByFullPath {
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
-  '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRoute
+  '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -104,8 +112,9 @@ export interface FileRoutesByTo {
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
-  '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRoute
+  '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -119,8 +128,9 @@ export interface FileRoutesById {
   '/_guest/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/_guest/wip': typeof GuestWipRoute
   '/_guest/': typeof GuestIndexRoute
-  '/_authenticated/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRoute
+  '/_authenticated/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/_authenticated/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRoute
+  '/_authenticated/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/'
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
+    | '/projects/$projectId/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/dashboard'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/'
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
+    | '/projects/$projectId/tickets/$ticketId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
     | '/_guest/'
     | '/_authenticated/projects/$projectId/tickets'
     | '/_authenticated/teams/$teamId/tickets'
+    | '/_authenticated/projects/$projectId/tickets/$ticketId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -254,15 +267,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsProjectIdTicketsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/projects/$projectId/tickets/$ticketId': {
+      id: '/_authenticated/projects/$projectId/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/projects/$projectId/tickets/$ticketId'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport
+      parentRoute: typeof AuthenticatedProjectsProjectIdTicketsRoute
+    }
   }
 }
+
+interface AuthenticatedProjectsProjectIdTicketsRouteChildren {
+  AuthenticatedProjectsProjectIdTicketsTicketIdRoute: typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
+}
+
+const AuthenticatedProjectsProjectIdTicketsRouteChildren: AuthenticatedProjectsProjectIdTicketsRouteChildren =
+  {
+    AuthenticatedProjectsProjectIdTicketsTicketIdRoute:
+      AuthenticatedProjectsProjectIdTicketsTicketIdRoute,
+  }
+
+const AuthenticatedProjectsProjectIdTicketsRouteWithChildren =
+  AuthenticatedProjectsProjectIdTicketsRoute._addFileChildren(
+    AuthenticatedProjectsProjectIdTicketsRouteChildren,
+  )
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyWorkRoute: typeof AuthenticatedMyWorkRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
-  AuthenticatedProjectsProjectIdTicketsRoute: typeof AuthenticatedProjectsProjectIdTicketsRoute
+  AuthenticatedProjectsProjectIdTicketsRoute: typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   AuthenticatedTeamsTeamIdTicketsRoute: typeof AuthenticatedTeamsTeamIdTicketsRoute
 }
 
@@ -272,7 +307,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedProjectsProjectIdTicketsRoute:
-    AuthenticatedProjectsProjectIdTicketsRoute,
+    AuthenticatedProjectsProjectIdTicketsRouteWithChildren,
   AuthenticatedTeamsTeamIdTicketsRoute: AuthenticatedTeamsTeamIdTicketsRoute,
 }
 

@@ -1,18 +1,10 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Circle, Plus, Search } from "lucide-react";
-import { Suspense, useState } from "react";
-import { fetchProject, fetchProjectTickets, fetchTicket } from "@/api";
+import { fetchProject, fetchProjectTickets } from "@/api";
 import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
 import {
 	Empty,
 	EmptyContent,
@@ -60,12 +52,6 @@ const projectQuery = (projectId: string) =>
 		queryFn: () => fetchProject(projectId),
 	});
 
-const ticketQuery = (ticketId: string) =>
-	queryOptions({
-		queryKey: ["tickets", ticketId],
-		queryFn: () => fetchTicket(ticketId),
-	});
-
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets",
 )({
@@ -78,79 +64,11 @@ export const Route = createFileRoute(
 	component: ProjectDetail,
 });
 
-function TicketDetailDialog({
-	ticketId,
-	open,
-	onOpenChange,
-}: {
-	ticketId: string;
-	open: boolean;
-	onOpenChange: (open: boolean) => void;
-}) {
-	const { data: ticket } = useSuspenseQuery(ticketQuery(ticketId));
-
-	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-2xl">
-				<DialogHeader>
-					<div className="flex items-center gap-2 mb-2">
-						<span className="text-sm font-medium text-muted-foreground mr-auto">
-							[T-{ticket.id.slice(0, 8)}]
-						</span>
-						<div className="flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-							<Circle className={`h-2 w-2 ${getStatusColor(ticket.status)}`} />
-							{getStatusLabel(ticket.status)}
-						</div>
-					</div>
-					<DialogTitle className="text-xl">{ticket.title}</DialogTitle>
-					<DialogDescription>
-						Created at {new Date(ticket.createdAt).toLocaleDateString()}
-					</DialogDescription>
-				</DialogHeader>
-
-				<div className="grid gap-6 py-4">
-					<div className="space-y-4">
-						<div className="prose prose-sm max-w-none text-muted-foreground">
-							{ticket.description}
-						</div>
-					</div>
-
-					<div className="space-y-2">
-						<h4 className="text-sm font-medium leading-none">Assignees</h4>
-						<div className="flex flex-wrap gap-2">
-							{ticket.assignees.length > 0 ? (
-								ticket.assignees.map((assignee) => (
-									<div
-										key={assignee.id}
-										className="flex items-center gap-2 rounded-full border px-3 py-1"
-									>
-										<Avatar className="h-5 w-5">
-											<AvatarImage src={assignee.avatarUrl ?? undefined} />
-											<AvatarFallback className="text-[10px]">
-												{assignee.name.slice(0, 2).toUpperCase()}
-											</AvatarFallback>
-										</Avatar>
-										<span className="text-sm">{assignee.name}</span>
-									</div>
-								))
-							) : (
-								<span className="text-sm text-muted-foreground">
-									Unassigned
-								</span>
-							)}
-						</div>
-					</div>
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
-}
-
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
+	const navigate = useNavigate();
 	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId));
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
-	const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
 
 	return (
 		<div className="flex flex-col h-full bg-background">
@@ -188,7 +106,12 @@ function ProjectDetail() {
 						{tickets.map((ticket) => (
 							<button
 								key={ticket.id}
-								onClick={() => setSelectedTicketId(ticket.id)}
+								onClick={() =>
+									navigate({
+										to: ticket.id,
+										params: { projectId, ticketId: ticket.id },
+									})
+								}
 								type="button"
 								className="grid w-full text-left grid-cols-[1fr_100px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors cursor-pointer focus:outline-none focus:bg-muted/50"
 							>
@@ -262,15 +185,7 @@ function ProjectDetail() {
 					</div>
 				</div>
 			</div>
-			{selectedTicketId && (
-				<Suspense fallback={null}>
-					<TicketDetailDialog
-						ticketId={selectedTicketId}
-						open={!!selectedTicketId}
-						onOpenChange={(open) => !open && setSelectedTicketId(null)}
-					/>
-				</Suspense>
-			)}
+			<Outlet />
 		</div>
 	);
 }
