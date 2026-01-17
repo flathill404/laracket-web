@@ -93,7 +93,7 @@ export function TwoFactorForm() {
 		},
 	});
 
-	const isEnabled = !!user?.two_factor_confirmed_at;
+	const isEnabled = !!user?.twoFactorConfirmedAt;
 
 	const handleConfirm = () => {
 		if (confirmationCode.length === 6) {
@@ -216,9 +216,10 @@ export function TwoFactorForm() {
 										application or enter the setup key and provide the generated
 										OTP code.
 									</p>
-									<div
+									<img
 										className="p-4 bg-white w-fit rounded-lg"
-										dangerouslySetInnerHTML={{ __html: qrCodeSvg }}
+										src={`data:image/svg+xml;utf8,${encodeURIComponent(qrCodeSvg)}`}
+										alt="2FA QR Code"
 									/>
 								</div>
 
