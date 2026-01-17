@@ -63,7 +63,7 @@ function ProjectDetail() {
 	return (
 		<div className="flex flex-col h-full bg-background">
 			{/* Page Header */}
-			<div className="flex items-center justify-between border-b px-6 py-5">
+			<div className="flex items-center justify-between border-b px-6 py-5 shrink-0">
 				<h1 className="text-2xl font-semibold tracking-tight">
 					{project.name}
 				</h1>
@@ -82,17 +82,17 @@ function ProjectDetail() {
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-auto bg-muted/5 p-6">
-				<div className="rounded-xl border bg-card text-card-foreground shadow-sm">
+			<div className="flex-1 overflow-hidden bg-muted/5 p-6">
+				<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
 					{/* Table Header */}
-					<div className="grid grid-cols-[1fr_100px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground">
+					<div className="grid grid-cols-[1fr_100px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground bg-muted/30">
 						<div>Subject</div>
 						<div>Status</div>
 						<div>Assignee</div>
 					</div>
 
 					{/* Ticket Rows */}
-					<div className="divide-y">
+					<div className="flex-1 overflow-auto divide-y">
 						{tickets.map((ticket) => (
 							<div
 								key={ticket.id}
@@ -149,7 +149,7 @@ function ProjectDetail() {
 						)}
 					</div>
 
-					<div className="border-t p-4 text-center text-xs text-muted-foreground">
+					<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
 						Showing {tickets.length} tickets
 					</div>
 				</div>
