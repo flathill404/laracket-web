@@ -3,12 +3,12 @@ import { Circle } from "lucide-react";
 import { fetchTicket } from "@/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+} from "@/components/ui/sheet";
 
 // Helper to define types for the status based on the API
 const getStatusColor = (status: string) => {
@@ -41,23 +41,23 @@ const ticketQuery = (ticketId: string) =>
 		queryFn: () => fetchTicket(ticketId),
 	});
 
-export interface TicketDetailDialogProps {
+export interface TicketDetailSheetProps {
 	ticketId: string;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 }
 
-export function TicketDetailDialog({
+export function TicketDetailSheet({
 	ticketId,
 	open,
 	onOpenChange,
-}: TicketDetailDialogProps) {
+}: TicketDetailSheetProps) {
 	const { data: ticket } = useSuspenseQuery(ticketQuery(ticketId));
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-2xl">
-				<DialogHeader>
+		<Sheet open={open} onOpenChange={onOpenChange}>
+			<SheetContent side="right" className="sm:max-w-2xl w-full">
+				<SheetHeader>
 					<div className="flex items-center gap-2 mb-2">
 						<span className="text-sm font-medium text-muted-foreground mr-auto">
 							[T-{ticket.id.slice(0, 8)}]
@@ -67,11 +67,11 @@ export function TicketDetailDialog({
 							{getStatusLabel(ticket.status)}
 						</div>
 					</div>
-					<DialogTitle className="text-xl">{ticket.title}</DialogTitle>
-					<DialogDescription>
+					<SheetTitle className="text-xl">{ticket.title}</SheetTitle>
+					<SheetDescription>
 						Created at {new Date(ticket.createdAt).toLocaleDateString()}
-					</DialogDescription>
-				</DialogHeader>
+					</SheetDescription>
+				</SheetHeader>
 
 				<div className="grid gap-6 py-4">
 					<div className="space-y-4">
@@ -106,7 +106,7 @@ export function TicketDetailDialog({
 						</div>
 					</div>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</SheetContent>
+		</Sheet>
 	);
 }

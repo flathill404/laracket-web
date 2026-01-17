@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { fetchTicket } from "@/api";
-import { TicketDetailDialog } from "@/components/ticket-detail-dialog";
+import { TicketDetailSheet } from "@/components/ticket-detail-sheet";
 
 // Helper to define types for the status based on the API
 const ticketQuery = (ticketId: string) =>
@@ -31,7 +31,7 @@ function TicketDetailRoute() {
 	};
 
 	return (
-		<TicketDetailDialog
+		<TicketDetailSheet
 			ticketId={ticketId}
 			open={true}
 			onOpenChange={handleOpenChange}
