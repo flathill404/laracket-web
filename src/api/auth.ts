@@ -2,7 +2,7 @@ import { z } from "zod";
 import { client } from "@/api/client";
 import { getCookie } from "@/lib/cookie";
 
-const userSchema = z.object({
+export const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	displayName: z.string().nullable().optional(), // Added displayName
