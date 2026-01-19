@@ -68,6 +68,7 @@ function LoginPage() {
 						</CardHeader>
 						<CardContent>
 							<form
+								noValidate
 								onSubmit={(e) => {
 									e.preventDefault();
 									form.handleSubmit();
