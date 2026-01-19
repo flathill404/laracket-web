@@ -24,7 +24,7 @@ function InputField({
 		<Field>
 			<FieldLabel
 				htmlFor={field.name}
-				className={hasError ? "text-red-500" : ""}
+				className={hasError ? "text-red-600" : ""}
 			>
 				{label}
 			</FieldLabel>
@@ -40,9 +40,7 @@ function InputField({
 				className={hasError ? "border-red-500 focus-visible:ring-red-500" : ""}
 			/>
 
-			{hasError && (
-				<FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-			)}
+			{hasError && <FieldError errors={field.state.meta.errors} />}
 		</Field>
 	);
 }
@@ -65,14 +63,12 @@ function CheckboxField({ label }: { label: string }) {
 			/>
 			<FieldLabel
 				htmlFor={field.name}
-				className={hasError ? "text-red-500" : ""}
+				className={hasError ? "text-red-600" : ""}
 			>
 				{label}
 			</FieldLabel>
 
-			{hasError && (
-				<FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-			)}
+			{hasError && <FieldError errors={field.state.meta.errors} />}
 		</Field>
 	);
 }
