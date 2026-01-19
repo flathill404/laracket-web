@@ -1,10 +1,10 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
 import { zocker } from "zocker";
+import { z } from "zod";
 import { userSchema } from "@/api/auth";
 import { projectSchema } from "@/api/projects";
 import { teamSchema } from "@/api/teams";
 import { ticketSchema, ticketsSchema } from "@/api/tickets";
-import { z } from "zod";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
