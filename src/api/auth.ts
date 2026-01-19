@@ -28,7 +28,7 @@ const loginInputSchema = z.object({
 });
 
 const loginOutputSchema = z.object({
-	two_factor: z.boolean(),
+	twoFactor: z.boolean(),
 });
 
 /**
@@ -52,9 +52,8 @@ const logout = async () => {
 };
 
 const updateProfileInformationInputSchema = z.object({
-	// name: z.string(), // Removed name as it is fixed
 	displayName: z.string(),
-	email: z.string().email(),
+	email: z.email(),
 });
 
 /**
@@ -68,9 +67,9 @@ const updateProfileInformation = async (
 };
 
 const updatePasswordInputSchema = z.object({
-	current_password: z.string(),
+	currentPassword: z.string(),
 	password: z.string().min(8),
-	password_confirmation: z.string().min(8),
+	passwordConfirmation: z.string().min(8),
 });
 
 /**
@@ -171,7 +170,7 @@ const confirmTwoFactor = async (
 
 const twoFactorChallengeInputSchema = z.object({
 	code: z.string().optional(),
-	recovery_code: z.string().optional(),
+	recoveryCode: z.string().optional(),
 });
 
 /**

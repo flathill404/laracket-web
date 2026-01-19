@@ -23,16 +23,16 @@ export function PasswordForm() {
 
 	const form = useAppForm({
 		defaultValues: {
-			current_password: "",
+			currentPassword: "",
 			password: "",
-			password_confirmation: "",
+			passwordConfirmation: "",
 		},
 		validators: {
 			onChange: ({ value }) => {
-				if (value.password !== value.password_confirmation) {
+				if (value.password !== value.passwordConfirmation) {
 					return {
 						fields: {
-							password_confirmation: "Passwords do not match",
+							passwordConfirmation: "Passwords do not match",
 						},
 					};
 				}
@@ -64,7 +64,7 @@ export function PasswordForm() {
 						className="space-y-4"
 					>
 						<form.AppField
-							name="current_password"
+							name="currentPassword"
 							children={(field) => (
 								<field.InputField
 									label="Current Password"
@@ -84,7 +84,7 @@ export function PasswordForm() {
 							)}
 						/>
 						<form.AppField
-							name="password_confirmation"
+							name="passwordConfirmation"
 							children={(field) => (
 								<field.InputField
 									label="Confirm Password"

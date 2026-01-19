@@ -47,7 +47,7 @@ function LoginPage() {
 		},
 		onSubmit: async ({ value }) => {
 			const res = await login(value);
-			if (res.two_factor) {
+			if (res.twoFactor) {
 				await router.navigate({ to: "/two-factor-challenge" });
 			} else {
 				await router.navigate({ to: search.redirect || "/dashboard" });
