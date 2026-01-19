@@ -269,7 +269,16 @@ function S3ObjectsPanel({
 								</TableRow>
 							) : (
 								data?.map((obj) => (
-									<TableRow key={obj.Key}>
+									<TableRow
+										key={obj.Key}
+										className="cursor-pointer hover:bg-muted"
+										onClick={() =>
+											window.open(
+												`http://localhost:4566/${bucket}/${obj.Key}`,
+												"_blank",
+											)
+										}
+									>
 										<TableCell className="font-mono">{obj.Key}</TableCell>
 										<TableCell>{obj.Size}</TableCell>
 										<TableCell>
@@ -292,7 +301,7 @@ function S3Panel({ onBack }: { onBack: () => void }) {
 	const { data, isLoading, error } = useQuery({
 		queryKey: ["localstack-s3-buckets"],
 		queryFn: async () => {
-			const res = await fetch("http://localhost:4566/");
+			const res = await fetch("http://s3.localhost.localstack.cloud:4566/");
 			if (!res.ok) throw new Error("Failed to fetch buckets");
 			const text = await res.text();
 			const doc = parseXml(text);
