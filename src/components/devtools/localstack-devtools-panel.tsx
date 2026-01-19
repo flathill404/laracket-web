@@ -28,7 +28,7 @@ type SesMessage = {
 		BccAddresses: string[];
 	};
 	Subject: string;
-	Body: {
+	Body?: {
 		text_part: string | null;
 		html_part: string | null;
 	};
@@ -89,7 +89,7 @@ function SesEmailDetail({
 					)}
 				</div>
 				<div className="border-t pt-4">
-					{message.Body.html_part ? (
+					{message.Body?.html_part ? (
 						<iframe
 							srcDoc={message.Body.html_part}
 							className="h-[400px] w-full border-none"
@@ -97,7 +97,7 @@ function SesEmailDetail({
 						/>
 					) : (
 						<pre className="whitespace-pre-wrap font-mono text-sm">
-							{message.Body.text_part}
+							{message.Body?.text_part ?? "No content"}
 						</pre>
 					)}
 				</div>
