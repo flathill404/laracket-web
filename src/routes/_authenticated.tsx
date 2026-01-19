@@ -44,12 +44,25 @@ export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: async ({ context, location }) => {
 		const queryClient = context.queryClient;
 		const user = await queryClient.ensureQueryData(userQueryOptions);
+
+		// If the user is not logged in, redirect to the login page
 		if (!user) {
 			throw redirect({
 				to: "/login",
 				search: { redirect: location.href },
 			});
 		}
+
+		// If the user is not verified, redirect to the verify-email page
+		if (!user.emailVerifiedAt) {
+			if (location.pathname !== "/verify-email") {
+				throw redirect({
+					to: "/verify-email",
+				});
+			}
+		}
+
+		// Load projects and teams for sidebar
 		const promises = [
 			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
 			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
@@ -63,6 +76,7 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthLayout() {
 	const { user, logout } = useAuth();
 	const userId = user?.id ?? "";
+	const isVerified = !!user?.emailVerifiedAt; // Derived state
 
 	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
@@ -81,14 +95,16 @@ function AuthLayout() {
 				</div>
 
 				<div className="flex w-full max-w-sm items-center space-x-2">
-					<div className="relative w-full">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Search tickets..."
-							className="h-9 w-full rounded-md bg-muted pl-9 md:w-[300px] lg:w-[336px]"
-						/>
-					</div>
+					{isVerified && (
+						<div className="relative w-full">
+							<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+							<Input
+								type="search"
+								placeholder="Search tickets..."
+								className="h-9 w-full rounded-md bg-muted pl-9 md:w-[300px] lg:w-[336px]"
+							/>
+						</div>
+					)}
 				</div>
 
 				<div className="ml-auto flex items-center gap-4">
@@ -135,91 +151,93 @@ function AuthLayout() {
 			{/* Main Body */}
 			<div className="flex flex-1 overflow-hidden">
 				{/* Left Sidebar */}
-				<aside className="hidden w-[240px] flex-col border-r bg-muted/10 md:flex">
-					<div className="flex-1 overflow-auto py-4">
-						<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
-							<Link
-								to="/dashboard"
-								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-							>
-								<LayoutDashboard className="h-4 w-4" />
-								Dashboard
-							</Link>
-							<Link
-								to="/my-work"
-								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-							>
-								<Inbox className="h-4 w-4" />
-								My Work
-							</Link>
-							<Link
-								to="/tickets"
-								className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-							>
-								<Files className="h-4 w-4" />
-								All Tickets
-							</Link>
+				{isVerified && (
+					<aside className="hidden w-[240px] flex-col border-r bg-muted/10 md:flex">
+						<div className="flex-1 overflow-auto py-4">
+							<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
+								<Link
+									to="/dashboard"
+									className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
+								>
+									<LayoutDashboard className="h-4 w-4" />
+									Dashboard
+								</Link>
+								<Link
+									to="/my-work"
+									className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
+								>
+									<Inbox className="h-4 w-4" />
+									My Work
+								</Link>
+								<Link
+									to="/tickets"
+									className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
+								>
+									<Files className="h-4 w-4" />
+									All Tickets
+								</Link>
 
-							<Accordion type="multiple" className="w-full">
-								<AccordionItem value="projects" className="border-b-0">
-									<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
-										<div className="flex items-center gap-3 px-3">
-											<Folder className="h-4 w-4" />
-											Projects
-										</div>
-									</AccordionTrigger>
-									<AccordionContent className="pb-0">
-										<div className="flex flex-col gap-1 pl-9">
-											{projects.map((project) => (
-												<Link
-													key={project.id}
-													to="/projects/$projectId/tickets"
-													params={{ projectId: project.id }}
-													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
-												>
-													{project.name}
-												</Link>
-											))}
-										</div>
-									</AccordionContent>
-								</AccordionItem>
+								<Accordion type="multiple" className="w-full">
+									<AccordionItem value="projects" className="border-b-0">
+										<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
+											<div className="flex items-center gap-3 px-3">
+												<Folder className="h-4 w-4" />
+												Projects
+											</div>
+										</AccordionTrigger>
+										<AccordionContent className="pb-0">
+											<div className="flex flex-col gap-1 pl-9">
+												{projects.map((project) => (
+													<Link
+														key={project.id}
+														to="/projects/$projectId/tickets"
+														params={{ projectId: project.id }}
+														className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
+													>
+														{project.name}
+													</Link>
+												))}
+											</div>
+										</AccordionContent>
+									</AccordionItem>
 
-								<AccordionItem value="teams" className="border-b-0">
-									<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
-										<div className="flex items-center gap-3 px-3">
-											<Users className="h-4 w-4" />
-											Teams
-										</div>
-									</AccordionTrigger>
-									<AccordionContent className="pb-0">
-										<div className="flex flex-col gap-1 pl-9">
-											{teams.map((team) => (
-												<Link
-													key={team.id}
-													to="/teams/$teamId/tickets"
-													params={{ teamId: team.id }}
-													className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
-												>
-													{team.name}
-												</Link>
-											))}
-										</div>
-									</AccordionContent>
-								</AccordionItem>
-							</Accordion>
-						</nav>
-					</div>
+									<AccordionItem value="teams" className="border-b-0">
+										<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
+											<div className="flex items-center gap-3 px-3">
+												<Users className="h-4 w-4" />
+												Teams
+											</div>
+										</AccordionTrigger>
+										<AccordionContent className="pb-0">
+											<div className="flex flex-col gap-1 pl-9">
+												{teams.map((team) => (
+													<Link
+														key={team.id}
+														to="/teams/$teamId/tickets"
+														params={{ teamId: team.id }}
+														className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
+													>
+														{team.name}
+													</Link>
+												))}
+											</div>
+										</AccordionContent>
+									</AccordionItem>
+								</Accordion>
+							</nav>
+						</div>
 
-					<div className="mt-auto border-t p-4">
-						<Link
-							to="/settings"
-							className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-						>
-							<Settings className="h-4 w-4" />
-							Settings
-						</Link>
-					</div>
-				</aside>
+						<div className="mt-auto border-t p-4">
+							<Link
+								to="/settings"
+								className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
+							>
+								<Settings className="h-4 w-4" />
+								Settings
+							</Link>
+						</div>
+					</aside>
+				)}
 
 				{/* Main Content Area */}
 				<main className="flex-1 overflow-hidden flex flex-col">

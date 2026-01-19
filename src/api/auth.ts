@@ -5,8 +5,9 @@ import { getCookie } from "@/lib/cookie";
 export const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	displayName: z.string().nullable().optional(), // Added displayName
+	displayName: z.string().nullable().optional(),
 	email: z.email(),
+	emailVerifiedAt: z.string().nullable().optional(),
 	avatarUrl: z.string().optional(),
 	twoFactorConfirmedAt: z.string().nullable().optional(),
 });
@@ -183,6 +184,13 @@ const twoFactorChallenge = async (
 	await client.post("/two-factor-challenge", input);
 };
 
+/**
+ * Sends a new verification email to the user.
+ */
+const sendVerificationEmail = async () => {
+	await client.post("/email/verification-notification");
+};
+
 export {
 	fetchUser,
 	login,
@@ -198,4 +206,5 @@ export {
 	fetchTwoFactorRecoveryCodes,
 	confirmTwoFactor,
 	twoFactorChallenge,
+	sendVerificationEmail,
 };
