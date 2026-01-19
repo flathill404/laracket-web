@@ -1,5 +1,7 @@
+import { revalidateLogic } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import z from "zod";
 import { updatePassword } from "@/api/auth";
 import {
 	Card,
@@ -9,6 +11,34 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
+
+const passwordSchema = z
+	.string()
+	.min(8, { message: "Password must be at least 8 characters long" })
+	.max(20, { message: "Password must be at most 20 characters long" })
+	.refine((password) => /[A-Z]/.test(password), {
+		message: "Password must contain at least one uppercase letter",
+	})
+	.refine((password) => /[a-z]/.test(password), {
+		message: "Password must contain at least one lowercase letter",
+	})
+	.refine((password) => /[0-9]/.test(password), {
+		message: "Password must contain at least one number",
+	})
+	.refine((password) => /[!@#$%^&*]/.test(password), {
+		message: "Password must contain at least one special character",
+	});
+
+export const updatePasswordSchema = z
+	.object({
+		currentPassword: z.string(),
+		password: passwordSchema,
+		passwordConfirmation: z.string(),
+	})
+	.refine((data) => data.password === data.passwordConfirmation, {
+		message: "Passwords do not match",
+		path: ["passwordConfirmation"],
+	});
 
 export function PasswordForm() {
 	const updatePasswordMutation = useMutation({
@@ -27,17 +57,9 @@ export function PasswordForm() {
 			password: "",
 			passwordConfirmation: "",
 		},
+		validationLogic: revalidateLogic(),
 		validators: {
-			onChange: ({ value }) => {
-				if (value.password !== value.passwordConfirmation) {
-					return {
-						fields: {
-							passwordConfirmation: "Passwords do not match",
-						},
-					};
-				}
-				return undefined;
-			},
+			onDynamic: updatePasswordSchema,
 		},
 		onSubmit: async ({ value }) => {
 			await updatePasswordMutation.mutateAsync(value);
