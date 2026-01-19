@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
+import PostalMime from "postal-mime";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,63 +48,28 @@ type SesResponse = {
 	messages: SesRawMessage[];
 };
 
-const parseEmail = (raw: string): Partial<SesMessage> => {
-	const [headersRaw, ...bodyParts] = raw.split("\r\n\r\n");
-	const bodyRaw = bodyParts.join("\r\n\r\n");
-	const headers: Record<string, string> = {};
-
-	headersRaw.split("\r\n").forEach((line) => {
-		const [key, ...value] = line.split(": ");
-		if (key && value) {
-			headers[key.toLowerCase()] = value.join(": ");
-		}
-	});
-
-	const subject = headers["subject"] ?? "(No Subject)";
-	const source = headers["from"] ?? "";
-	const to = headers["to"]?.split(",").map((s) => s.trim()) ?? [];
-
-	let textPart: string | null = null;
-	let htmlPart: string | null = null;
-
-	const contentType = headers["content-type"] ?? "";
-	const boundaryMatch = contentType.match(/boundary=([^;]+)/);
-
-	if (boundaryMatch && boundaryMatch[1]) {
-		const boundary = boundaryMatch[1];
-		const parts = bodyRaw.split(`--${boundary}`);
-
-		for (const part of parts) {
-			if (part.includes("Content-Type: text/plain")) {
-				textPart = part.split("\r\n\r\n")[1]?.trim() ?? null;
-				// Remove quoted printable soft breaks
-				if (part.includes("Content-Transfer-Encoding: quoted-printable")) {
-					textPart = textPart?.replace(/=\r\n/g, "") ?? textPart;
-				}
-			}
-			if (part.includes("Content-Type: text/html")) {
-				htmlPart = part.split("\r\n\r\n")[1]?.trim() ?? null;
-				// Remove quoted printable soft breaks
-				if (part.includes("Content-Transfer-Encoding: quoted-printable")) {
-					htmlPart = htmlPart?.replace(/=\r\n/g, "") ?? htmlPart;
-				}
-			}
-		}
-	} else {
-		textPart = bodyRaw;
-	}
+const parseEmail = async (raw: string): Promise<Partial<SesMessage>> => {
+	const parser = new PostalMime();
+	const email = await parser.parse(raw);
 
 	return {
-		Source: source,
-		Subject: subject,
+		Source: email.from?.address ?? "",
+		Subject: email.subject ?? "(No Subject)",
 		Destination: {
-			ToAddresses: to,
-			CcAddresses: [],
-			BccAddresses: [],
+			ToAddresses:
+				email.to?.map((addr) => addr.address).filter((a): a is string => !!a) ??
+				[],
+			CcAddresses:
+				email.cc?.map((addr) => addr.address).filter((a): a is string => !!a) ??
+				[],
+			BccAddresses:
+				email.bcc
+					?.map((addr) => addr.address)
+					.filter((a): a is string => !!a) ?? [],
 		},
 		Body: {
-			text_part: textPart,
-			html_part: htmlPart,
+			text_part: email.text ?? null,
+			html_part: email.html ?? null,
 		},
 	};
 };
@@ -188,11 +154,14 @@ function SesPanel({ onBack }: { onBack: () => void }) {
 				throw new Error("Failed to fetch SES messages");
 			}
 			const rawData = (await res.json()) as SesResponse;
-			return {
-				messages: rawData.messages.map((msg) => ({
+			const parsedMessages = await Promise.all(
+				rawData.messages.map(async (msg) => ({
 					...msg,
-					...parseEmail(msg.RawData),
-				})) as SesMessage[],
+					...(await parseEmail(msg.RawData)),
+				})),
+			);
+			return {
+				messages: parsedMessages as SesMessage[],
 			};
 		},
 		refetchInterval: 2000,
