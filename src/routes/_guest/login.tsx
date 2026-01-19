@@ -14,7 +14,12 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useAuth } from "@/hooks/use-auth";
 
+const loginSearchSchema = z.object({
+	redirect: z.string().optional(),
+});
+
 export const Route = createFileRoute("/_guest/login")({
+	validateSearch: loginSearchSchema,
 	component: LoginPage,
 });
 
@@ -26,7 +31,9 @@ const loginFormSchema = z.object({
 
 function LoginPage() {
 	const router = useRouter();
+
 	const { login } = useAuth();
+	const search = Route.useSearch();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -43,7 +50,7 @@ function LoginPage() {
 			if (res.two_factor) {
 				await router.navigate({ to: "/two-factor-challenge" });
 			} else {
-				await router.navigate({ to: "/dashboard" });
+				await router.navigate({ to: search.redirect || "/dashboard" });
 			}
 		},
 	});
