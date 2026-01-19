@@ -1,7 +1,9 @@
+import { revalidateLogic } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import z from "zod";
 import {
 	deleteAvatar,
 	updateAvatar,
@@ -71,10 +73,19 @@ export function ProfileForm() {
 		},
 	});
 
+	const profileFormSchema = z.object({
+		displayName: z.string().min(1),
+		email: z.email(),
+	});
+
 	const form = useAppForm({
 		defaultValues: {
 			displayName: user?.displayName ?? "",
 			email: user?.email ?? "",
+		},
+		validationLogic: revalidateLogic(),
+		validators: {
+			onDynamic: profileFormSchema,
 		},
 		onSubmit: async ({ value }) => {
 			await updateProfileMutation.mutateAsync(value);
