@@ -7,7 +7,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { DefaultNotFound } from "../components/default-not-found";
+import { DefaultNotFound } from "@/components/default-not-found";
+import LocalstackDevtoolsPanel from "@/components/devtools/localstack-devtools-panel";
 import appCss from "../styles.css?url";
 
 interface RouterContext {
@@ -63,6 +64,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							{
 								name: "Tanstack Query",
 								render: <ReactQueryDevtoolsPanel />,
+							},
+							{
+								name: "Localstack",
+								render: <LocalstackDevtoolsPanel />,
 							},
 						]}
 					/>
