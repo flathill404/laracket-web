@@ -30,8 +30,15 @@ export function ProfileForm() {
 
 	const updateProfileMutation = useMutation({
 		mutationFn: updateProfileInformation,
-		onSuccess: () => {
-			toast.success("Profile updated");
+		onSuccess: (_, variables) => {
+			if (variables.email !== user?.email) {
+				toast.success("Profile updated", {
+					description:
+						"We've sent a verification link to your new email address. Please check your inbox to complete the update.",
+				});
+			} else {
+				toast.success("Profile updated");
+			}
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 		onError: () => {
