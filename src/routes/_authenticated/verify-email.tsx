@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { sendVerificationEmail } from "@/api/auth";
+import z from "zod";
+import { sendVerificationEmail, updateProfileInformation } from "@/api/auth";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -12,6 +14,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/verify-email")({
@@ -19,9 +22,12 @@ export const Route = createFileRoute("/_authenticated/verify-email")({
 });
 
 function VerifyEmail() {
-	const { logout } = useAuth();
+	const { user, logout } = useAuth();
+	const queryClient = useQueryClient();
+	const [isEditing, setIsEditing] = useState(false);
+	const [email, setEmail] = useState(user?.email ?? "");
 
-	const { mutate: resendEmail, isPending } = useMutation({
+	const { mutate: resendEmail, isPending: isResending } = useMutation({
 		mutationFn: sendVerificationEmail,
 		onSuccess: () => {
 			toast.success("Verification link sent!");
@@ -30,6 +36,36 @@ function VerifyEmail() {
 			toast.error("Failed to send verification link.");
 		},
 	});
+
+	const { mutate: updateEmail, isPending: isUpdating } = useMutation({
+		mutationFn: updateProfileInformation,
+		onSuccess: () => {
+			toast.success("Email updated and verification link sent!");
+			setIsEditing(false);
+			queryClient.invalidateQueries({ queryKey: ["user"] });
+			// Fortify automatically sends a new verification email on email update
+		},
+		onError: () => {
+			toast.error("Failed to update email.");
+		},
+	});
+
+	const handleUpdateEmail = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!user) return;
+
+		try {
+			z.string().email().parse(email);
+		} catch {
+			toast.error("Please enter a valid email address.");
+			return;
+		}
+
+		updateEmail({
+			displayName: user.displayName ?? "",
+			email: email,
+		});
+	};
 
 	return (
 		<div className="flex flex-1 items-center justify-center p-4">
@@ -45,22 +81,69 @@ function VerifyEmail() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
-					<p className="text-center text-sm text-muted-foreground">
-						If you didn't receive the email, we will gladly send you another.
-					</p>
+					{isEditing ? (
+						<form onSubmit={handleUpdateEmail} className="space-y-2">
+							<div className="space-y-1">
+								<Input
+									type="email"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+									placeholder="Enter new email address"
+									required
+									autoFocus
+								/>
+							</div>
+							<div className="flex flex-col gap-2">
+								<Button type="submit" className="w-full" disabled={isUpdating}>
+									{isUpdating ? "Updating..." : "Update Email"}
+								</Button>
+								<Button
+									type="button"
+									variant="ghost"
+									className="w-full"
+									onClick={() => {
+										setIsEditing(false);
+										setEmail(user?.email ?? "");
+									}}
+								>
+									Cancel
+								</Button>
+							</div>
+						</form>
+					) : (
+						<div className="flex flex-col gap-4">
+							<p className="text-center text-sm text-muted-foreground">
+								Current email:{" "}
+								<span className="text-foreground">{user?.email}</span>
+								<Button
+									variant="link"
+									className="px-2 h-auto text-primary"
+									onClick={() => setIsEditing(true)}
+								>
+									Edit?
+								</Button>
+							</p>
+							<p className="text-center text-sm text-muted-foreground">
+								If you didn't receive the email, we will gladly send you
+								another.
+							</p>
+						</div>
+					)}
 				</CardContent>
-				<CardFooter className="flex flex-col gap-2">
-					<Button
-						className="w-full"
-						onClick={() => resendEmail()}
-						disabled={isPending}
-					>
-						{isPending ? "Sending..." : "Resend Verification Email"}
-					</Button>
-					<Button variant="ghost" className="w-full" onClick={() => logout()}>
-						Log Out
-					</Button>
-				</CardFooter>
+				{!isEditing && (
+					<CardFooter className="flex flex-col gap-2">
+						<Button
+							className="w-full"
+							onClick={() => resendEmail()}
+							disabled={isResending}
+						>
+							{isResending ? "Sending..." : "Resend Verification Email"}
+						</Button>
+						<Button variant="ghost" className="w-full" onClick={() => logout()}>
+							Log Out
+						</Button>
+					</CardFooter>
+				)}
 			</Card>
 		</div>
 	);
