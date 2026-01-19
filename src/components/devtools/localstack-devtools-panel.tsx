@@ -35,8 +35,77 @@ type SesMessage = {
 	Timestamp: string;
 };
 
+type SesRawMessage = {
+	Id: string;
+	Region: string;
+	Source: string;
+	RawData: string;
+	Timestamp: string;
+};
+
 type SesResponse = {
-	messages: SesMessage[];
+	messages: SesRawMessage[];
+};
+
+const parseEmail = (raw: string): Partial<SesMessage> => {
+	const [headersRaw, ...bodyParts] = raw.split("\r\n\r\n");
+	const bodyRaw = bodyParts.join("\r\n\r\n");
+	const headers: Record<string, string> = {};
+
+	headersRaw.split("\r\n").forEach((line) => {
+		const [key, ...value] = line.split(": ");
+		if (key && value) {
+			headers[key.toLowerCase()] = value.join(": ");
+		}
+	});
+
+	const subject = headers["subject"] ?? "(No Subject)";
+	const source = headers["from"] ?? "";
+	const to = headers["to"]?.split(",").map((s) => s.trim()) ?? [];
+
+	let textPart: string | null = null;
+	let htmlPart: string | null = null;
+
+	const contentType = headers["content-type"] ?? "";
+	const boundaryMatch = contentType.match(/boundary=([^;]+)/);
+
+	if (boundaryMatch && boundaryMatch[1]) {
+		const boundary = boundaryMatch[1];
+		const parts = bodyRaw.split(`--${boundary}`);
+
+		for (const part of parts) {
+			if (part.includes("Content-Type: text/plain")) {
+				textPart = part.split("\r\n\r\n")[1]?.trim() ?? null;
+				// Remove quoted printable soft breaks
+				if (part.includes("Content-Transfer-Encoding: quoted-printable")) {
+					textPart = textPart?.replace(/=\r\n/g, "") ?? textPart;
+				}
+			}
+			if (part.includes("Content-Type: text/html")) {
+				htmlPart = part.split("\r\n\r\n")[1]?.trim() ?? null;
+				// Remove quoted printable soft breaks
+				if (part.includes("Content-Transfer-Encoding: quoted-printable")) {
+					htmlPart = htmlPart?.replace(/=\r\n/g, "") ?? htmlPart;
+				}
+			}
+		}
+	} else {
+		textPart = bodyRaw;
+	}
+
+	return {
+		Source: source,
+		Subject: subject,
+		Destination: {
+			ToAddresses: to,
+			CcAddresses: [],
+			BccAddresses: [],
+		},
+		Body: {
+			text_part: textPart,
+			html_part: htmlPart,
+		},
+	};
 };
 
 function SesEmailDetail({
@@ -118,7 +187,13 @@ function SesPanel({ onBack }: { onBack: () => void }) {
 			if (!res.ok) {
 				throw new Error("Failed to fetch SES messages");
 			}
-			return (await res.json()) as SesResponse;
+			const rawData = (await res.json()) as SesResponse;
+			return {
+				messages: rawData.messages.map((msg) => ({
+					...msg,
+					...parseEmail(msg.RawData),
+				})) as SesMessage[],
+			};
 		},
 		refetchInterval: 2000,
 		enabled: !selectedMessage,
