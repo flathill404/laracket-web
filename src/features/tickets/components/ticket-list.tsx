@@ -20,13 +20,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
+
 import { cn } from "@/utils";
 import { getStatusColor, getStatusLabel } from "../utils";
 
@@ -72,6 +66,7 @@ export function TicketList({
 	selectedStatuses = [],
 	onStatusChange,
 }: TicketListProps) {
+	// Add meta to Subject column for flex sizing
 	const columns = [
 		columnHelper.accessor((row) => row, {
 			id: "subject",
@@ -90,6 +85,9 @@ export function TicketList({
 						</span>
 					</div>
 				);
+			},
+			meta: {
+				className: "flex-1 min-w-0 pr-4",
 			},
 		}),
 		columnHelper.accessor("status", {
@@ -242,69 +240,78 @@ export function TicketList({
 	return (
 		<div className="flex-1 overflow-hidden bg-muted/5 p-6">
 			<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
-				<div className="flex-1 overflow-auto">
-					<table className="w-full caption-bottom text-sm">
-						<TableHeader className="sticky top-0 z-10 bg-muted">
-							{table.getHeaderGroups().map((headerGroup) => (
-								<TableRow
-									key={headerGroup.id}
-									className="hover:bg-muted/30 border-b-muted"
+				{/* Header - Fixed */}
+				<div className="flex w-full border-b bg-muted/50 font-medium text-muted-foreground text-sm overflow-y-auto [scrollbar-gutter:stable]">
+					{table.getHeaderGroups().map((headerGroup) => (
+						<div key={headerGroup.id} className="flex w-full min-w-max">
+							{headerGroup.headers.map((header) => {
+								const meta = header.column.columnDef.meta as
+									| { className?: string }
+									| undefined;
+								return (
+									<div
+										key={header.id}
+										className={cn(
+											"flex items-center px-4 h-10 text-left align-middle",
+											meta?.className,
+										)}
+									>
+										{header.isPlaceholder
+											? null
+											: flexRender(
+													header.column.columnDef.header,
+													header.getContext(),
+												)}
+									</div>
+								);
+							})}
+						</div>
+					))}
+				</div>
+
+				{/* Body - Scrollable */}
+				<div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
+					{table.getRowModel().rows?.length ? (
+						<div className="w-full flex flex-col min-w-max">
+							{table.getRowModel().rows.map((row) => (
+								<div
+									key={row.id}
+									role="button"
+									// biome-ignore lint/a11y/useButton: <explanation>
+									tabIndex={0}
+									data-state={row.getIsSelected() && "selected"}
+									onClick={() => onTicketClick(row.original)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" || e.key === " ") {
+											e.preventDefault();
+											onTicketClick(row.original);
+										}
+									}}
+									className="flex w-full items-center border-b last:border-0 hover:bg-muted/50 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 								>
-									{headerGroup.headers.map((header) => {
-										const meta = header.column.columnDef.meta as
+									{row.getVisibleCells().map((cell) => {
+										const meta = cell.column.columnDef.meta as
 											| { className?: string }
 											| undefined;
 										return (
-											<TableHead key={header.id} className={meta?.className}>
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column.columnDef.header,
-															header.getContext(),
-														)}
-											</TableHead>
+											<div key={cell.id} className={cn("p-4", meta?.className)}>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext(),
+												)}
+											</div>
 										);
 									})}
-								</TableRow>
+								</div>
 							))}
-						</TableHeader>
-						<TableBody>
-							{table.getRowModel().rows?.length ? (
-								table.getRowModel().rows.map((row) => (
-									<TableRow
-										key={row.id}
-										data-state={row.getIsSelected() && "selected"}
-										onClick={() => onTicketClick(row.original)}
-										className="cursor-pointer hover:bg-muted/50"
-									>
-										{row.getVisibleCells().map((cell) => {
-											const meta = cell.column.columnDef.meta as
-												| { className?: string }
-												| undefined;
-											return (
-												<TableCell key={cell.id} className={meta?.className}>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
-												</TableCell>
-											);
-										})}
-									</TableRow>
-								))
-							) : (
-								<TableRow>
-									<TableCell
-										colSpan={columns.length}
-										className="h-24 text-center"
-									>
-										{emptyState ?? "No tickets found."}
-									</TableCell>
-								</TableRow>
-							)}
-						</TableBody>
-					</table>
+						</div>
+					) : (
+						<div className="flex h-24 items-center justify-center text-sm text-muted-foreground">
+							{emptyState ?? "No tickets found."}
+						</div>
+					)}
 				</div>
+
 				<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
 					Showing {tickets.length} tickets
 				</div>
