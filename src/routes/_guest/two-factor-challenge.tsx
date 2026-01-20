@@ -1,5 +1,6 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
 	Card,
@@ -38,8 +39,12 @@ function TwoFactorChallengePage() {
 			onDynamic: twoFactorFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await twoFactorChallenge({ code: value.code });
-			await router.navigate({ to: "/dashboard" });
+			try {
+				await twoFactorChallenge({ code: value.code });
+				await router.navigate({ to: "/dashboard" });
+			} catch {
+				toast.error("Failed to verify two-factor authentication code.");
+			}
 		},
 	});
 
