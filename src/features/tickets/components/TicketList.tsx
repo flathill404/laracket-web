@@ -27,8 +27,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { getStatusColor, getStatusLabel } from "@/lib/ticket-utils";
 import { cn } from "@/utils";
+import { getStatusColor, getStatusLabel } from "../utils";
 
 // Using a loose type for now to match the existing usage, but ideally this should be a shared type from the API
 export interface Ticket {

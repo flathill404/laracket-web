@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { client } from "@/api/client";
 
-import { ticketsSchema } from "./tickets";
+import { ticketsSchema } from "@/features/tickets/api/tickets";
 
 export const projectSchema = z.object({
 	id: z.string(),

@@ -13,7 +13,6 @@ import {
 	Send,
 	Smile,
 } from "lucide-react";
-import { fetchTicket } from "@/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +23,7 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { fetchTicket } from "../api/tickets";
 
 // Helper to define types for the status based on the API
 const getStatusColor = (status: string) => {

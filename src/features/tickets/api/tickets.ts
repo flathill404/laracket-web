@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { client } from "./client";
+import { client } from "@/api/client";
 
 enum TicketStatus {
 	Open = "open",

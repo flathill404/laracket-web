@@ -15,8 +15,8 @@ import {
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useAppForm } from "@/hooks/use-app-form";
-import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_guest/two-factor-challenge")({
 	component: TwoFactorChallengePage,

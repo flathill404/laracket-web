@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { fetchTicket } from "@/api";
-import { TicketDetailSheet } from "@/components/ticket-detail-sheet";
+import { TicketDetailSheet } from "@/features/tickets/components/TicketDetailSheet";
 
 const ticketQuery = (ticketId: string) =>
 	queryOptions({

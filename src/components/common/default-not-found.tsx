@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FileQuestion, Home } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 export function DefaultNotFound() {
 	return (
