@@ -32,7 +32,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/match-sorter-utils": "^8.19.4",
-    "@tanstack/query-db-collection": "^1.0.8",
+    "@tanstack/query-db-collection": "^1.0.18",
     "@tanstack/react-db": "^0.1.65",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-form": "^1.0.0",
