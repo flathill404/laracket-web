@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { UnauthorizedError } from "@/api/errors";
+import { UnauthorizedError } from "@/lib/errors";
 import { fetchUser } from "../api/auth";
 
 export const userQueryOptions = queryOptions({

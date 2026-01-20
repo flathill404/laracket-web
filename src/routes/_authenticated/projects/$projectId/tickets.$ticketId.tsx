@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { fetchTicket } from "@/api";
+import { fetchTicket } from "@/features/tickets/api/tickets";
 import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
 
 // Helper to define types for the status based on the API

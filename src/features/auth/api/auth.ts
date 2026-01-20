@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { client } from "@/api/client";
+import { client } from "@/lib/client";
 
 export const userSchema = z.object({
 	id: z.string(),
