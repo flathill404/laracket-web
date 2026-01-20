@@ -1,14 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import {
-	confirmPassword,
-	confirmTwoFactor,
-	disableTwoFactor,
-	enableTwoFactor,
-	fetchTwoFactorQrCode,
-	fetchTwoFactorRecoveryCodes,
-} from "@/api/auth";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -33,7 +25,15 @@ import {
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/hooks/use-auth";
+import {
+	confirmPassword,
+	confirmTwoFactor,
+	disableTwoFactor,
+	enableTwoFactor,
+	fetchTwoFactorQrCode,
+	fetchTwoFactorRecoveryCodes,
+} from "@/features/auth/api/auth";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 
 export function TwoFactorForm() {
 	const { user } = useAuth();

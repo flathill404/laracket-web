@@ -2,9 +2,6 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import * as React from "react";
-import { fetchUserTickets } from "@/api";
-import { RocketMascot } from "@/components/illustrations/rocket-mascot";
-import { TicketList } from "@/components/tickets/ticket-list";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -14,8 +11,11 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
-import { useAuth } from "@/hooks/use-auth";
-import { userQueryOptions } from "@/lib/auth";
+import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { userQueryOptions } from "@/features/auth/lib/auth";
+import { fetchUserTickets } from "@/features/tickets/api/tickets";
+import { TicketList } from "@/features/tickets/components/ticket-list";
 
 const userTicketsQuery = (userId: string) =>
 	queryOptions({

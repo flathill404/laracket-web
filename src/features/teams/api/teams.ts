@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { client } from "@/api/client";
-import { ticketsSchema } from "./tickets";
+import { client } from "@/lib/client";
+import { ticketsSchema } from "@/features/tickets/api/tickets";
 
 export const teamSchema = z.object({
 	id: z.string(),

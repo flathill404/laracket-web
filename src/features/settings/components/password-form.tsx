@@ -2,7 +2,6 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import z from "zod";
-import { updatePassword } from "@/api/auth";
 import {
 	Card,
 	CardContent,
@@ -10,6 +9,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { updatePassword } from "@/features/auth/api/auth";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 
 const passwordSchema = z

@@ -1,9 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
-import { fetchTeam, fetchTeamTickets } from "@/api/teams";
-import { RocketMascot } from "@/components/illustrations/rocket-mascot";
-import { TicketList } from "@/components/tickets/ticket-list";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -13,7 +10,10 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
+import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { Input } from "@/components/ui/input";
+import { fetchTeam, fetchTeamTickets } from "@/features/teams/api/teams";
+import { TicketList } from "@/features/tickets/components/ticket-list";
 
 const teamTicketsQuery = (teamId: string) =>
 	queryOptions({

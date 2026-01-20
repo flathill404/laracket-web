@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { client } from "./client";
+import { client } from "@/lib/client";
 
 enum TicketStatus {
 	Open = "open",

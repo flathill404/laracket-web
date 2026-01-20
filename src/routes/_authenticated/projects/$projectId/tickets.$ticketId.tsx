@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { fetchTicket } from "@/api";
-import { TicketDetailSheet } from "@/components/ticket-detail-sheet";
+import { fetchTicket } from "@/features/tickets/api/tickets";
+import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
 
 // Helper to define types for the status based on the API
 const ticketQuery = (ticketId: string) =>

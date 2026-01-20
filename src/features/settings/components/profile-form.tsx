@@ -4,12 +4,6 @@ import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
-import {
-	deleteAvatar,
-	updateAvatar,
-	updateProfileInformation,
-} from "@/api/auth";
-import { ImageCropDialog } from "@/components/image-crop-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,8 +24,14 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldLabel } from "@/components/ui/field";
+import {
+	deleteAvatar,
+	updateAvatar,
+	updateProfileInformation,
+} from "@/features/auth/api/auth";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
-import { useAuth } from "@/hooks/use-auth";
+import { ImageCropDialog } from "./image-crop-dialog";
 
 export function ProfileForm() {
 	const { user } = useAuth();

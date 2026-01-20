@@ -2,9 +2,6 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
 import { z } from "zod";
-import { fetchProject, fetchProjectTickets } from "@/api";
-import { RocketMascot } from "@/components/illustrations/rocket-mascot";
-import { TicketList } from "@/components/tickets/ticket-list";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -14,7 +11,13 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
+import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { Input } from "@/components/ui/input";
+import {
+	fetchProject,
+	fetchProjectTickets,
+} from "@/features/projects/api/projects";
+import { TicketList } from "@/features/tickets/components/ticket-list";
 
 const ticketsQuery = (projectId: string, filters?: { status?: string[] }) =>
 	queryOptions({
