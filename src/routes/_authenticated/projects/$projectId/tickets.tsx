@@ -17,7 +17,7 @@ import {
 	fetchProject,
 	fetchProjectTickets,
 } from "@/features/projects/api/projects";
-import { TicketList } from "@/features/tickets/components/TicketList";
+import { TicketList } from "@/features/tickets/components/ticket-list";
 
 const ticketsQuery = (projectId: string, filters?: { status?: string[] }) =>
 	queryOptions({

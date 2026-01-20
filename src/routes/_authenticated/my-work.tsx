@@ -15,7 +15,7 @@ import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { userQueryOptions } from "@/features/auth/lib/auth";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
-import { TicketList } from "@/features/tickets/components/TicketList";
+import { TicketList } from "@/features/tickets/components/ticket-list";
 
 const userTicketsQuery = (userId: string) =>
 	queryOptions({

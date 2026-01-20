@@ -31,7 +31,7 @@ import {
 } from "@/features/auth/api/auth";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
-import { ImageCropDialog } from "./ImageCropDialog";
+import { ImageCropDialog } from "./image-crop-dialog";
 
 export function ProfileForm() {
 	const { user } = useAuth();
