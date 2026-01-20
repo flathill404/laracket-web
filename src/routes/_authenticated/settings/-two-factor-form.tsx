@@ -41,6 +41,9 @@ export function TwoFactorForm() {
 	const [confirmationCode, setConfirmationCode] = useState("");
 	const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
 	const [password, setPassword] = useState("");
+	const [pendingAction, setPendingAction] = useState<
+		"enable" | "show-recovery-codes" | null
+	>(null);
 
 	const isConfirmed = user?.twoFactorStatus === "enabled";
 	const isPending = user?.twoFactorStatus === "pending";
@@ -75,7 +78,12 @@ export function TwoFactorForm() {
 		onSuccess: () => {
 			setConfirmPasswordOpen(false);
 			setPassword("");
-			enableMutation.mutate();
+			if (pendingAction === "enable") {
+				enableMutation.mutate();
+			} else if (pendingAction === "show-recovery-codes") {
+				refetchRecoveryCodes();
+			}
+			setPendingAction(null);
 		},
 		onError: () => {
 			toast.error("Incorrect password");
@@ -171,7 +179,10 @@ export function TwoFactorForm() {
 							<div className="flex gap-2">
 								<Button
 									variant="outline"
-									onClick={() => refetchRecoveryCodes()}
+									onClick={() => {
+										setPendingAction("show-recovery-codes");
+										setConfirmPasswordOpen(true);
+									}}
 								>
 									Show Recovery Codes
 								</Button>
@@ -274,64 +285,63 @@ export function TwoFactorForm() {
 						) : (
 							<div className="flex gap-2">
 								<Button
-									onClick={() => setConfirmPasswordOpen(true)}
+									onClick={() => {
+										setPendingAction("enable");
+										setConfirmPasswordOpen(true);
+									}}
 									disabled={enableMutation.isPending}
 								>
 									Enable
 								</Button>
-								<Dialog
-									open={confirmPasswordOpen}
-									onOpenChange={setConfirmPasswordOpen}
-								>
-									<DialogContent>
-										<DialogHeader>
-											<DialogTitle>Confirm Password</DialogTitle>
-											<DialogDescription>
-												For your security, please confirm your password to
-												continue.
-											</DialogDescription>
-										</DialogHeader>
-										<div className="space-y-4 py-2">
-											<div className="space-y-2">
-												<Label htmlFor="password">Password</Label>
-												<Input
-													type="password"
-													id="password"
-													placeholder="Password"
-													value={password}
-													onChange={(e) => setPassword(e.target.value)}
-													onKeyDown={(e) => {
-														if (e.key === "Enter") {
-															confirmPasswordMutation.mutate({ password });
-														}
-													}}
-												/>
-											</div>
-										</div>
-										<DialogFooter>
-											<Button
-												variant="outline"
-												onClick={() => setConfirmPasswordOpen(false)}
-											>
-												Cancel
-											</Button>
-											<Button
-												onClick={() =>
-													confirmPasswordMutation.mutate({ password })
-												}
-												disabled={
-													confirmPasswordMutation.isPending || !password
-												}
-											>
-												Confirm
-											</Button>
-										</DialogFooter>
-									</DialogContent>
-								</Dialog>
 							</div>
 						)}
 					</>
 				)}
+
+				<Dialog
+					open={confirmPasswordOpen}
+					onOpenChange={setConfirmPasswordOpen}
+				>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Confirm Password</DialogTitle>
+							<DialogDescription>
+								For your security, please confirm your password to continue.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="space-y-4 py-2">
+							<div className="space-y-2">
+								<Label htmlFor="password">Password</Label>
+								<Input
+									type="password"
+									id="password"
+									placeholder="Password"
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											confirmPasswordMutation.mutate({ password });
+										}
+									}}
+								/>
+							</div>
+						</div>
+						<DialogFooter>
+							<Button
+								variant="outline"
+								onClick={() => setConfirmPasswordOpen(false)}
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={() => confirmPasswordMutation.mutate({ password })}
+								disabled={confirmPasswordMutation.isPending || !password}
+							>
+								Confirm
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 			</CardContent>
 		</Card>
 	);
