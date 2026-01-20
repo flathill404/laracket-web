@@ -1,5 +1,5 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ export const Route = createFileRoute(
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
 	const search = Route.useSearch();
-	const navigate = useNavigate();
+	const navigate = Route.useNavigate();
 	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId, search));
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
 
@@ -98,7 +98,7 @@ function ProjectDetail() {
 				onStatusChange={handleStatusChange}
 				onTicketClick={(ticket) =>
 					navigate({
-						to: ticket.id,
+						to: "/projects/$projectId/tickets/$ticketId",
 						params: { projectId, ticketId: ticket.id },
 					})
 				}

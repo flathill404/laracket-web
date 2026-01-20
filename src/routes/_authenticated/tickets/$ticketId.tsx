@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { fetchTicket } from "@/features/tickets/api/tickets";
 import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
 
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/tickets/$ticketId")({
 
 function TicketDetailRoute() {
 	const { ticketId } = Route.useParams();
-	const navigate = useNavigate();
+	const navigate = Route.useNavigate();
 
 	const handleOpenChange = (open: boolean) => {
 		if (!open) {
