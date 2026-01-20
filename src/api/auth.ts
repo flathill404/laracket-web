@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { client } from "@/api/client";
-import { getCookie } from "@/lib/cookie";
 
 export const userSchema = z.object({
 	id: z.string(),
@@ -88,23 +87,14 @@ const updatePassword = async (
  * @param file - The new avatar file.
  */
 const updateAvatar = async (file: File) => {
-	const formData = new FormData();
-	formData.append("avatar", file);
-
-	// We use global fetch to support FormData and avoid JSON stringification from client.post
-	const BASE_URL = "http://localhost:8000/api";
-	const csrfToken = getCookie("XSRF-TOKEN") || "";
-
-	await fetch(`${BASE_URL}/user/avatar`, {
-		method: "POST",
-		headers: {
-			Accept: "application/json",
-			"Key-Inflection": "camel",
-			"X-XSRF-TOKEN": csrfToken,
-		},
-		body: formData,
-		credentials: "include",
+	const avatar = await new Promise<string>((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result as string);
+		reader.onerror = (error) => reject(error);
 	});
+
+	await client.post("/user/avatar", { avatar });
 };
 
 /**
