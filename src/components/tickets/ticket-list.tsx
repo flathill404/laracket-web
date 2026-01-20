@@ -1,5 +1,19 @@
+import {
+	createColumnHelper,
+	flexRender,
+	getCoreRowModel,
+	useReactTable,
+} from "@tanstack/react-table";
 import { Circle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import { getStatusColor, getStatusLabel } from "@/lib/ticket-utils";
 
 // Using a loose type for now to match the existing usage, but ideally this should be a shared type from the API
@@ -25,72 +39,152 @@ interface TicketListProps {
 	emptyState?: React.ReactNode;
 }
 
+const columnHelper = createColumnHelper<Ticket>();
+
 export function TicketList({
 	tickets,
 	onTicketClick,
 	emptyState,
 }: TicketListProps) {
+	const columns = [
+		columnHelper.accessor((row) => row, {
+			id: "subject",
+			header: "Subject",
+			cell: (info) => {
+				const ticket = info.getValue();
+				return (
+					<div className="flex flex-col gap-1">
+						<div className="flex items-center gap-2">
+							<span className="font-medium">
+								[T-{ticket.id.slice(0, 8)}] {ticket.title}
+							</span>
+						</div>
+						<span className="text-xs text-muted-foreground line-clamp-1">
+							{ticket.description}
+						</span>
+					</div>
+				);
+			},
+		}),
+		columnHelper.accessor("status", {
+			header: "Status",
+			cell: (info) => {
+				const status = info.getValue();
+				return (
+					<div className="flex items-center gap-2">
+						<Circle className={`h-3 w-3 ${getStatusColor(status)}`} />
+						<span className="text-sm">{getStatusLabel(status)}</span>
+					</div>
+				);
+			},
+			meta: {
+				className: "w-[100px]",
+			},
+		}),
+		columnHelper.accessor("assignees", {
+			header: "Assignee",
+			cell: (info) => {
+				const assignees = info.getValue();
+				return (
+					<div className="flex items-center gap-2">
+						{assignees.length > 0 ? (
+							assignees.map((assignee) => (
+								<div key={assignee.id} className="flex items-center gap-2">
+									<Avatar className="h-6 w-6">
+										<AvatarImage src={assignee.avatarUrl ?? undefined} />
+										<AvatarFallback className="text-[10px]">
+											{assignee.name.slice(0, 2).toUpperCase()}
+										</AvatarFallback>
+									</Avatar>
+									<span className="text-sm text-muted-foreground">
+										{assignee.name}
+									</span>
+								</div>
+							))
+						) : (
+							<span className="text-sm text-muted-foreground">Unassigned</span>
+						)}
+					</div>
+				);
+			},
+			meta: {
+				className: "w-[140px]",
+			},
+		}),
+	];
+
+	const table = useReactTable({
+		data: tickets,
+		columns,
+		getCoreRowModel: getCoreRowModel(),
+	});
+
 	return (
 		<div className="flex-1 overflow-hidden bg-muted/5 p-6">
 			<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
-				{/* Table Header */}
-				<div className="grid grid-cols-[1fr_100px_140px] items-center gap-4 border-b px-6 py-3 text-xs font-medium text-muted-foreground bg-muted/30">
-					<div>Subject</div>
-					<div>Status</div>
-					<div>Assignee</div>
+				<div className="flex-1 overflow-auto">
+					<Table>
+						<TableHeader className="bg-muted/30">
+							{table.getHeaderGroups().map((headerGroup) => (
+								<TableRow
+									key={headerGroup.id}
+									className="hover:bg-muted/30 border-b-muted"
+								>
+									{headerGroup.headers.map((header) => {
+										const meta = header.column.columnDef.meta as
+											| { className?: string }
+											| undefined;
+										return (
+											<TableHead key={header.id} className={meta?.className}>
+												{header.isPlaceholder
+													? null
+													: flexRender(
+															header.column.columnDef.header,
+															header.getContext(),
+														)}
+											</TableHead>
+										);
+									})}
+								</TableRow>
+							))}
+						</TableHeader>
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row) => (
+									<TableRow
+										key={row.id}
+										data-state={row.getIsSelected() && "selected"}
+										onClick={() => onTicketClick(row.original)}
+										className="cursor-pointer hover:bg-muted/50"
+									>
+										{row.getVisibleCells().map((cell) => {
+											const meta = cell.column.columnDef.meta as
+												| { className?: string }
+												| undefined;
+											return (
+												<TableCell key={cell.id} className={meta?.className}>
+													{flexRender(
+														cell.column.columnDef.cell,
+														cell.getContext(),
+													)}
+												</TableCell>
+											);
+										})}
+									</TableRow>
+								))
+							) : (
+								<TableRow>
+									<TableCell
+										colSpan={columns.length}
+										className="h-24 text-center"
+									>
+										{emptyState ?? "No tickets found."}
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
 				</div>
-
-				{/* Ticket Rows */}
-				<div className="flex-1 overflow-auto divide-y">
-					{tickets.map((ticket) => (
-						<button
-							key={ticket.id}
-							onClick={() => onTicketClick(ticket)}
-							type="button"
-							className="grid w-full text-left grid-cols-[1fr_100px_140px] items-center gap-4 px-6 py-4 hover:bg-muted/50 transition-colors cursor-pointer focus:outline-none focus:bg-muted/50"
-						>
-							<div className="flex flex-col gap-1">
-								<div className="flex items-center gap-2">
-									<span className="font-medium">
-										[T-{ticket.id.slice(0, 8)}] {ticket.title}
-									</span>
-								</div>
-								<span className="text-xs text-muted-foreground line-clamp-1">
-									{ticket.description}
-								</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<Circle
-									className={`h-3 w-3 ${getStatusColor(ticket.status)}`}
-								/>
-								<span className="text-sm">{getStatusLabel(ticket.status)}</span>
-							</div>
-							<div className="flex items-center gap-2">
-								{ticket.assignees.length > 0 ? (
-									ticket.assignees.map((assignee) => (
-										<div key={assignee.id} className="flex items-center gap-2">
-											<Avatar className="h-6 w-6">
-												<AvatarImage src={assignee.avatarUrl ?? undefined} />
-												<AvatarFallback className="text-[10px]">
-													{assignee.name.slice(0, 2).toUpperCase()}
-												</AvatarFallback>
-											</Avatar>
-											<span className="text-sm text-muted-foreground">
-												{assignee.name}
-											</span>
-										</div>
-									))
-								) : (
-									<span className="text-sm text-muted-foreground">
-										Unassigned
-									</span>
-								)}
-							</div>
-						</button>
-					))}
-					{tickets.length === 0 && emptyState}
-				</div>
-
 				<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
 					Showing {tickets.length} tickets
 				</div>
