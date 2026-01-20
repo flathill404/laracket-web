@@ -6,9 +6,9 @@
     "dev": "bun --bun vite dev",
     "build": "bun --bun vite build",
     "serve": "bun --bun vite preview",
-    "format": "bunx biome format --write",
-    "lint": "bunx biome lint --write",
-    "check": "bunx biome check --write",
+    "format": "biome format --write",
+    "lint": "biome lint --write",
+    "check": "biome check --write",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
