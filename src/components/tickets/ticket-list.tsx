@@ -4,8 +4,22 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
-import { Circle } from "lucide-react";
+import { Check, Circle, Filter } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+	Command,
+	CommandGroup,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+} from "@/components/ui/command";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import {
 	TableBody,
 	TableCell,
@@ -14,6 +28,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { getStatusColor, getStatusLabel } from "@/lib/ticket-utils";
+import { cn } from "@/utils";
 
 // Using a loose type for now to match the existing usage, but ideally this should be a shared type from the API
 export interface Ticket {
@@ -36,14 +51,26 @@ interface TicketListProps {
 	tickets: Ticket[];
 	onTicketClick: (ticket: Ticket) => void;
 	emptyState?: React.ReactNode;
+	selectedStatuses?: string[];
+	onStatusChange?: (statuses: string[]) => void;
 }
 
 const columnHelper = createColumnHelper<Ticket>();
+
+const statuses = [
+	{ value: "open", label: "Open" },
+	{ value: "in_progress", label: "In Progress" },
+	{ value: "in_review", label: "In Review" },
+	{ value: "resolved", label: "Resolved" },
+	{ value: "closed", label: "Closed" },
+];
 
 export function TicketList({
 	tickets,
 	onTicketClick,
 	emptyState,
+	selectedStatuses = [],
+	onStatusChange,
 }: TicketListProps) {
 	const columns = [
 		columnHelper.accessor((row) => row, {
@@ -66,7 +93,101 @@ export function TicketList({
 			},
 		}),
 		columnHelper.accessor("status", {
-			header: "Status",
+			header: () => {
+				return (
+					<div className="flex items-center space-x-2">
+						<Popover>
+							<PopoverTrigger asChild>
+								<Button
+									variant="ghost"
+									size="sm"
+									className={cn(
+										"-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50",
+										selectedStatuses.length > 0 &&
+											"bg-accent/50 text-accent-foreground font-medium",
+									)}
+								>
+									<span>Status</span>
+									{selectedStatuses.length > 0 && (
+										<Badge
+											variant="secondary"
+											className="ml-2 rounded-sm px-1 font-normal"
+										>
+											{selectedStatuses.length}
+										</Badge>
+									)}
+									<Filter
+										className={cn(
+											"ml-2 h-4 w-4",
+											selectedStatuses.length > 0
+												? "text-primary fill-primary/20"
+												: "text-muted-foreground",
+										)}
+									/>
+								</Button>
+							</PopoverTrigger>
+							<PopoverContent className="w-[200px] p-0" align="start">
+								<Command>
+									<CommandList>
+										<CommandGroup>
+											{statuses.map((status) => {
+												const isSelected = selectedStatuses.includes(
+													status.value,
+												);
+												return (
+													<CommandItem
+														key={status.value}
+														onSelect={() => {
+															if (onStatusChange) {
+																const newStatuses = isSelected
+																	? selectedStatuses.filter(
+																			(s) => s !== status.value,
+																		)
+																	: [...selectedStatuses, status.value];
+																onStatusChange(newStatuses);
+															}
+														}}
+													>
+														<div
+															className={cn(
+																"mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+																isSelected
+																	? "bg-primary text-primary-foreground"
+																	: "opacity-50 [&_svg]:invisible",
+															)}
+														>
+															<Check className={cn("h-4 w-4")} />
+														</div>
+														<span className="flex items-center gap-2">
+															<Circle
+																className={`h-3 w-3 ${getStatusColor(status.value)}`}
+															/>
+															{status.label}
+														</span>
+													</CommandItem>
+												);
+											})}
+										</CommandGroup>
+										{selectedStatuses.length > 0 && (
+											<>
+												<CommandSeparator />
+												<CommandGroup>
+													<CommandItem
+														onSelect={() => onStatusChange?.([])}
+														className="justify-center text-center"
+													>
+														Clear filters
+													</CommandItem>
+												</CommandGroup>
+											</>
+										)}
+									</CommandList>
+								</Command>
+							</PopoverContent>
+						</Popover>
+					</div>
+				);
+			},
 			cell: (info) => {
 				const status = info.getValue();
 				return (
@@ -77,7 +198,7 @@ export function TicketList({
 				);
 			},
 			meta: {
-				className: "w-[100px]",
+				className: "w-[150px]",
 			},
 		}),
 		columnHelper.accessor("assignees", {

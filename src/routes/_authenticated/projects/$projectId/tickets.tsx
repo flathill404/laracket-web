@@ -1,6 +1,7 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
+import { z } from "zod";
 import { fetchProject, fetchProjectTickets } from "@/api";
 import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { TicketList } from "@/components/tickets/ticket-list";
@@ -15,10 +16,10 @@ import {
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 
-const ticketsQuery = (projectId: string) =>
+const ticketsQuery = (projectId: string, filters?: { status?: string[] }) =>
 	queryOptions({
-		queryKey: ["projects", projectId, "tickets"],
-		queryFn: () => fetchProjectTickets(projectId),
+		queryKey: ["projects", projectId, "tickets", filters],
+		queryFn: () => fetchProjectTickets(projectId, filters),
 	});
 
 const projectQuery = (projectId: string) =>
@@ -27,12 +28,22 @@ const projectQuery = (projectId: string) =>
 		queryFn: () => fetchProject(projectId),
 	});
 
+const searchSchema = z.object({
+	status: z.array(z.string()).optional(),
+});
+
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets",
 )({
-	loader: async ({ context: { queryClient }, params: { projectId } }) => {
+	validateSearch: (search) => searchSchema.parse(search),
+	loaderDeps: ({ search: { status } }) => ({ status }),
+	loader: async ({
+		context: { queryClient },
+		params: { projectId },
+		deps: { status },
+	}) => {
 		await Promise.all([
-			queryClient.ensureQueryData(ticketsQuery(projectId)),
+			queryClient.ensureQueryData(ticketsQuery(projectId, { status })),
 			queryClient.ensureQueryData(projectQuery(projectId)),
 		]);
 	},
@@ -41,9 +52,20 @@ export const Route = createFileRoute(
 
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
+	const search = Route.useSearch();
 	const navigate = useNavigate();
-	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId));
+	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId, search));
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
+
+	const handleStatusChange = (status: string[]) => {
+		navigate({
+			to: ".",
+			search: (prev) => ({
+				...prev,
+				status: status.length > 0 ? status : undefined,
+			}),
+		});
+	};
 
 	return (
 		<div className="flex flex-col h-full bg-background">
@@ -69,6 +91,8 @@ function ProjectDetail() {
 
 			<TicketList
 				tickets={tickets}
+				selectedStatuses={search.status}
+				onStatusChange={handleStatusChange}
 				onTicketClick={(ticket) =>
 					navigate({
 						to: ticket.id,

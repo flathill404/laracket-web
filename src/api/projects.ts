@@ -39,8 +39,20 @@ export const updateProject = async (projectId: string, name: string) => {
 	return projectSchema.parse(json.data);
 };
 
-export const fetchProjectTickets = async (projectId: string) => {
-	const response = await client.get(`/projects/${projectId}/tickets`);
+export const fetchProjectTickets = async (
+	projectId: string,
+	filters?: { status?: string[] },
+) => {
+	const searchParams = new URLSearchParams();
+	if (filters?.status) {
+		for (const s of filters.status) {
+			searchParams.append("status[]", s);
+		}
+	}
+	const queryString = searchParams.toString();
+	const url = `/projects/${projectId}/tickets${queryString ? `?${queryString}` : ""}`;
+
+	const response = await client.get(url);
 	const json = await response.json();
 	return ticketsSchema.parse(json.data);
 };
