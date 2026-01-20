@@ -436,7 +436,7 @@ export default function LocalstackDevtoolsPanel() {
 			}
 			return (await res.json()) as LocalstackHealth;
 		},
-		refetchInterval: 5000,
+
 		retry: false,
 		enabled: !selectedService,
 	});
