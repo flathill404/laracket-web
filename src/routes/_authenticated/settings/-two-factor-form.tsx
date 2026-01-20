@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
+	confirmPassword,
 	confirmTwoFactor,
 	disableTwoFactor,
 	enableTwoFactor,
@@ -20,10 +21,12 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
 	InputOTP,
 	InputOTPGroup,
@@ -39,6 +42,8 @@ export function TwoFactorForm() {
 	const [qrCodeSvg, setQrCodeSvg] = useState<string | null>(null);
 	const [confirmationCode, setConfirmationCode] = useState("");
 	const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
+	const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
+	const [password, setPassword] = useState("");
 
 	const enableMutation = useMutation({
 		mutationFn: async () => {
@@ -52,6 +57,18 @@ export function TwoFactorForm() {
 		},
 		onError: () => {
 			toast.error("Failed to enable two-factor authentication");
+		},
+	});
+
+	const confirmPasswordMutation = useMutation({
+		mutationFn: confirmPassword,
+		onSuccess: () => {
+			setConfirmPasswordOpen(false);
+			setPassword("");
+			enableMutation.mutate();
+		},
+		onError: () => {
+			toast.error("Incorrect password");
 		},
 	});
 
@@ -263,12 +280,63 @@ export function TwoFactorForm() {
 								</div>
 							</div>
 						) : (
-							<Button
-								onClick={() => enableMutation.mutate()}
-								disabled={enableMutation.isPending}
-							>
-								Enable
-							</Button>
+							<div className="flex gap-2">
+								<Button
+									onClick={() => setConfirmPasswordOpen(true)}
+									disabled={enableMutation.isPending}
+								>
+									Enable
+								</Button>
+								<Dialog
+									open={confirmPasswordOpen}
+									onOpenChange={setConfirmPasswordOpen}
+								>
+									<DialogContent>
+										<DialogHeader>
+											<DialogTitle>Confirm Password</DialogTitle>
+											<DialogDescription>
+												For your security, please confirm your password to
+												continue.
+											</DialogDescription>
+										</DialogHeader>
+										<div className="space-y-4 py-2">
+											<div className="space-y-2">
+												<Label htmlFor="password">Password</Label>
+												<Input
+													type="password"
+													id="password"
+													placeholder="Password"
+													value={password}
+													onChange={(e) => setPassword(e.target.value)}
+													onKeyDown={(e) => {
+														if (e.key === "Enter") {
+															confirmPasswordMutation.mutate({ password });
+														}
+													}}
+												/>
+											</div>
+										</div>
+										<DialogFooter>
+											<Button
+												variant="outline"
+												onClick={() => setConfirmPasswordOpen(false)}
+											>
+												Cancel
+											</Button>
+											<Button
+												onClick={() =>
+													confirmPasswordMutation.mutate({ password })
+												}
+												disabled={
+													confirmPasswordMutation.isPending || !password
+												}
+											>
+												Confirm
+											</Button>
+										</DialogFooter>
+									</DialogContent>
+								</Dialog>
+							</div>
 						)}
 					</>
 				)}

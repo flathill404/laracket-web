@@ -66,6 +66,20 @@ const updateProfileInformation = async (
 	await client.put("/user/profile-information", input);
 };
 
+const confirmPasswordInputSchema = z.object({
+	password: z.string(),
+});
+
+/**
+ * Confirms the user's password.
+ * @param input - The password to confirm.
+ */
+const confirmPassword = async (
+	input: z.infer<typeof confirmPasswordInputSchema>,
+) => {
+	await client.post("/user/confirm-password", input);
+};
+
 const updatePasswordInputSchema = z.object({
 	currentPassword: z.string(),
 	password: z.string().min(8),
@@ -187,6 +201,7 @@ export {
 	logout,
 	updateProfileInformation,
 	updatePassword,
+	confirmPassword,
 	updateAvatar,
 	deleteAvatar,
 	// 2FA functions
