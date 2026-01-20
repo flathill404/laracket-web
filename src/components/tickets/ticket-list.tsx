@@ -7,7 +7,6 @@ import {
 import { Circle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-	Table,
 	TableBody,
 	TableCell,
 	TableHead,
@@ -123,8 +122,8 @@ export function TicketList({
 		<div className="flex-1 overflow-hidden bg-muted/5 p-6">
 			<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
 				<div className="flex-1 overflow-auto">
-					<Table>
-						<TableHeader className="bg-muted/30">
+					<table className="w-full caption-bottom text-sm">
+						<TableHeader className="sticky top-0 z-10 bg-muted">
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow
 									key={headerGroup.id}
@@ -183,7 +182,7 @@ export function TicketList({
 								</TableRow>
 							)}
 						</TableBody>
-					</Table>
+					</table>
 				</div>
 				<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
 					Showing {tickets.length} tickets
