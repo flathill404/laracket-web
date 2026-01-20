@@ -33,8 +33,8 @@ export const useAuth = () => {
 
 	const twoFactorChallengeMutation = useMutation({
 		mutationFn: twoFactorChallenge,
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["user"] });
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 	});
 
