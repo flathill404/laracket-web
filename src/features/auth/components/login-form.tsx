@@ -29,8 +29,8 @@ export function LoginForm({ redirect }: LoginFormProps) {
 
 	const form = useAppForm({
 		defaultValues: {
-			email: "",
-			password: "",
+			email: import.meta.env.DEV ? "jeison.stethem@acme.com" : "",
+			password: import.meta.env.DEV ? "password" : "",
 			remember: false,
 		},
 		validationLogic: revalidateLogic(),
