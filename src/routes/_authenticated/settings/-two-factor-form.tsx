@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -38,22 +38,32 @@ import { useAuth } from "@/hooks/use-auth";
 export function TwoFactorForm() {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
-	const [isSetupMode, setIsSetupMode] = useState(false);
-	const [qrCodeSvg, setQrCodeSvg] = useState<string | null>(null);
 	const [confirmationCode, setConfirmationCode] = useState("");
-	const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
 	const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
 	const [password, setPassword] = useState("");
 
-	const enableMutation = useMutation({
-		mutationFn: async () => {
-			await enableTwoFactor();
+	const isConfirmed = user?.twoFactorStatus === "enabled";
+	const isPending = user?.twoFactorStatus === "pending";
+
+	const { data: recoveryCodes, refetch: refetchRecoveryCodes } = useQuery({
+		queryKey: ["recovery-codes"],
+		queryFn: fetchTwoFactorRecoveryCodes,
+		enabled: false,
+	});
+
+	const { data: qrCodeSvg } = useQuery({
+		queryKey: ["two-factor-qr-code"],
+		queryFn: async () => {
 			const { svg } = await fetchTwoFactorQrCode();
 			return svg;
 		},
-		onSuccess: (svg) => {
-			setQrCodeSvg(svg);
-			setIsSetupMode(true);
+		enabled: isPending,
+	});
+
+	const enableMutation = useMutation({
+		mutationFn: enableTwoFactor,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 		onError: () => {
 			toast.error("Failed to enable two-factor authentication");
@@ -76,10 +86,7 @@ export function TwoFactorForm() {
 		mutationFn: confirmTwoFactor,
 		onSuccess: async () => {
 			toast.success("Two-factor authentication enabled");
-			const codes = await fetchTwoFactorRecoveryCodes();
-			setRecoveryCodes(codes);
-			setIsSetupMode(false);
-			setQrCodeSvg(null);
+			refetchRecoveryCodes();
 			setConfirmationCode("");
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
@@ -92,25 +99,12 @@ export function TwoFactorForm() {
 		mutationFn: disableTwoFactor,
 		onSuccess: () => {
 			toast.success("Two-factor authentication disabled");
-			setRecoveryCodes(null);
 			queryClient.invalidateQueries({ queryKey: ["user"] });
 		},
 		onError: () => {
 			toast.error("Failed to disable two-factor authentication");
 		},
 	});
-
-	const getRecoveryCodesMutation = useMutation({
-		mutationFn: fetchTwoFactorRecoveryCodes,
-		onSuccess: (codes) => {
-			setRecoveryCodes(codes);
-		},
-		onError: () => {
-			toast.error("Failed to get recovery codes");
-		},
-	});
-
-	const isEnabled = !!user?.twoFactorConfirmedAt;
 
 	const handleConfirm = () => {
 		if (confirmationCode.length === 6) {
@@ -128,7 +122,7 @@ export function TwoFactorForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-6">
-				{isEnabled ? (
+				{isConfirmed ? (
 					<>
 						<div className="flex items-center justify-between">
 							<div className="space-y-1">
@@ -166,7 +160,9 @@ export function TwoFactorForm() {
 								</div>
 								<Button
 									variant="outline"
-									onClick={() => setRecoveryCodes(null)}
+									onClick={() =>
+										queryClient.setQueryData(["recovery-codes"], null)
+									}
 								>
 									Done
 								</Button>
@@ -175,8 +171,7 @@ export function TwoFactorForm() {
 							<div className="flex gap-2">
 								<Button
 									variant="outline"
-									onClick={() => getRecoveryCodesMutation.mutate()}
-									disabled={getRecoveryCodesMutation.isPending}
+									onClick={() => refetchRecoveryCodes()}
 								>
 									Show Recovery Codes
 								</Button>
@@ -224,7 +219,7 @@ export function TwoFactorForm() {
 							</p>
 						</div>
 
-						{isSetupMode && qrCodeSvg ? (
+						{isPending && qrCodeSvg ? (
 							<div className="space-y-6">
 								<div className="space-y-4">
 									<p className="font-medium">
@@ -268,11 +263,8 @@ export function TwoFactorForm() {
 										</Button>
 										<Button
 											variant="ghost"
-											onClick={() => {
-												setIsSetupMode(false);
-												setQrCodeSvg(null);
-												setConfirmationCode("");
-											}}
+											onClick={() => disableMutation.mutate()}
+											disabled={disableMutation.isPending}
 										>
 											Cancel
 										</Button>

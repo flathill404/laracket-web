@@ -8,7 +8,7 @@ export const userSchema = z.object({
 	email: z.email(),
 	emailVerifiedAt: z.string().nullish(),
 	avatarUrl: z.string().nullish(),
-	twoFactorConfirmedAt: z.string().nullish(),
+	twoFactorStatus: z.enum(["disabled", "pending", "enabled"]),
 });
 
 /**
