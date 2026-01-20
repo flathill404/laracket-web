@@ -5,11 +5,11 @@ import { getCookie } from "@/lib/cookie";
 export const userSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	displayName: z.string().nullable().optional(),
+	displayName: z.string().nullish(),
 	email: z.email(),
-	emailVerifiedAt: z.string().nullable().optional(),
-	avatarUrl: z.string().optional(),
-	twoFactorConfirmedAt: z.string().nullable().optional(),
+	emailVerifiedAt: z.string().nullish(),
+	avatarUrl: z.string().nullish(),
+	twoFactorConfirmedAt: z.string().nullish(),
 });
 
 /**
@@ -23,7 +23,7 @@ const fetchUser = async () => {
 };
 
 const loginInputSchema = z.object({
-	email: z.string().email(),
+	email: z.email(),
 	password: z.string().min(8),
 	remember: z.boolean().default(false),
 });
