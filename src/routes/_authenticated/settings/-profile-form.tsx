@@ -19,6 +19,16 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { FieldLabel } from "@/components/ui/field";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { useAuth } from "@/hooks/use-auth";
@@ -28,6 +38,7 @@ export function ProfileForm() {
 	const queryClient = useQueryClient();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [cropDialogOpen, setCropDialogOpen] = useState(false);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
 
 	const updateProfileMutation = useMutation({
@@ -64,6 +75,7 @@ export function ProfileForm() {
 		onSuccess: () => {
 			toast.success("Avatar deleted");
 			queryClient.invalidateQueries({ queryKey: ["user"] });
+			setDeleteDialogOpen(false);
 			if (fileInputRef.current) {
 				fileInputRef.current.value = "";
 			}
@@ -114,12 +126,6 @@ export function ProfileForm() {
 		await updateAvatarMutation.mutateAsync(croppedFile);
 	};
 
-	const handleDeleteAvatar = async () => {
-		if (confirm("Are you sure you want to delete your avatar?")) {
-			await deleteAvatarMutation.mutateAsync();
-		}
-	};
-
 	return (
 		<Card>
 			<CardHeader>
@@ -133,20 +139,50 @@ export function ProfileForm() {
 				<div className="flex items-center gap-6">
 					<div className="relative">
 						<Avatar className="h-20 w-20">
-							<AvatarImage src={user?.avatarUrl} alt={user?.name} />
+							<AvatarImage
+								src={user?.avatarUrl ?? undefined}
+								alt={user?.name}
+							/>
 							<AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
 						</Avatar>
 						{user?.avatarUrl && (
-							<Button
-								variant="destructive"
-								size="icon"
-								className="absolute -right-2 -top-2 h-6 w-6 rounded-full shadow-sm"
-								onClick={handleDeleteAvatar}
-								disabled={deleteAvatarMutation.isPending}
+							<Dialog
+								open={deleteDialogOpen}
+								onOpenChange={setDeleteDialogOpen}
 							>
-								<X className="h-3 w-3" />
-								<span className="sr-only">Delete avatar</span>
-							</Button>
+								<DialogTrigger asChild>
+									<Button
+										variant="destructive"
+										size="icon"
+										className="absolute -right-2 -top-2 h-6 w-6 rounded-full shadow-sm"
+									>
+										<X className="h-3 w-3" />
+										<span className="sr-only">Delete avatar</span>
+									</Button>
+								</DialogTrigger>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>Delete Avatar</DialogTitle>
+										<DialogDescription>
+											Are you sure you want to delete your avatar?
+										</DialogDescription>
+									</DialogHeader>
+									<DialogFooter>
+										<DialogClose asChild>
+											<Button variant="outline">Cancel</Button>
+										</DialogClose>
+										<Button
+											variant="destructive"
+											onClick={() => deleteAvatarMutation.mutate()}
+											disabled={deleteAvatarMutation.isPending}
+										>
+											{deleteAvatarMutation.isPending
+												? "Deleting..."
+												: "Delete"}
+										</Button>
+									</DialogFooter>
+								</DialogContent>
+							</Dialog>
 						)}
 					</div>
 					<div className="flex flex-col gap-2">
