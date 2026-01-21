@@ -23,32 +23,8 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { getStatusColor, getStatusLabel } from "@/features/tickets/utils";
 import { fetchTicket } from "../api/tickets";
-
-// Helper to define types for the status based on the API
-const getStatusColor = (status: string) => {
-	switch (status) {
-		case "open":
-		case "reopened":
-			return "text-green-500 fill-green-500";
-		case "in_progress":
-			return "text-yellow-500 fill-yellow-500";
-		case "resolved":
-		case "closed":
-			return "text-slate-500 fill-slate-500";
-		case "in_review":
-			return "text-blue-500 fill-blue-500";
-		default:
-			return "text-slate-500 fill-slate-500";
-	}
-};
-
-const getStatusLabel = (status: string) => {
-	return status
-		.split("_")
-		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(" ");
-};
 
 const ticketQuery = (ticketId: string) =>
 	queryOptions({
