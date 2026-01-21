@@ -74,3 +74,12 @@ export const fetchUserTickets = async (userId: string) => {
 	const json = await response.json();
 	return ticketsSchema.parse(json.data);
 };
+
+export const updateTicket = async (
+	ticketId: string,
+	data: Partial<z.infer<typeof ticketSchema>>,
+) => {
+	const response = await client.put(`/tickets/${ticketId}`, data);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};

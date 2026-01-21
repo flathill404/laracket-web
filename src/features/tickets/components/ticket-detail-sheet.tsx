@@ -1,7 +1,11 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import {
+	queryOptions,
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
 	Bold,
-	ChevronDown,
 	ChevronRight,
 	Circle,
 	Image as ImageIcon,
@@ -15,6 +19,13 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
@@ -23,8 +34,13 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { getStatusColor, getStatusLabel } from "@/features/tickets/utils";
-import { fetchTicket } from "../api/tickets";
+import {
+	getAllStatuses,
+	getStatusBadgeVariant,
+	getStatusColor,
+	getStatusLabel,
+} from "@/features/tickets/utils";
+import { fetchTicket, updateTicket } from "../api/tickets";
 
 const ticketQuery = (ticketId: string) =>
 	queryOptions({
@@ -43,7 +59,16 @@ export function TicketDetailSheet({
 	open,
 	onOpenChange,
 }: TicketDetailSheetProps) {
+	const queryClient = useQueryClient();
 	const { data: ticket } = useSuspenseQuery(ticketQuery(ticketId));
+
+	const { mutate: mutateStatus } = useMutation({
+		mutationFn: (status: string) =>
+			updateTicket(ticketId, { status: status as any }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets", ticketId] });
+		},
+	});
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
@@ -75,17 +100,28 @@ export function TicketDetailSheet({
 							</div>
 						</div>
 						<div className="flex items-center gap-2">
-							<Button
-								variant="outline"
-								size="sm"
-								className="gap-2 text-green-700 bg-green-50 border-green-200 hover:bg-green-100 hover:text-green-800 hover:border-green-300 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900"
+							<Select
+								defaultValue={ticket.status}
+								onValueChange={(value) => mutateStatus(value)}
 							>
-								<Circle
-									className={`h-2 w-2 ${getStatusColor(ticket.status)}`}
-								/>
-								{getStatusLabel(ticket.status)}
-								<ChevronDown className="h-3 w-3 opacity-50" />
-							</Button>
+								<SelectTrigger
+									className={`h-8 w-auto gap-2 border-dashed ${getStatusBadgeVariant(
+										ticket.status,
+									)}`}
+								>
+									<Circle
+										className={`h-2 w-2 ${getStatusColor(ticket.status)}`}
+									/>
+									<SelectValue placeholder="Select status" />
+								</SelectTrigger>
+								<SelectContent>
+									{getAllStatuses().map((status) => (
+										<SelectItem key={status} value={status}>
+											{getStatusLabel(status)}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<Button variant="ghost" size="icon">
 								<MoreHorizontal className="h-4 w-4" />
 							</Button>
@@ -128,7 +164,7 @@ export function TicketDetailSheet({
 								<Separator className="my-8" />
 
 								{/* Timeline (Mocked) */}
-								<div className="relative pl-4 space-y-8 before:absolute before:top-0 before:bottom-0 before:left-[19px] before:w-[2px] before:bg-muted">
+								<div className="relative space-y-8 before:absolute before:top-0 before:bottom-0 before:left-[19px] before:w-[2px] before:bg-muted">
 									{/* Activity 1 */}
 									<div className="relative pl-8">
 										<div className="absolute left-0 top-1 h-10 w-10 flex items-center justify-center rounded-full bg-background border-2 border-muted z-10">
@@ -243,49 +279,30 @@ export function TicketDetailSheet({
 											Assignees
 										</span>
 										<div className="flex flex-wrap gap-2 min-h-[2.5rem] items-center">
-											{ticket.assignees.length > 0 ? (
-												ticket.assignees.map((assignee) => (
-													<div
-														key={assignee.id}
-														className="flex items-center gap-2 bg-background border px-2 py-1 rounded-md shadow-sm"
-													>
-														<Avatar className="h-5 w-5">
-															<AvatarImage
-																src={assignee.avatarUrl ?? undefined}
-															/>
-															<AvatarFallback className="text-[10px]">
-																{assignee.name.slice(0, 2).toUpperCase()}
-															</AvatarFallback>
-														</Avatar>
-														<span className="text-sm font-medium">
-															{assignee.name}
-														</span>
-													</div>
-												))
-											) : (
-												<Button
-													variant="outline"
-													size="sm"
-													className="h-8 text-muted-foreground border-dashed"
+											{ticket.assignees.map((assignee) => (
+												<div
+													key={assignee.id}
+													className="flex items-center gap-2 bg-background border px-2 py-1 rounded-md shadow-sm"
 												>
-													+ Add Assignee
-												</Button>
-											)}
-										</div>
-									</div>
-
-									<div className="space-y-2">
-										<span className="text-xs font-medium text-muted-foreground">
-											Priority
-										</span>
-										<div>
+													<Avatar className="h-5 w-5">
+														<AvatarImage
+															src={assignee.avatarUrl ?? undefined}
+														/>
+														<AvatarFallback className="text-[10px]">
+															{assignee.name.slice(0, 2).toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<span className="text-sm font-medium">
+														{assignee.name}
+													</span>
+												</div>
+											))}
 											<Button
 												variant="outline"
 												size="sm"
-												className="h-8 justify-start gap-2 font-normal"
+												className="h-8 text-muted-foreground border-dashed"
 											>
-												<div className="h-2 w-2 rounded-full bg-red-500" />
-												High
+												+ Add Assignee
 											</Button>
 										</div>
 									</div>
@@ -301,27 +318,6 @@ export function TicketDetailSheet({
 												className="h-8 px-0 text-muted-foreground hover:text-foreground"
 											>
 												+ Add Reviewer
-											</Button>
-										</div>
-									</div>
-
-									<div className="space-y-2">
-										<span className="text-xs font-medium text-muted-foreground">
-											Labels
-										</span>
-										<div className="flex flex-wrap gap-1.5">
-											<div className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs font-medium border border-blue-200 dark:border-blue-800">
-												frontend
-											</div>
-											<div className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 text-xs font-medium border border-purple-200 dark:border-purple-800">
-												bug
-											</div>
-											<Button
-												variant="ghost"
-												size="sm"
-												className="h-5 w-5 rounded-full p-0"
-											>
-												<span className="text-lg leading-none mb-1">+</span>
 											</Button>
 										</div>
 									</div>
