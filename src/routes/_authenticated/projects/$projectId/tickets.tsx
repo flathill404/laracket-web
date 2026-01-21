@@ -19,6 +19,7 @@ import {
 	fetchProjectTickets,
 } from "@/features/projects/api/projects";
 import { TicketList } from "@/features/tickets/components/ticket-list";
+import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
 
 const ticketsQuery = (
@@ -63,8 +64,14 @@ function ProjectDetail() {
 	const { projectId } = Route.useParams();
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
-	const { data: tickets } = useSuspenseQuery(ticketsQuery(projectId, search));
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
+
+	// Use infinite query hook
+	const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+		useInfiniteTickets(projectId, {
+			status: search.status,
+			sort: search.sort,
+		});
 
 	const handleStatusChange = (status: string[]) => {
 		navigate({
@@ -90,6 +97,8 @@ function ProjectDetail() {
 		});
 	};
 
+	const pages = data?.pages ?? [];
+
 	return (
 		<div className="flex flex-col h-full bg-background">
 			{/* Page Header */}
@@ -113,11 +122,14 @@ function ProjectDetail() {
 			</div>
 
 			<TicketList
-				tickets={tickets}
+				pages={pages}
 				selectedStatuses={search.status}
 				onStatusChange={handleStatusChange}
 				sorting={sorting}
 				onSortingChange={handleSortingChange}
+				hasNextPage={hasNextPage}
+				isFetchingNextPage={isFetchingNextPage}
+				fetchNextPage={fetchNextPage}
 				onTicketClick={(ticket) =>
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",

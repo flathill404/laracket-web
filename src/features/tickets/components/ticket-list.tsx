@@ -5,6 +5,9 @@ import {
 	type SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { Loader2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import {
 	Table,
@@ -15,10 +18,11 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
+import type { PaginatedTicketsResponse } from "@/features/tickets/api/tickets";
 import { columns, type Ticket } from "./columns";
 
-interface TicketListProps {
-	tickets: Ticket[];
+// Base props shared between both modes
+interface BaseTicketListProps {
 	onTicketClick: (ticket: Ticket) => void;
 	emptyState?: React.ReactNode;
 	selectedStatuses?: string[];
@@ -27,17 +31,61 @@ interface TicketListProps {
 	onSortingChange?: OnChangeFn<SortingState>;
 }
 
-export function TicketList({
-	tickets,
-	onTicketClick,
-	emptyState,
-	selectedStatuses = [],
-	onStatusChange,
-	sorting,
-	onSortingChange,
-}: TicketListProps) {
+// Props for infinite scroll mode (pages from useInfiniteQuery)
+interface InfiniteScrollProps extends BaseTicketListProps {
+	pages: PaginatedTicketsResponse[];
+	hasNextPage: boolean;
+	isFetchingNextPage: boolean;
+	fetchNextPage: () => void;
+	tickets?: never;
+}
+
+// Props for simple mode (flat ticket array)
+interface SimpleListProps extends BaseTicketListProps {
+	tickets: Ticket[];
+	pages?: never;
+	hasNextPage?: never;
+	isFetchingNextPage?: never;
+	fetchNextPage?: never;
+}
+
+type TicketListProps = InfiniteScrollProps | SimpleListProps;
+
+const ROW_HEIGHT = 65; // Estimated row height in pixels
+
+export function TicketList(props: TicketListProps) {
+	const {
+		onTicketClick,
+		emptyState,
+		selectedStatuses = [],
+		onStatusChange,
+		sorting,
+		onSortingChange,
+	} = props;
+
+	// Determine mode and get tickets
+	const isInfiniteMode = "pages" in props && props.pages !== undefined;
+
+	const allTickets = useMemo(() => {
+		if (isInfiniteMode) {
+			return (props as InfiniteScrollProps).pages.flatMap((page) => page.data);
+		}
+		return (props as SimpleListProps).tickets;
+	}, [isInfiniteMode, props]);
+
+	// Infinite scroll props (with defaults for simple mode)
+	const hasNextPage = isInfiniteMode
+		? (props as InfiniteScrollProps).hasNextPage
+		: false;
+	const isFetchingNextPage = isInfiniteMode
+		? (props as InfiniteScrollProps).isFetchingNextPage
+		: false;
+	const fetchNextPage = isInfiniteMode
+		? (props as InfiniteScrollProps).fetchNextPage
+		: () => {};
+
 	const table = useReactTable({
-		data: tickets,
+		data: allTickets,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		manualSorting: true,
@@ -51,6 +99,47 @@ export function TicketList({
 			onStatusChange: onStatusChange ?? (() => {}),
 		},
 	});
+
+	const { rows } = table.getRowModel();
+
+	// Virtualizer setup
+	const parentRef = useRef<HTMLDivElement>(null);
+
+	const virtualizer = useVirtualizer({
+		count: rows.length,
+		getScrollElement: () => parentRef.current,
+		estimateSize: () => ROW_HEIGHT,
+		overscan: 5,
+	});
+
+	// Infinite scroll: load more when near bottom
+	const lastItemIndex = virtualizer.getVirtualItems().at(-1)?.index;
+
+	const loadMoreIfNeeded = useCallback(() => {
+		if (
+			lastItemIndex !== undefined &&
+			lastItemIndex >= rows.length - 5 &&
+			hasNextPage &&
+			!isFetchingNextPage
+		) {
+			fetchNextPage();
+		}
+	}, [
+		lastItemIndex,
+		rows.length,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+	]);
+
+	useEffect(() => {
+		loadMoreIfNeeded();
+	}, [loadMoreIfNeeded]);
+
+	const virtualItems = virtualizer.getVirtualItems();
+
+	// Get total count info
+	const totalLoaded = allTickets.length;
 
 	return (
 		<div className="flex-1 overflow-hidden bg-muted/5 p-6">
@@ -83,34 +172,60 @@ export function TicketList({
 					</TableHeader>
 				</Table>
 
-				{/* Body - Scrollable */}
-				<div className="flex-1 overflow-auto [scrollbar-gutter:stable]">
-					<Table className="table-fixed">
-						<TableBody>
-							{table.getRowModel().rows?.length ? (
-								table.getRowModel().rows.map((row) => (
-									<TableRow
+				{/* Body - Virtualized and Scrollable */}
+				<div
+					ref={parentRef}
+					className="flex-1 overflow-auto [scrollbar-gutter:stable]"
+				>
+					{rows.length > 0 ? (
+						<div
+							style={{
+								height: `${virtualizer.getTotalSize()}px`,
+								width: "100%",
+								position: "relative",
+							}}
+						>
+							{virtualItems.map((virtualRow) => {
+								const row = rows[virtualRow.index];
+								return (
+									<button
 										key={row.id}
+										type="button"
 										data-state={row.getIsSelected() && "selected"}
 										onClick={() => onTicketClick(row.original)}
-										className="cursor-pointer hover:bg-muted/50"
+										className="cursor-pointer hover:bg-muted/50 border-b flex items-center focus:outline-none focus:bg-muted/50 w-full text-left bg-transparent"
+										style={{
+											position: "absolute",
+											top: 0,
+											left: 0,
+											width: "100%",
+											height: `${virtualRow.size}px`,
+											transform: `translateY(${virtualRow.start}px)`,
+										}}
 									>
 										{row.getVisibleCells().map((cell) => {
 											const meta = cell.column.columnDef.meta as
 												| { className?: string }
 												| undefined;
 											return (
-												<TableCell key={cell.id} className={meta?.className}>
+												<div
+													key={cell.id}
+													className={`p-4 ${meta?.className ?? ""}`}
+												>
 													{flexRender(
 														cell.column.columnDef.cell,
 														cell.getContext(),
 													)}
-												</TableCell>
+												</div>
 											);
 										})}
-									</TableRow>
-								))
-							) : (
+									</button>
+								);
+							})}
+						</div>
+					) : (
+						<Table className="table-fixed">
+							<TableBody>
 								<TableRow>
 									<TableCell
 										colSpan={columns.length}
@@ -119,13 +234,24 @@ export function TicketList({
 										{emptyState ?? "No tickets found."}
 									</TableCell>
 								</TableRow>
-							)}
-						</TableBody>
-					</Table>
+							</TableBody>
+						</Table>
+					)}
 				</div>
 
-				<div className="border-t p-4 text-center text-xs text-muted-foreground bg-card">
-					Showing {tickets.length} tickets
+				{/* Footer with count and loading indicator */}
+				<div className="border-t p-4 flex items-center justify-center gap-2 text-xs text-muted-foreground bg-card">
+					{isFetchingNextPage ? (
+						<>
+							<Loader2 className="h-3 w-3 animate-spin" />
+							<span>Loading more tickets...</span>
+						</>
+					) : (
+						<span>
+							Showing {totalLoaded} tickets
+							{hasNextPage && " • Scroll for more"}
+						</span>
+					)}
 				</div>
 			</div>
 		</div>

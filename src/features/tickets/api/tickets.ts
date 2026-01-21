@@ -44,6 +44,25 @@ export const ticketSchema = z.object({
 
 export const ticketsSchema = z.array(ticketSchema);
 
+// Schema for Laravel cursor pagination response
+export const paginatedTicketsSchema = z.object({
+	data: z.array(ticketSchema),
+	links: z.object({
+		first: z.string().nullable(),
+		last: z.string().nullable(),
+		prev: z.string().nullable(),
+		next: z.string().nullable(),
+	}),
+	meta: z.object({
+		path: z.string(),
+		perPage: z.number(),
+		nextCursor: z.string().nullable(),
+		prevCursor: z.string().nullable(),
+	}),
+});
+
+export type PaginatedTicketsResponse = z.infer<typeof paginatedTicketsSchema>;
+
 export const fetchTicket = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}`);
 	const json = await response.json();
