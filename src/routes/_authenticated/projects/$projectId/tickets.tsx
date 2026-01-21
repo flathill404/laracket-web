@@ -140,6 +140,7 @@ function ProjectDetail() {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",
 						params: { projectId, ticketId: ticket.id },
+						search: (prev) => prev,
 					})
 				}
 				emptyState={

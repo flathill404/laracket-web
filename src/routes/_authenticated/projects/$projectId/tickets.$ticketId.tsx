@@ -25,8 +25,8 @@ function TicketDetailRoute() {
 
 	const handleOpenChange = (open: boolean) => {
 		if (!open) {
-			// Navigate back to the tickets list (parent route)
-			navigate({ to: "..", search: (old) => old });
+			// Navigate back to the tickets list (parent route), preserving search params
+			navigate({ to: "..", search: true });
 		}
 	};
 
