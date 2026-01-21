@@ -1,5 +1,12 @@
-import type { ColumnDef } from "@tanstack/react-table";
-import { Check, Circle, Filter, MoreHorizontal, Trash } from "lucide-react";
+import type { Column, ColumnDef } from "@tanstack/react-table";
+import {
+	ArrowUpDown,
+	Check,
+	Circle,
+	Filter,
+	MoreHorizontal,
+	Trash,
+} from "lucide-react";
 import { useState } from "react";
 import {
 	AlertDialog,
@@ -104,7 +111,7 @@ export const columns: ColumnDef<Ticket>[] = [
 	},
 	{
 		accessorKey: "dueDate",
-		header: "Due Date",
+		header: ({ column }) => <DueDateHeader column={column} />,
 		cell: ({ getValue }) => (
 			<DueDateCell dueDate={getValue() as string | null | undefined} />
 		),
@@ -271,6 +278,20 @@ function AssigneeCell({ assignees }: { assignees: Ticket["assignees"] }) {
 				<span className="text-sm text-muted-foreground">Unassigned</span>
 			)}
 		</div>
+	);
+}
+
+function DueDateHeader({ column }: { column: Column<Ticket> }) {
+	return (
+		<Button
+			variant="ghost"
+			size="sm"
+			className="-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50"
+			onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+		>
+			<span>Due Date</span>
+			<ArrowUpDown className="ml-2 h-4 w-4" />
+		</Button>
 	);
 }
 

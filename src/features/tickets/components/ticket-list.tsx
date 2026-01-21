@@ -1,8 +1,11 @@
 import {
 	flexRender,
 	getCoreRowModel,
+	type OnChangeFn,
+	type SortingState,
 	useReactTable,
 } from "@tanstack/react-table";
+
 import {
 	Table,
 	TableBody,
@@ -20,6 +23,8 @@ interface TicketListProps {
 	emptyState?: React.ReactNode;
 	selectedStatuses?: string[];
 	onStatusChange?: (statuses: string[]) => void;
+	sorting?: SortingState;
+	onSortingChange?: OnChangeFn<SortingState>;
 }
 
 export function TicketList({
@@ -28,11 +33,18 @@ export function TicketList({
 	emptyState,
 	selectedStatuses = [],
 	onStatusChange,
+	sorting,
+	onSortingChange,
 }: TicketListProps) {
 	const table = useReactTable({
 		data: tickets,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		manualSorting: true,
+		onSortingChange,
+		state: {
+			sorting,
+		},
 		meta: {
 			selectedStatuses,
 			onStatusChange: onStatusChange ?? (() => {}),
