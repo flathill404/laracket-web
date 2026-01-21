@@ -19,6 +19,7 @@ import {
 	fetchProjectTickets,
 } from "@/features/projects/api/projects";
 import { TicketList } from "@/features/tickets/components/ticket-list";
+import { parseSortParam, toSortParam } from "@/lib/sorting";
 
 const ticketsQuery = (
 	projectId: string,
@@ -75,14 +76,7 @@ function ProjectDetail() {
 		});
 	};
 
-	// Convert snake_case from URL to camelCase for tanstack table
-	const sortParam = search.sort;
-	const sortId = sortParam
-		?.replace(/^-/, "")
-		.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
-	const sortDesc = sortParam?.startsWith("-") ?? false;
-
-	const sorting: SortingState = sortId ? [{ id: sortId, desc: sortDesc }] : [];
+	const sorting = parseSortParam(search.sort);
 
 	const handleSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
 		const newSorting =
@@ -90,21 +84,9 @@ function ProjectDetail() {
 				? updaterOrValue(sorting)
 				: updaterOrValue;
 
-		// Convert camelCase to snake_case for API
-		const columnId = newSorting.length > 0 ? newSorting[0].id : null;
-		const snakeCaseId = columnId?.replace(
-			/[A-Z]/g,
-			(m) => `_${m.toLowerCase()}`,
-		);
-
-		const sort =
-			newSorting.length > 0
-				? `${newSorting[0].desc ? "-" : ""}${snakeCaseId}`
-				: undefined;
-
 		navigate({
 			to: ".",
-			search: (prev) => ({ ...prev, sort }),
+			search: (prev) => ({ ...prev, sort: toSortParam(newSorting) }),
 		});
 	};
 
