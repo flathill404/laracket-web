@@ -67,37 +67,58 @@ export function TicketDetailSheet({
 	const { mutate: mutateStatus } = useMutation({
 		mutationFn: (status: TicketStatusType) =>
 			updateTicketStatus(ticketId, status),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets"] });
-			queryClient.invalidateQueries({ queryKey: ["projects"] });
+		onSuccess: (_, variables) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old
+					? {
+							...old,
+							status: variables,
+						}
+					: old,
+			);
+			queryClient.invalidateQueries({
+				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
 		},
 	});
 
 	const { mutate: addAssignee } = useMutation({
 		mutationFn: (userId: string) => addTicketAssignee(ticketId, userId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+			queryClient.invalidateQueries({
+				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
 		},
 	});
 
 	const { mutate: removeAssignee } = useMutation({
 		mutationFn: (userId: string) => removeTicketAssignee(ticketId, userId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+			queryClient.invalidateQueries({
+				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
 		},
 	});
 
 	const { mutate: addReviewer } = useMutation({
 		mutationFn: (userId: string) => addTicketReviewer(ticketId, userId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+			queryClient.invalidateQueries({
+				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
 		},
 	});
 
 	const { mutate: removeReviewer } = useMutation({
 		mutationFn: (userId: string) => removeTicketReviewer(ticketId, userId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		onSuccess: (data) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+			queryClient.invalidateQueries({
+				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
 		},
 	});
 

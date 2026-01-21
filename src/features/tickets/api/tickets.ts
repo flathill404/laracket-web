@@ -85,11 +85,9 @@ export const updateTicketStatus = async (
 	ticketId: string,
 	status: z.infer<typeof ticketStatusSchema>,
 ) => {
-	const response = await client.patch(`/tickets/${ticketId}/status`, {
+	await client.patch(`/tickets/${ticketId}/status`, {
 		status,
 	});
-	const json = await response.json();
-	return ticketSchema.parse(json.data);
 };
 
 export const addTicketAssignee = async (ticketId: string, userId: string) => {
