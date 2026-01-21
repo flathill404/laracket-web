@@ -19,13 +19,7 @@ export const ticketStatusSchema = z.enum([
 
 export type TicketStatusType = z.infer<typeof ticketStatusSchema>;
 
-const assigneeSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-	avatarUrl: z.string().nullish(),
-});
-const reviewerSchema = z.object({
+const ticketUserSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	displayName: z.string(),
@@ -38,8 +32,8 @@ export const ticketSchema = z.object({
 	description: z.string(),
 	status: ticketStatusSchema,
 	dueDate: z.iso.datetime().nullish(),
-	assignees: z.array(assigneeSchema),
-	reviewers: z.array(reviewerSchema),
+	assignees: z.array(ticketUserSchema),
+	reviewers: z.array(ticketUserSchema),
 	projectId: z.string(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
@@ -136,6 +130,11 @@ export const removeTicketReviewer = async (
 	return ticketSchema.parse(json.data);
 };
 
-export { assigneeSchema, reviewerSchema };
-export type Assignee = z.infer<typeof assigneeSchema>;
-export type Reviewer = z.infer<typeof reviewerSchema>;
+export {
+	ticketUserSchema as assigneeSchema,
+	ticketUserSchema as reviewerSchema,
+	ticketUserSchema,
+};
+export type TicketUser = z.infer<typeof ticketUserSchema>;
+export type Assignee = TicketUser;
+export type Reviewer = TicketUser;

@@ -39,10 +39,16 @@ import {
 	getStatusColor,
 	getStatusLabel,
 } from "@/features/tickets/utils";
-import { type TicketStatusType, updateTicketStatus } from "../api/tickets";
+import {
+	addTicketAssignee,
+	addTicketReviewer,
+	removeTicketAssignee,
+	removeTicketReviewer,
+	type TicketStatusType,
+	updateTicketStatus,
+} from "../api/tickets";
 import { ticketQueryOptions } from "../lib/tickets";
-import { AssigneeSelector } from "./assignee-selector";
-import { ReviewerSelector } from "./reviewer-selector";
+import { TicketUserSelector } from "./ticket-user-selector";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -64,6 +70,34 @@ export function TicketDetailSheet({
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["tickets"] });
 			queryClient.invalidateQueries({ queryKey: ["projects"] });
+		},
+	});
+
+	const { mutate: addAssignee } = useMutation({
+		mutationFn: (userId: string) => addTicketAssignee(ticketId, userId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		},
+	});
+
+	const { mutate: removeAssignee } = useMutation({
+		mutationFn: (userId: string) => removeTicketAssignee(ticketId, userId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		},
+	});
+
+	const { mutate: addReviewer } = useMutation({
+		mutationFn: (userId: string) => addTicketReviewer(ticketId, userId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+		},
+	});
+
+	const { mutate: removeReviewer } = useMutation({
+		mutationFn: (userId: string) => removeTicketReviewer(ticketId, userId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets"] });
 		},
 	});
 
@@ -99,7 +133,9 @@ export function TicketDetailSheet({
 						<div className="flex items-center gap-2">
 							<Select
 								value={ticket.status}
-								onValueChange={(value) => mutateStatus(value as TicketStatusType)}
+								onValueChange={(value) =>
+									mutateStatus(value as TicketStatusType)
+								}
 							>
 								<SelectTrigger
 									className={`h-8 w-[160px] gap-2 border-dashed ${getStatusBadgeVariant(
@@ -273,16 +309,28 @@ export function TicketDetailSheet({
 								</h4>
 
 								<div className="space-y-5">
-									<AssigneeSelector
+									<TicketUserSelector
 										ticketId={ticket.id}
 										projectId={ticket.projectId}
-										assignees={ticket.assignees}
+										users={ticket.assignees}
+										label="Assignees"
+										addButtonLabel="+ Add Assignee"
+										addButtonVariant="outline"
+										addButtonClassName="h-8 text-muted-foreground border-dashed"
+										onAdd={(userId) => addAssignee(userId)}
+										onRemove={(userId) => removeAssignee(userId)}
 									/>
 
-									<ReviewerSelector
+									<TicketUserSelector
 										ticketId={ticket.id}
 										projectId={ticket.projectId}
-										reviewers={ticket.reviewers}
+										users={ticket.reviewers}
+										label="Reviewers"
+										addButtonLabel="+ Add Reviewer"
+										addButtonVariant="ghost"
+										addButtonClassName="h-8 px-0 text-muted-foreground hover:text-foreground"
+										onAdd={(userId) => addReviewer(userId)}
+										onRemove={(userId) => removeReviewer(userId)}
 									/>
 								</div>
 							</div>
