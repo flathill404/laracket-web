@@ -1,5 +1,16 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Check, Circle, Filter } from "lucide-react";
+import { Check, Circle, Filter, MoreHorizontal, Trash } from "lucide-react";
+import { useState } from "react";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +21,12 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	Popover,
 	PopoverContent,
@@ -24,6 +41,7 @@ export interface Ticket {
 	title: string;
 	description: string;
 	status: string;
+	dueDate?: string | null;
 	assignees: Array<{
 		id: string;
 		name: string;
@@ -38,6 +56,7 @@ export interface Ticket {
 export interface TicketTableMeta {
 	selectedStatuses: string[];
 	onStatusChange: (statuses: string[]) => void;
+	onDeleteTicket?: (ticketId: string) => void;
 }
 
 export const statuses = [
@@ -216,4 +235,112 @@ export const columns: ColumnDef<Ticket>[] = [
 			className: "w-[140px]",
 		},
 	},
+	{
+		accessorKey: "dueDate",
+		header: "Due Date",
+		cell: ({ getValue }) => {
+			const dueDate = getValue() as string | null | undefined;
+			if (!dueDate) {
+				return <span className="text-sm text-muted-foreground">—</span>;
+			}
+			const date = new Date(dueDate);
+			const formatted = date.toLocaleDateString("en-US", {
+				month: "short",
+				day: "numeric",
+				year: "numeric",
+			});
+			const isPastDue = date < new Date();
+			return (
+				<span
+					className={cn("text-sm", isPastDue && "text-destructive font-medium")}
+				>
+					{formatted}
+				</span>
+			);
+		},
+		meta: {
+			className: "w-[120px]",
+		},
+	},
+	{
+		id: "actions",
+		header: () => <span className="sr-only">Actions</span>,
+		cell: ({ row, table }) => {
+			const ticket = row.original;
+			const meta = table.options.meta as TicketTableMeta | undefined;
+			const onDeleteTicket = meta?.onDeleteTicket;
+
+			return <ActionsCell ticket={ticket} onDeleteTicket={onDeleteTicket} />;
+		},
+		meta: {
+			className: "w-[50px]",
+		},
+	},
 ];
+
+function ActionsCell({
+	ticket,
+	onDeleteTicket,
+}: {
+	ticket: Ticket;
+	onDeleteTicket?: (ticketId: string) => void;
+}) {
+	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+	return (
+		<>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						variant="ghost"
+						size="icon"
+						className="h-8 w-8"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<MoreHorizontal className="h-4 w-4" />
+						<span className="sr-only">Open menu</span>
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					<DropdownMenuItem
+						className="text-destructive focus:text-destructive"
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowDeleteDialog(true);
+						}}
+					>
+						<Trash className="mr-2 h-4 w-4" />
+						Delete
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+
+			<AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+				<AlertDialogContent onClick={(e) => e.stopPropagation()}>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Delete ticket?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete the
+							ticket "{ticket.title}".
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+							Cancel
+						</AlertDialogCancel>
+						<AlertDialogAction
+							className="bg-destructive text-white hover:bg-destructive/90"
+							onClick={(e) => {
+								e.stopPropagation();
+								onDeleteTicket?.(ticket.id);
+								setShowDeleteDialog(false);
+							}}
+						>
+							Delete
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
+	);
+}
