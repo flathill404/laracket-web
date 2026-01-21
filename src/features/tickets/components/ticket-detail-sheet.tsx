@@ -48,7 +48,7 @@ import {
 	type TicketUser,
 	updateTicketStatus,
 } from "../api/tickets";
-import { ticketQueryOptions } from "../lib/tickets";
+import { projectTicketsQueryKey, ticketQueryOptions } from "../lib/tickets";
 import { TicketUserSelector } from "./ticket-user-selector";
 
 export interface TicketDetailSheetProps {
@@ -78,7 +78,7 @@ export function TicketDetailSheet({
 					: old,
 			);
 			queryClient.invalidateQueries({
-				queryKey: ["projects", ticket.projectId, "tickets"],
+				queryKey: projectTicketsQueryKey(ticket.projectId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: ticketQueryOptions(ticketId).queryKey,
@@ -98,7 +98,7 @@ export function TicketDetailSheet({
 					: old,
 			);
 			queryClient.invalidateQueries({
-				queryKey: ["projects", ticket.projectId, "tickets"],
+				queryKey: projectTicketsQueryKey(ticket.projectId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: ticketQueryOptions(ticketId).queryKey,
@@ -118,7 +118,7 @@ export function TicketDetailSheet({
 					: old,
 			);
 			queryClient.invalidateQueries({
-				queryKey: ["projects", ticket.projectId, "tickets"],
+				queryKey: projectTicketsQueryKey(ticket.projectId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: ticketQueryOptions(ticketId).queryKey,
@@ -138,7 +138,7 @@ export function TicketDetailSheet({
 					: old,
 			);
 			queryClient.invalidateQueries({
-				queryKey: ["projects", ticket.projectId, "tickets"],
+				queryKey: projectTicketsQueryKey(ticket.projectId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: ticketQueryOptions(ticketId).queryKey,

@@ -6,3 +6,6 @@ export const ticketQueryOptions = (ticketId: string) =>
 		queryKey: ["tickets", ticketId],
 		queryFn: () => fetchTicket(ticketId),
 	});
+
+export const projectTicketsQueryKey = (projectId: string) =>
+	["projects", projectId, "tickets"] as const;
