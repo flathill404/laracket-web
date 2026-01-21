@@ -65,8 +65,23 @@ export function TicketDetailSheet({
 	const { mutate: mutateStatus } = useMutation({
 		mutationFn: (status: string) =>
 			updateTicket(ticketId, { status: status as any }),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tickets", ticketId] });
+		onMutate: async (newStatus) => {
+			await queryClient.cancelQueries({ queryKey: ["tickets", ticketId] });
+
+			const previousTicket = queryClient.getQueryData(["tickets", ticketId]);
+
+			queryClient.setQueryData(["tickets", ticketId], (old: any) => ({
+				...old,
+				status: newStatus,
+			}));
+
+			return { previousTicket };
+		},
+		onSuccess: (data) => {
+			queryClient.setQueryData(["tickets", ticketId], data);
+		},
+		onError: (err, newStatus, context) => {
+			queryClient.setQueryData(["tickets", ticketId], context?.previousTicket);
 		},
 	});
 
@@ -101,23 +116,25 @@ export function TicketDetailSheet({
 						</div>
 						<div className="flex items-center gap-2">
 							<Select
-								defaultValue={ticket.status}
+								value={ticket.status}
 								onValueChange={(value) => mutateStatus(value)}
 							>
 								<SelectTrigger
-									className={`h-8 w-auto gap-2 border-dashed ${getStatusBadgeVariant(
+									className={`h-8 w-[160px] gap-2 border-dashed ${getStatusBadgeVariant(
 										ticket.status,
 									)}`}
 								>
-									<Circle
-										className={`h-2 w-2 ${getStatusColor(ticket.status)}`}
-									/>
 									<SelectValue placeholder="Select status" />
 								</SelectTrigger>
-								<SelectContent>
+								<SelectContent position="popper">
 									{getAllStatuses().map((status) => (
 										<SelectItem key={status} value={status}>
-											{getStatusLabel(status)}
+											<div className="flex items-center gap-2">
+												<Circle
+													className={`h-2 w-2 ${getStatusColor(status)}`}
+												/>
+												<span>{getStatusLabel(status)}</span>
+											</div>
 										</SelectItem>
 									))}
 								</SelectContent>
