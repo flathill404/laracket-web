@@ -95,7 +95,7 @@ export function TicketUserSelector({
 					<PopoverContent className="w-[200px] p-0" align="start">
 						<Command>
 							<CommandInput placeholder={placeholder} />
-							<CommandList>
+							<CommandList className="max-h-[200px] overflow-y-auto">
 								<CommandEmpty>No members found.</CommandEmpty>
 								<CommandGroup>
 									{availableMembers.map((member) => (

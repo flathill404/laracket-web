@@ -327,8 +327,8 @@ export function TicketDetailSheet({
 										users={ticket.reviewers}
 										label="Reviewers"
 										addButtonLabel="+ Add Reviewer"
-										addButtonVariant="ghost"
-										addButtonClassName="h-8 px-0 text-muted-foreground hover:text-foreground"
+										addButtonVariant="outline"
+										addButtonClassName="h-8 text-muted-foreground border-dashed"
 										onAdd={(userId) => addReviewer(userId)}
 										onRemove={(userId) => removeReviewer(userId)}
 									/>
