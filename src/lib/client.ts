@@ -39,7 +39,7 @@ async function checkGeneralResponse(response: Response) {
 const BASE_URL = "http://localhost:8000/api";
 
 export async function request(
-	method: "GET" | "POST" | "PUT" | "DELETE",
+	method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
 	endpoint: string,
 	body?: unknown,
 ): Promise<Response> {
@@ -81,4 +81,5 @@ export const client = {
 	delete: (endpoint: string) => request("DELETE", endpoint),
 	post: (endpoint: string, body?: unknown) => request("POST", endpoint, body),
 	put: (endpoint: string, body?: unknown) => request("PUT", endpoint, body),
+	patch: (endpoint: string, body?: unknown) => request("PATCH", endpoint, body),
 };

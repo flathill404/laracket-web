@@ -1,20 +1,12 @@
-import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { fetchTicket } from "@/features/tickets/api/tickets";
 import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
-
-// Helper to define types for the status based on the API
-const ticketQuery = (ticketId: string) =>
-	queryOptions({
-		queryKey: ["tickets", ticketId],
-		queryFn: () => fetchTicket(ticketId),
-	});
+import { ticketQueryOptions } from "@/features/tickets/lib/tickets";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets/$ticketId",
 )({
 	loader: ({ context: { queryClient }, params: { ticketId } }) => {
-		return queryClient.ensureQueryData(ticketQuery(ticketId));
+		return queryClient.ensureQueryData(ticketQueryOptions(ticketId));
 	},
 	component: TicketDetailRoute,
 });

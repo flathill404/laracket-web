@@ -1,5 +1,4 @@
 import {
-	queryOptions,
 	useMutation,
 	useQueryClient,
 	useSuspenseQuery,
@@ -40,13 +39,8 @@ import {
 	getStatusColor,
 	getStatusLabel,
 } from "@/features/tickets/utils";
-import { fetchTicket, updateTicket } from "../api/tickets";
-
-const ticketQuery = (ticketId: string) =>
-	queryOptions({
-		queryKey: ["tickets", ticketId],
-		queryFn: () => fetchTicket(ticketId),
-	});
+import { type TicketStatusType, updateTicketStatus } from "../api/tickets";
+import { ticketQueryOptions } from "../lib/tickets";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -60,28 +54,14 @@ export function TicketDetailSheet({
 	onOpenChange,
 }: TicketDetailSheetProps) {
 	const queryClient = useQueryClient();
-	const { data: ticket } = useSuspenseQuery(ticketQuery(ticketId));
+	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
 
 	const { mutate: mutateStatus } = useMutation({
-		mutationFn: (status: string) =>
-			updateTicket(ticketId, { status: status as any }),
-		onMutate: async (newStatus) => {
-			await queryClient.cancelQueries({ queryKey: ["tickets", ticketId] });
-
-			const previousTicket = queryClient.getQueryData(["tickets", ticketId]);
-
-			queryClient.setQueryData(["tickets", ticketId], (old: any) => ({
-				...old,
-				status: newStatus,
-			}));
-
-			return { previousTicket };
-		},
-		onSuccess: (data) => {
-			queryClient.setQueryData(["tickets", ticketId], data);
-		},
-		onError: (err, newStatus, context) => {
-			queryClient.setQueryData(["tickets", ticketId], context?.previousTicket);
+		mutationFn: (status: TicketStatusType) =>
+			updateTicketStatus(ticketId, status),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tickets"] });
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
 		},
 	});
 
@@ -117,7 +97,7 @@ export function TicketDetailSheet({
 						<div className="flex items-center gap-2">
 							<Select
 								value={ticket.status}
-								onValueChange={(value) => mutateStatus(value)}
+								onValueChange={(value) => mutateStatus(value as TicketStatusType)}
 							>
 								<SelectTrigger
 									className={`h-8 w-[160px] gap-2 border-dashed ${getStatusBadgeVariant(
@@ -183,7 +163,7 @@ export function TicketDetailSheet({
 								{/* Timeline (Mocked) */}
 								<div className="relative space-y-8 before:absolute before:top-0 before:bottom-0 before:left-[19px] before:w-[2px] before:bg-muted">
 									{/* Activity 1 */}
-									<div className="relative pl-8">
+									<div className="relative pl-14">
 										<div className="absolute left-0 top-1 h-10 w-10 flex items-center justify-center rounded-full bg-background border-2 border-muted z-10">
 											<div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
 										</div>
@@ -199,7 +179,7 @@ export function TicketDetailSheet({
 									</div>
 
 									{/* Activity 2 - Comment */}
-									<div className="relative pl-8">
+									<div className="relative pl-14">
 										<Avatar className="absolute left-0 top-0 h-10 w-10 border-2 border-background z-10">
 											<AvatarFallback>JD</AvatarFallback>
 										</Avatar>

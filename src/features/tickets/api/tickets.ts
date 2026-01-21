@@ -9,13 +9,15 @@ enum TicketStatus {
 	Closed = "closed",
 }
 
-const ticketStatusSchema = z.enum([
+export const ticketStatusSchema = z.enum([
 	TicketStatus.Open,
 	TicketStatus.InProgress,
 	TicketStatus.InReview,
 	TicketStatus.Resolved,
 	TicketStatus.Closed,
 ]);
+
+export type TicketStatusType = z.infer<typeof ticketStatusSchema>;
 
 const assigneeSchema = z.object({
 	id: z.string(),
@@ -80,6 +82,17 @@ export const updateTicket = async (
 	data: Partial<z.infer<typeof ticketSchema>>,
 ) => {
 	const response = await client.put(`/tickets/${ticketId}`, data);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
+export const updateTicketStatus = async (
+	ticketId: string,
+	status: z.infer<typeof ticketStatusSchema>,
+) => {
+	const response = await client.patch(`/tickets/${ticketId}/status`, {
+		status,
+	});
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
 };
