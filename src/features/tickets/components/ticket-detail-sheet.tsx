@@ -80,6 +80,9 @@ export function TicketDetailSheet({
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
+			});
 		},
 	});
 
@@ -96,6 +99,9 @@ export function TicketDetailSheet({
 			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
 			});
 		},
 	});
@@ -114,6 +120,9 @@ export function TicketDetailSheet({
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
+			});
 		},
 	});
 
@@ -131,6 +140,9 @@ export function TicketDetailSheet({
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
+			});
 		},
 	});
 
@@ -147,6 +159,9 @@ export function TicketDetailSheet({
 			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
 			});
 		},
 	});
