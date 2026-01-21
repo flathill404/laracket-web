@@ -1,5 +1,6 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus, Search } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,10 @@ import {
 } from "@/features/projects/api/projects";
 import { TicketList } from "@/features/tickets/components/ticket-list";
 
-const ticketsQuery = (projectId: string, filters?: { status?: string[] }) =>
+const ticketsQuery = (
+	projectId: string,
+	filters?: { status?: string[]; sort?: string },
+) =>
 	queryOptions({
 		queryKey: ["projects", projectId, "tickets", filters],
 		queryFn: () => fetchProjectTickets(projectId, filters),
@@ -33,20 +37,21 @@ const projectQuery = (projectId: string) =>
 
 const searchSchema = z.object({
 	status: z.array(z.string()).optional(),
+	sort: z.string().optional(),
 });
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets",
 )({
 	validateSearch: (search) => searchSchema.parse(search),
-	loaderDeps: ({ search: { status } }) => ({ status }),
+	loaderDeps: ({ search: { status, sort } }) => ({ status, sort }),
 	loader: async ({
 		context: { queryClient },
 		params: { projectId },
-		deps: { status },
+		deps: { status, sort },
 	}) => {
 		await Promise.all([
-			queryClient.ensureQueryData(ticketsQuery(projectId, { status })),
+			queryClient.ensureQueryData(ticketsQuery(projectId, { status, sort })),
 			queryClient.ensureQueryData(projectQuery(projectId)),
 		]);
 	},
@@ -67,6 +72,39 @@ function ProjectDetail() {
 				...prev,
 				status: status.length > 0 ? status : undefined,
 			}),
+		});
+	};
+
+	// Convert snake_case from URL to camelCase for tanstack table
+	const sortParam = search.sort;
+	const sortId = sortParam
+		?.replace(/^-/, "")
+		.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+	const sortDesc = sortParam?.startsWith("-") ?? false;
+
+	const sorting: SortingState = sortId ? [{ id: sortId, desc: sortDesc }] : [];
+
+	const handleSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
+		const newSorting =
+			typeof updaterOrValue === "function"
+				? updaterOrValue(sorting)
+				: updaterOrValue;
+
+		// Convert camelCase to snake_case for API
+		const columnId = newSorting.length > 0 ? newSorting[0].id : null;
+		const snakeCaseId = columnId?.replace(
+			/[A-Z]/g,
+			(m) => `_${m.toLowerCase()}`,
+		);
+
+		const sort =
+			newSorting.length > 0
+				? `${newSorting[0].desc ? "-" : ""}${snakeCaseId}`
+				: undefined;
+
+		navigate({
+			to: ".",
+			search: (prev) => ({ ...prev, sort }),
 		});
 	};
 
@@ -96,6 +134,8 @@ function ProjectDetail() {
 				tickets={tickets}
 				selectedStatuses={search.status}
 				onStatusChange={handleStatusChange}
+				sorting={sorting}
+				onSortingChange={handleSortingChange}
 				onTicketClick={(ticket) =>
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",

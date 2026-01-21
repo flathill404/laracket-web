@@ -40,13 +40,16 @@ export const updateProject = async (projectId: string, name: string) => {
 
 export const fetchProjectTickets = async (
 	projectId: string,
-	filters?: { status?: string[] },
+	filters?: { status?: string[]; sort?: string },
 ) => {
 	const searchParams = new URLSearchParams();
 	if (filters?.status) {
 		for (const s of filters.status) {
 			searchParams.append("status[]", s);
 		}
+	}
+	if (filters?.sort) {
+		searchParams.append("sort", filters.sort);
 	}
 	const queryString = searchParams.toString();
 	const url = `/projects/${projectId}/tickets${queryString ? `?${queryString}` : ""}`;

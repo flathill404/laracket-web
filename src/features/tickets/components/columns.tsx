@@ -1,5 +1,7 @@
 import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
+	ArrowDown,
+	ArrowUp,
 	ArrowUpDown,
 	Check,
 	Circle,
@@ -115,6 +117,7 @@ export const columns: ColumnDef<Ticket>[] = [
 		cell: ({ getValue }) => (
 			<DueDateCell dueDate={getValue() as string | null | undefined} />
 		),
+		sortDescFirst: false,
 		meta: {
 			className: "w-[120px]",
 		},
@@ -282,15 +285,27 @@ function AssigneeCell({ assignees }: { assignees: Ticket["assignees"] }) {
 }
 
 function DueDateHeader({ column }: { column: Column<Ticket> }) {
+	const sorted = column.getIsSorted();
+
 	return (
 		<Button
 			variant="ghost"
 			size="sm"
-			className="-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50"
-			onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+			type="button"
+			className={cn(
+				"-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50",
+				sorted && "text-foreground",
+			)}
+			onClick={() => column.toggleSorting()}
 		>
 			<span>Due Date</span>
-			<ArrowUpDown className="ml-2 h-4 w-4" />
+			{sorted === "asc" ? (
+				<ArrowUp className="ml-2 h-4 w-4 text-primary" />
+			) : sorted === "desc" ? (
+				<ArrowDown className="ml-2 h-4 w-4 text-primary" />
+			) : (
+				<ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
+			)}
 		</Button>
 	);
 }

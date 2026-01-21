@@ -41,6 +41,7 @@ export function TicketList({
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		manualSorting: true,
+		enableSortingRemoval: true,
 		onSortingChange,
 		state: {
 			sorting,
