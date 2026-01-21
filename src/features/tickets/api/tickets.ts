@@ -34,9 +34,10 @@ export const ticketSchema = z.object({
 	title: z.string(),
 	description: z.string(),
 	status: ticketStatusSchema,
+	dueDate: z.iso.datetime().nullish(),
 	assignees: z.array(assigneeSchema),
 	reviewers: z.array(reviewerSchema),
-	projectId: z.string(), // Added projectId
+	projectId: z.string(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
 });
