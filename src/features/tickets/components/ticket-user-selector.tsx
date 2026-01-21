@@ -28,7 +28,7 @@ interface TicketUserSelectorProps {
 	addButtonLabel?: string;
 	addButtonVariant?: "outline" | "ghost" | "default" | "secondary";
 	addButtonClassName?: string;
-	onAdd: (userId: string) => void;
+	onAdd: (user: TicketUser) => void;
 	onRemove: (userId: string) => void;
 }
 
@@ -53,8 +53,11 @@ export function TicketUserSelector({
 	const availableMembers = members.filter((m) => !userIds.has(m.id));
 
 	const handleSelect = (userId: string) => {
-		onAdd(userId);
-		setOpen(false);
+		const user = availableMembers.find((m) => m.id === userId);
+		if (user) {
+			onAdd(user);
+			setOpen(false);
+		}
 	};
 
 	return (

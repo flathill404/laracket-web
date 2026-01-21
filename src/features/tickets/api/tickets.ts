@@ -91,41 +91,29 @@ export const updateTicketStatus = async (
 };
 
 export const addTicketAssignee = async (ticketId: string, userId: string) => {
-	const response = await client.post(`/tickets/${ticketId}/assignees`, {
+	await client.post(`/tickets/${ticketId}/assignees`, {
 		userId,
 	});
-	const json = await response.json();
-	return ticketSchema.parse(json.data);
 };
 
 export const removeTicketAssignee = async (
 	ticketId: string,
 	userId: string,
 ) => {
-	const response = await client.delete(
-		`/tickets/${ticketId}/assignees/${userId}`,
-	);
-	const json = await response.json();
-	return ticketSchema.parse(json.data);
+	await client.delete(`/tickets/${ticketId}/assignees/${userId}`);
 };
 
 export const addTicketReviewer = async (ticketId: string, userId: string) => {
-	const response = await client.post(`/tickets/${ticketId}/reviewers`, {
+	await client.post(`/tickets/${ticketId}/reviewers`, {
 		userId,
 	});
-	const json = await response.json();
-	return ticketSchema.parse(json.data);
 };
 
 export const removeTicketReviewer = async (
 	ticketId: string,
 	userId: string,
 ) => {
-	const response = await client.delete(
-		`/tickets/${ticketId}/reviewers/${userId}`,
-	);
-	const json = await response.json();
-	return ticketSchema.parse(json.data);
+	await client.delete(`/tickets/${ticketId}/reviewers/${userId}`);
 };
 
 export {

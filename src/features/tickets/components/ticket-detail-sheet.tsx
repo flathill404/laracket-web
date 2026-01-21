@@ -45,6 +45,7 @@ import {
 	removeTicketAssignee,
 	removeTicketReviewer,
 	type TicketStatusType,
+	type TicketUser,
 	updateTicketStatus,
 } from "../api/tickets";
 import { ticketQueryOptions } from "../lib/tickets";
@@ -83,9 +84,16 @@ export function TicketDetailSheet({
 	});
 
 	const { mutate: addAssignee } = useMutation({
-		mutationFn: (userId: string) => addTicketAssignee(ticketId, userId),
-		onSuccess: (data) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+		mutationFn: (user: TicketUser) => addTicketAssignee(ticketId, user.id),
+		onSuccess: (_, user) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old
+					? {
+							...old,
+							assignees: [...old.assignees, user],
+						}
+					: old,
+			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
@@ -94,8 +102,15 @@ export function TicketDetailSheet({
 
 	const { mutate: removeAssignee } = useMutation({
 		mutationFn: (userId: string) => removeTicketAssignee(ticketId, userId),
-		onSuccess: (data) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+		onSuccess: (_, userId) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old
+					? {
+							...old,
+							assignees: old.assignees.filter((a) => a.id !== userId),
+						}
+					: old,
+			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
@@ -103,9 +118,16 @@ export function TicketDetailSheet({
 	});
 
 	const { mutate: addReviewer } = useMutation({
-		mutationFn: (userId: string) => addTicketReviewer(ticketId, userId),
-		onSuccess: (data) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+		mutationFn: (user: TicketUser) => addTicketReviewer(ticketId, user.id),
+		onSuccess: (_, user) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old
+					? {
+							...old,
+							reviewers: [...old.reviewers, user],
+						}
+					: old,
+			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
@@ -114,8 +136,15 @@ export function TicketDetailSheet({
 
 	const { mutate: removeReviewer } = useMutation({
 		mutationFn: (userId: string) => removeTicketReviewer(ticketId, userId),
-		onSuccess: (data) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, data);
+		onSuccess: (_, userId) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old
+					? {
+							...old,
+							reviewers: old.reviewers.filter((r) => r.id !== userId),
+						}
+					: old,
+			);
 			queryClient.invalidateQueries({
 				queryKey: ["projects", ticket.projectId, "tickets"],
 			});
