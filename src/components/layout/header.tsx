@@ -36,7 +36,7 @@ export function Header({ user, isVerified, logout }: HeaderProps) {
 						<Input
 							type="search"
 							placeholder="Search tickets..."
-							className="h-9 w-full rounded-md bg-muted pl-9 md:w-[300px] lg:w-[336px]"
+							className="h-9 w-full rounded-md bg-muted pl-9 md:w-80 lg:w-96"
 						/>
 					</div>
 				)}

@@ -11,7 +11,7 @@ export function AuthenticatedNotFound() {
 
 			<div className="space-y-2">
 				<h1 className="text-2xl font-bold tracking-tight">Page not found</h1>
-				<p className="text-muted-foreground max-w-[400px]">
+				<p className="text-muted-foreground max-w-sm">
 					Sorry, we couldn't find the page you're looking for. It might have
 					been moved or doesn't exist.
 				</p>

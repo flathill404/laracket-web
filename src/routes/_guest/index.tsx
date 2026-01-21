@@ -32,7 +32,7 @@ function LandingPage() {
 								Manage Your Tickets with{" "}
 								<span className="text-primary">Laracket</span>
 							</h1>
-							<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+							<p className="mx-auto max-w-2xl text-muted-foreground md:text-xl">
 								The ultimate ticket management SaaS platform. Streamline your
 								workflow, track issues, and collaborate seamlessly.
 							</p>
@@ -66,7 +66,7 @@ function LandingPage() {
 								<h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
 									Fast, Reliable, and Secure
 								</h2>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
+								<p className="mx-auto max-w-2xl text-muted-foreground md:text-xl/relaxed">
 									Built with modern technologies to ensure your team stays
 									productive without interruptions.
 								</p>
@@ -75,7 +75,7 @@ function LandingPage() {
 								<div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
 									Open Source
 								</div>
-								<p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
+								<p className="mx-auto max-w-2xl text-muted-foreground md:text-xl/relaxed">
 									Laracket is open source. You can contribute to the project or
 									host it yourself.
 								</p>

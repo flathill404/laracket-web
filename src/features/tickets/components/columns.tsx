@@ -133,7 +133,7 @@ export const columns: ColumnDef<Ticket>[] = [
 			return <ActionsCell ticket={ticket} onDeleteTicket={onDeleteTicket} />;
 		},
 		meta: {
-			className: "w-[50px]",
+			className: "w-[80px]",
 		},
 	},
 ];

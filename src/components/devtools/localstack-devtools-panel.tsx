@@ -127,7 +127,7 @@ function SesEmailDetail({
 					{message.Body?.html_part ? (
 						<iframe
 							srcDoc={message.Body.html_part}
-							className="h-[400px] w-full border-none"
+							className="h-96 w-full border-none"
 							title="Email Content"
 						/>
 					) : (

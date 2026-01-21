@@ -23,7 +23,7 @@ interface SidebarProps {
 
 export function Sidebar({ projects, teams }: SidebarProps) {
 	return (
-		<aside className="hidden w-[240px] flex-col border-r bg-muted/10 md:flex">
+		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
 			<div className="flex-1 overflow-auto py-4">
 				<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
 					<Link

@@ -92,11 +92,11 @@ export function TicketUserSelector({
 							{addButtonLabel}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-[200px] p-0" align="start">
+					<PopoverContent className="w-48 p-0" align="start">
 						<Command className="overflow-visible">
 							<CommandInput placeholder={placeholder} />
 							<CommandList
-								className="max-h-[200px] overflow-y-auto overflow-x-hidden"
+								className="max-h-48 overflow-y-auto overflow-x-hidden"
 								onWheel={(e) => e.stopPropagation()}
 							>
 								<CommandEmpty>No members found.</CommandEmpty>
