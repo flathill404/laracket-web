@@ -67,7 +67,7 @@ function ProjectDetail() {
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
 
 	// Use infinite query hook
-	const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
 		useInfiniteTickets(projectId, {
 			status: search.status,
 			sort: search.sort,
@@ -123,6 +123,7 @@ function ProjectDetail() {
 
 			<TicketList
 				pages={pages}
+				isLoading={isLoading}
 				selectedStatuses={search.status}
 				onStatusChange={handleStatusChange}
 				sorting={sorting}

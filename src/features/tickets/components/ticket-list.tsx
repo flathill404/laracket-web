@@ -9,6 +9,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	Table,
 	TableBody,
@@ -29,6 +30,7 @@ interface BaseTicketListProps {
 	onStatusChange?: (statuses: string[]) => void;
 	sorting?: SortingState;
 	onSortingChange?: OnChangeFn<SortingState>;
+	isLoading?: boolean;
 }
 
 // Props for infinite scroll mode (pages from useInfiniteQuery)
@@ -177,7 +179,25 @@ export function TicketList(props: TicketListProps) {
 					ref={parentRef}
 					className="flex-1 overflow-auto [scrollbar-gutter:stable]"
 				>
-					{rows.length > 0 ? (
+					{props.isLoading ? (
+						<Table className="table-fixed">
+							<TableBody>
+								{Array.from({ length: 10 }).map((_, i) => (
+									<TableRow key={i}>
+										{columns.map((_, j) => {
+											// Approximate widths based on column definitions or guess
+											// This is a simple skeleton approach
+											return (
+												<TableCell key={j} className="h-[65px] p-4">
+													<Skeleton className="h-4 w-full" />
+												</TableCell>
+											);
+										})}
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					) : rows.length > 0 ? (
 						<div
 							style={{
 								height: `${virtualizer.getTotalSize()}px`,
