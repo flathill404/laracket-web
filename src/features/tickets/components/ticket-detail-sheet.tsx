@@ -42,6 +42,7 @@ import {
 import { type TicketStatusType, updateTicketStatus } from "../api/tickets";
 import { ticketQueryOptions } from "../lib/tickets";
 import { AssigneeSelector } from "./assignee-selector";
+import { ReviewerSelector } from "./reviewer-selector";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -278,20 +279,11 @@ export function TicketDetailSheet({
 										assignees={ticket.assignees}
 									/>
 
-									<div className="space-y-2">
-										<span className="text-xs font-medium text-muted-foreground">
-											Reviewers
-										</span>
-										<div>
-											<Button
-												variant="ghost"
-												size="sm"
-												className="h-8 px-0 text-muted-foreground hover:text-foreground"
-											>
-												+ Add Reviewer
-											</Button>
-										</div>
-									</div>
+									<ReviewerSelector
+										ticketId={ticket.id}
+										projectId={ticket.projectId}
+										reviewers={ticket.reviewers}
+									/>
 								</div>
 							</div>
 

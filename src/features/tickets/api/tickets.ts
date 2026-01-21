@@ -29,6 +29,7 @@ const reviewerSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	displayName: z.string(),
+	avatarUrl: z.string().nullish(),
 });
 
 export const ticketSchema = z.object({
@@ -116,5 +117,25 @@ export const removeTicketAssignee = async (
 	return ticketSchema.parse(json.data);
 };
 
-export { assigneeSchema };
+export const addTicketReviewer = async (ticketId: string, userId: string) => {
+	const response = await client.post(`/tickets/${ticketId}/reviewers`, {
+		userId,
+	});
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
+export const removeTicketReviewer = async (
+	ticketId: string,
+	userId: string,
+) => {
+	const response = await client.delete(
+		`/tickets/${ticketId}/reviewers/${userId}`,
+	);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
+export { assigneeSchema, reviewerSchema };
 export type Assignee = z.infer<typeof assigneeSchema>;
+export type Reviewer = z.infer<typeof reviewerSchema>;
