@@ -96,3 +96,25 @@ export const updateTicketStatus = async (
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
 };
+
+export const addTicketAssignee = async (ticketId: string, userId: string) => {
+	const response = await client.post(`/tickets/${ticketId}/assignees`, {
+		userId,
+	});
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
+export const removeTicketAssignee = async (
+	ticketId: string,
+	userId: string,
+) => {
+	const response = await client.delete(
+		`/tickets/${ticketId}/assignees/${userId}`,
+	);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
+export { assigneeSchema };
+export type Assignee = z.infer<typeof assigneeSchema>;

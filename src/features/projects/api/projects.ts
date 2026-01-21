@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { paginatedTicketsSchema } from "@/features/tickets/api/tickets";
+import {
+	type Assignee,
+	assigneeSchema,
+	paginatedTicketsSchema,
+} from "@/features/tickets/api/tickets";
 import { client } from "@/lib/client";
 
 export const projectSchema = z.object({
@@ -60,4 +64,14 @@ export const fetchProjectTickets = async (
 	const response = await client.get(url);
 	const json = await response.json();
 	return paginatedTicketsSchema.parse(json);
+};
+
+const projectMembersSchema = z.array(assigneeSchema);
+
+export const fetchProjectMembers = async (
+	projectId: string,
+): Promise<Assignee[]> => {
+	const response = await client.get(`/projects/${projectId}/members`);
+	const json = await response.json();
+	return projectMembersSchema.parse(json.data);
 };

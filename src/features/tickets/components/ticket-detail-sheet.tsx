@@ -41,6 +41,7 @@ import {
 } from "@/features/tickets/utils";
 import { type TicketStatusType, updateTicketStatus } from "../api/tickets";
 import { ticketQueryOptions } from "../lib/tickets";
+import { AssigneeSelector } from "./assignee-selector";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -271,38 +272,11 @@ export function TicketDetailSheet({
 								</h4>
 
 								<div className="space-y-5">
-									<div className="space-y-2">
-										<span className="text-xs font-medium text-muted-foreground">
-											Assignees
-										</span>
-										<div className="flex flex-wrap gap-2 min-h-[2.5rem] items-center">
-											{ticket.assignees.map((assignee) => (
-												<div
-													key={assignee.id}
-													className="flex items-center gap-2 bg-background border px-2 py-1 rounded-md shadow-sm"
-												>
-													<Avatar className="h-5 w-5">
-														<AvatarImage
-															src={assignee.avatarUrl ?? undefined}
-														/>
-														<AvatarFallback className="text-[10px]">
-															{assignee.name.slice(0, 2).toUpperCase()}
-														</AvatarFallback>
-													</Avatar>
-													<span className="text-sm font-medium">
-														{assignee.name}
-													</span>
-												</div>
-											))}
-											<Button
-												variant="outline"
-												size="sm"
-												className="h-8 text-muted-foreground border-dashed"
-											>
-												+ Add Assignee
-											</Button>
-										</div>
-									</div>
+									<AssigneeSelector
+										ticketId={ticket.id}
+										projectId={ticket.projectId}
+										assignees={ticket.assignees}
+									/>
 
 									<div className="space-y-2">
 										<span className="text-xs font-medium text-muted-foreground">

@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { fetchProjects } from "../api/projects";
+import { fetchProjectMembers, fetchProjects } from "../api/projects";
 
 export const projectsQueryOptions = (userId: string) =>
 	queryOptions({
@@ -7,4 +7,10 @@ export const projectsQueryOptions = (userId: string) =>
 		queryFn: async () => {
 			return await fetchProjects(userId);
 		},
+	});
+
+export const projectMembersQueryOptions = (projectId: string) =>
+	queryOptions({
+		queryKey: ["projects", projectId, "members"],
+		queryFn: () => fetchProjectMembers(projectId),
 	});
