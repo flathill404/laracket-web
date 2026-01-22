@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAppForm } from "@/hooks/use-app-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -42,6 +41,7 @@ import {
 	getStatusColor,
 	getStatusLabel,
 } from "@/features/tickets/utils";
+import { useAppForm } from "@/hooks/use-app-form";
 import {
 	addTicketAssignee,
 	addTicketReviewer,
@@ -80,8 +80,9 @@ export function TicketDetailSheet({
 			const trimmedTitle = value.title.trim();
 			if (trimmedTitle && trimmedTitle !== ticket.title) {
 				await updateTicket(ticketId, { title: trimmedTitle });
-				queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-					old ? { ...old, title: trimmedTitle } : old,
+				queryClient.setQueryData(
+					ticketQueryOptions(ticketId).queryKey,
+					(old) => (old ? { ...old, title: trimmedTitle } : old),
 				);
 				queryClient.invalidateQueries({
 					queryKey: projectTicketsQueryKey(ticket.projectId),
@@ -117,9 +118,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-						...old,
-						status: variables,
-					}
+							...old,
+							status: variables,
+						}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -137,9 +138,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-						...old,
-						assignees: [...old.assignees, user],
-					}
+							...old,
+							assignees: [...old.assignees, user],
+						}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -157,9 +158,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-						...old,
-						assignees: old.assignees.filter((a) => a.id !== userId),
-					}
+							...old,
+							assignees: old.assignees.filter((a) => a.id !== userId),
+						}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -177,9 +178,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-						...old,
-						reviewers: [...old.reviewers, user],
-					}
+							...old,
+							reviewers: [...old.reviewers, user],
+						}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -197,9 +198,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-						...old,
-						reviewers: old.reviewers.filter((r) => r.id !== userId),
-					}
+							...old,
+							reviewers: old.reviewers.filter((r) => r.id !== userId),
+						}
 					: old,
 			);
 			queryClient.invalidateQueries({

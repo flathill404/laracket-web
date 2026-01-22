@@ -183,11 +183,13 @@ export function TicketList(props: TicketListProps) {
 						<Table className="table-fixed">
 							<TableBody>
 								{Array.from({ length: 10 }).map((_, i) => (
+									// biome-ignore lint/suspicious/noArrayIndexKey: Skeleton items are static
 									<TableRow key={i}>
 										{columns.map((_, j) => {
 											// Approximate widths based on column definitions or guess
 											// This is a simple skeleton approach
 											return (
+												// biome-ignore lint/suspicious/noArrayIndexKey: Skeleton items are static
 												<TableCell key={j} className="h-[65px] p-4">
 													<Skeleton className="h-4 w-full" />
 												</TableCell>
