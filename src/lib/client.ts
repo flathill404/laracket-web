@@ -12,7 +12,7 @@ async function checkGeneralResponse(response: Response) {
 		return;
 	}
 
-	// きもい
+	// Allow 302 redirects to pass through (handled by redirect: "manual")
 	if (response.status === 302) {
 		return;
 	}

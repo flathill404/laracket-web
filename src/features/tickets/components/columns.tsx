@@ -10,6 +10,7 @@ import {
 	Trash,
 } from "lucide-react";
 import { useState } from "react";
+import type { z } from "zod";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -42,25 +43,11 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/utils";
+import type { ticketSchema } from "../api/tickets";
+import { ALL_STATUSES, STATUS_LABELS } from "../constants";
 import { getStatusColor, getStatusLabel } from "../utils";
 
-// Using a loose type for now to match the existing usage, but ideally this should be a shared type from the API
-export interface Ticket {
-	id: string;
-	title: string;
-	description: string;
-	status: string;
-	dueDate?: string | null;
-	assignees: Array<{
-		id: string;
-		name: string;
-		avatarUrl?: string | null;
-	}>;
-	// Add other fields if needed for display
-	// Allow for extra properties from the API response
-	// biome-ignore lint/suspicious/noExplicitAny: allow loose typing for ticket
-	[key: string]: any;
-}
+export type Ticket = z.infer<typeof ticketSchema>;
 
 export interface TicketTableMeta {
 	selectedStatuses: string[];
@@ -68,13 +55,10 @@ export interface TicketTableMeta {
 	onDeleteTicket?: (ticketId: string) => void;
 }
 
-export const statuses = [
-	{ value: "open", label: "Open" },
-	{ value: "in_progress", label: "In Progress" },
-	{ value: "in_review", label: "In Review" },
-	{ value: "resolved", label: "Resolved" },
-	{ value: "closed", label: "Closed" },
-];
+export const statuses = ALL_STATUSES.map((status) => ({
+	value: status,
+	label: STATUS_LABELS[status],
+}));
 
 export const columns: ColumnDef<Ticket>[] = [
 	{
