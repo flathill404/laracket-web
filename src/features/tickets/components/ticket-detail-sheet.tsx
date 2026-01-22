@@ -16,8 +16,10 @@ import {
 	Send,
 	Smile,
 } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -46,6 +48,7 @@ import {
 	removeTicketReviewer,
 	type TicketStatusType,
 	type TicketUser,
+	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
 import { projectTicketsQueryKey, ticketQueryOptions } from "../lib/tickets";
@@ -65,6 +68,40 @@ export function TicketDetailSheet({
 	const queryClient = useQueryClient();
 	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
 
+	const [isEditingTitle, setIsEditingTitle] = useState(false);
+	const [editedTitle, setEditedTitle] = useState(ticket.title);
+
+	const { mutate: mutateTitle } = useMutation({
+		mutationFn: (title: string) => updateTicket(ticketId, { title }),
+		onSuccess: (_, title) => {
+			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+				old ? { ...old, title } : old,
+			);
+			queryClient.invalidateQueries({
+				queryKey: projectTicketsQueryKey(ticket.projectId),
+			});
+			queryClient.invalidateQueries({
+				queryKey: ticketQueryOptions(ticketId).queryKey,
+			});
+			setIsEditingTitle(false);
+		},
+	});
+
+	const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			if (editedTitle.trim() && editedTitle !== ticket.title) {
+				mutateTitle(editedTitle.trim());
+			} else {
+				setIsEditingTitle(false);
+				setEditedTitle(ticket.title);
+			}
+		} else if (e.key === "Escape") {
+			setIsEditingTitle(false);
+			setEditedTitle(ticket.title);
+		}
+	};
+
 	const { mutate: mutateStatus } = useMutation({
 		mutationFn: (status: TicketStatusType) =>
 			updateTicketStatus(ticketId, status),
@@ -72,9 +109,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-							...old,
-							status: variables,
-						}
+						...old,
+						status: variables,
+					}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -92,9 +129,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-							...old,
-							assignees: [...old.assignees, user],
-						}
+						...old,
+						assignees: [...old.assignees, user],
+					}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -112,9 +149,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-							...old,
-							assignees: old.assignees.filter((a) => a.id !== userId),
-						}
+						...old,
+						assignees: old.assignees.filter((a) => a.id !== userId),
+					}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -132,9 +169,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-							...old,
-							reviewers: [...old.reviewers, user],
-						}
+						...old,
+						reviewers: [...old.reviewers, user],
+					}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -152,9 +189,9 @@ export function TicketDetailSheet({
 			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
 				old
 					? {
-							...old,
-							reviewers: old.reviewers.filter((r) => r.id !== userId),
-						}
+						...old,
+						reviewers: old.reviewers.filter((r) => r.id !== userId),
+					}
 					: old,
 			);
 			queryClient.invalidateQueries({
@@ -174,8 +211,8 @@ export function TicketDetailSheet({
 			>
 				<div className="flex flex-col h-full">
 					{/* Header */}
-					<div className="flex items-center justify-between px-6 py-3 border-b shrink-0 bg-background z-10">
-						<div className="flex items-center gap-4">
+					<div className="flex items-center justify-between gap-4 px-6 py-3 border-b shrink-0 bg-background z-10">
+						<div className="flex flex-1 items-center gap-4 min-w-0">
 							<SheetClose asChild>
 								<Button
 									variant="ghost"
@@ -185,13 +222,24 @@ export function TicketDetailSheet({
 									<ChevronRight className="h-5 w-5" />
 								</Button>
 							</SheetClose>
-							<div className="flex items-center gap-3">
-								<span className="text-sm font-medium text-muted-foreground">
+							<div className="flex flex-1 items-center gap-3 min-w-0">
+								<span className="text-sm font-medium text-muted-foreground shrink-0">
 									[T-{ticket.id.slice(0, 8)}]
 								</span>
 								<Separator orientation="vertical" className="h-4" />
-								<SheetTitle className="text-lg font-semibold m-0">
-									{ticket.title}
+								<SheetTitle className="flex-1 min-w-0 m-0">
+									<Input
+										value={editedTitle}
+										onChange={(e) => setEditedTitle(e.target.value)}
+										onKeyDown={handleTitleKeyDown}
+										onFocus={() => setIsEditingTitle(true)}
+										onBlur={() => {
+											setIsEditingTitle(false);
+											setEditedTitle(ticket.title);
+										}}
+										className={`flex-1 text-lg! font-semibold h-auto py-0.5 px-1 border-transparent bg-transparent shadow-none rounded focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:border-input focus-visible:bg-background ${!isEditingTitle ? "cursor-pointer hover:bg-muted/50" : ""
+											}`}
+									/>
 								</SheetTitle>
 							</div>
 						</div>
