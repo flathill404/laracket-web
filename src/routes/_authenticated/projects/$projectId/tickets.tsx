@@ -2,6 +2,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus, Search } from "lucide-react";
+import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
 	fetchProject,
 	fetchProjectTickets,
 } from "@/features/projects/api/projects";
+import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
 import { TicketList } from "@/features/tickets/components/ticket-list";
 import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
@@ -62,6 +64,7 @@ export const Route = createFileRoute(
 
 function ProjectDetail() {
 	const { projectId } = Route.useParams();
+	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const { data: project } = useSuspenseQuery(projectQuery(projectId));
@@ -115,7 +118,7 @@ function ProjectDetail() {
 							className="h-9 w-full pl-9"
 						/>
 					</div>
-					<Button>
+					<Button onClick={() => setIsCreateOpen(true)}>
 						<Plus className="mr-2 h-4 w-4" /> New Ticket
 					</Button>
 				</div>
@@ -150,12 +153,17 @@ function ProjectDetail() {
 							</EmptyDescription>
 						</EmptyHeader>
 						<EmptyContent>
-							<Button>
+							<Button onClick={() => setIsCreateOpen(true)}>
 								<Plus className="mr-2 h-4 w-4" /> Create your first ticket
 							</Button>
 						</EmptyContent>
 					</Empty>
 				}
+			/>
+			<CreateTicketDrawer
+				projectId={projectId}
+				open={isCreateOpen}
+				onOpenChange={setIsCreateOpen}
 			/>
 			<Outlet />
 		</div>

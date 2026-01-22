@@ -6,7 +6,6 @@ import {
 import {
 	Bold,
 	ChevronRight,
-	Circle,
 	Image as ImageIcon,
 	Italic,
 	Link as LinkIcon,
@@ -20,13 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+
 import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
@@ -35,12 +28,7 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import {
-	getAllStatuses,
-	getStatusBadgeVariant,
-	getStatusColor,
-	getStatusLabel,
-} from "@/features/tickets/utils";
+
 import { useAppForm } from "@/hooks/use-app-form";
 import {
 	addTicketAssignee,
@@ -53,6 +41,7 @@ import {
 	updateTicketStatus,
 } from "../api/tickets";
 import { projectTicketsQueryKey, ticketQueryOptions } from "../lib/tickets";
+import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
 
 export interface TicketDetailSheetProps {
@@ -257,32 +246,12 @@ export function TicketDetailSheet({
 							</div>
 						</div>
 						<div className="flex items-center gap-2">
-							<Select
+							<TicketStatusSelect
 								value={ticket.status}
 								onValueChange={(value) =>
 									mutateStatus(value as TicketStatusType)
 								}
-							>
-								<SelectTrigger
-									className={`h-8 w-[160px] gap-2 border-dashed ${getStatusBadgeVariant(
-										ticket.status,
-									)}`}
-								>
-									<SelectValue placeholder="Select status" />
-								</SelectTrigger>
-								<SelectContent position="popper">
-									{getAllStatuses().map((status) => (
-										<SelectItem key={status} value={status}>
-											<div className="flex items-center gap-2">
-												<Circle
-													className={`h-2 w-2 ${getStatusColor(status)}`}
-												/>
-												<span>{getStatusLabel(status)}</span>
-											</div>
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							/>
 							<Button variant="ghost" size="icon">
 								<MoreHorizontal className="h-4 w-4" />
 							</Button>

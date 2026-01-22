@@ -72,6 +72,18 @@ export const fetchUserTickets = async (userId: string) => {
 	return ticketsSchema.parse(json.data);
 };
 
+export const createTicket = async (data: {
+	title: string;
+	description?: string;
+	status?: TicketStatusType;
+	assigneeId?: string;
+	dueDate?: string;
+}) => {
+	const response = await client.post("/tickets", data);
+	const json = await response.json();
+	return ticketSchema.parse(json.data);
+};
+
 export const updateTicket = async (
 	ticketId: string,
 	data: Partial<z.infer<typeof ticketSchema>>,
