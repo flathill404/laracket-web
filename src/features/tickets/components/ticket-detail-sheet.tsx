@@ -32,9 +32,14 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-
+import {
+	getAllStatuses,
+	getStatusBadgeVariant,
+	getStatusColor,
+	getStatusLabel,
+} from "@/features/tickets/utils";
 import { useAppForm } from "@/hooks/use-app-form";
-import { cn } from "@/utils";
+import type { Activity } from "../api/activities";
 import {
 	addTicketAssignee,
 	addTicketReviewer,
@@ -45,10 +50,68 @@ import {
 	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
-import { updateTicketCache, useTicketMutation } from "../lib/ticket-mutations";
-import { ticketQueryOptions } from "../lib/tickets";
-import { TicketStatusSelect } from "./ticket-status-select";
+import {
+	projectTicketsQueryKey,
+	ticketActivitiesQueryOptions,
+	ticketQueryOptions,
+} from "../lib/tickets";
 import { TicketUserSelector } from "./ticket-user-selector";
+
+function formatRelativeTime(dateString: string): string {
+	const date = new Date(dateString);
+	const now = new Date();
+	const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+	if (diffInSeconds < 60) return "just now";
+	if (diffInSeconds < 3600)
+		return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+	if (diffInSeconds < 86400)
+		return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+	if (diffInSeconds < 604800)
+		return `${Math.floor(diffInSeconds / 86400)} days ago`;
+	return date.toLocaleDateString();
+}
+
+function getActivityDescription(activity: Activity): string {
+	if (activity.type === "created") {
+		return "created this ticket";
+	}
+
+	if (activity.type === "updated" && activity.payload) {
+		const payload = activity.payload as {
+			status?: { from: string; to: string };
+		};
+		if (payload.status) {
+			return `changed status from ${getStatusLabel(payload.status.from as Parameters<typeof getStatusLabel>[0])} to ${getStatusLabel(payload.status.to as Parameters<typeof getStatusLabel>[0])}`;
+		}
+	}
+
+	return "updated this ticket";
+}
+
+function ActivityItem({ activity }: { activity: Activity }) {
+	return (
+		<div className="relative pl-14">
+			<Avatar className="absolute left-0 top-0 h-10 w-10 border-2 border-background z-10">
+				<AvatarImage src={activity.user.avatarUrl ?? undefined} />
+				<AvatarFallback>
+					{activity.user.name.slice(0, 2).toUpperCase()}
+				</AvatarFallback>
+			</Avatar>
+			<div className="pt-2">
+				<span className="font-semibold text-sm">
+					{activity.user.displayName}
+				</span>{" "}
+				<span className="text-sm text-muted-foreground">
+					{getActivityDescription(activity)}
+				</span>
+				<span className="ml-2 text-xs text-muted-foreground">
+					{formatRelativeTime(activity.createdAt)}
+				</span>
+			</div>
+		</div>
+	);
+}
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -63,6 +126,9 @@ export function TicketDetailSheet({
 }: TicketDetailSheetProps) {
 	const queryClient = useQueryClient();
 	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
+	const { data: activities } = useSuspenseQuery(
+		ticketActivitiesQueryOptions(ticketId),
+	);
 
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
@@ -242,42 +308,11 @@ export function TicketDetailSheet({
 
 								<Separator className="my-8" />
 
-								{/* Timeline (Mocked) */}
+								{/* Timeline */}
 								<div className="relative space-y-8 before:absolute before:top-0 before:bottom-0 before:left-[19px] before:w-[2px] before:bg-muted">
-									{/* Activity 1 */}
-									<div className="relative pl-14">
-										<div className="absolute left-0 top-1 h-10 w-10 flex items-center justify-center rounded-full bg-background border-2 border-muted z-10">
-											<div className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
-										</div>
-										<div className="pt-2">
-											<span className="font-semibold text-sm">Jane Doe</span>{" "}
-											<span className="text-sm text-muted-foreground">
-												changed status to In Progress
-											</span>
-											<span className="ml-2 text-xs text-muted-foreground">
-												2 days ago
-											</span>
-										</div>
-									</div>
-
-									{/* Activity 2 - Comment */}
-									<div className="relative pl-14">
-										<Avatar className="absolute left-0 top-0 h-10 w-10 border-2 border-background z-10">
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className="space-y-2">
-											<div className="flex items-baseline gap-2">
-												<span className="font-semibold text-sm">Jane Doe</span>
-												<span className="text-xs text-muted-foreground">
-													commented yesterday
-												</span>
-											</div>
-											<div className="bg-muted/30 p-4 rounded-lg text-sm">
-												I've started investigating this issue. Looks like a race
-												condition.
-											</div>
-										</div>
-									</div>
+									{activities.map((activity) => (
+										<ActivityItem key={activity.id} activity={activity} />
+									))}
 								</div>
 							</div>
 
