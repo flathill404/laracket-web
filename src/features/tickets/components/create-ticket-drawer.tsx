@@ -5,7 +5,7 @@ import {
 	ChevronRight,
 	Paperclip,
 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -26,10 +26,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { projectMembersQueryOptions } from "@/features/projects/lib/projects";
 import {
-	type TicketStatusType,
 	createTicket,
-	ticketStatusSchema,
+	type TicketStatusType,
 	type TicketUser,
+	ticketStatusSchema,
 } from "@/features/tickets/api/tickets";
 import { TicketStatusSelect } from "@/features/tickets/components/ticket-status-select";
 import { TicketUserSelector } from "@/features/tickets/components/ticket-user-selector";

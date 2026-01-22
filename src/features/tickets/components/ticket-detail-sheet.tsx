@@ -1,8 +1,4 @@
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
 	Bold,
@@ -49,7 +45,8 @@ import {
 	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
-import { projectTicketsQueryKey, ticketQueryOptions } from "../lib/tickets";
+import { updateTicketCache, useTicketMutation } from "../lib/ticket-mutations";
+import { ticketQueryOptions } from "../lib/tickets";
 import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
 
@@ -78,16 +75,10 @@ export function TicketDetailSheet({
 			const trimmedTitle = value.title.trim();
 			if (trimmedTitle && trimmedTitle !== ticket.title) {
 				await updateTicket(ticketId, { title: trimmedTitle });
-				queryClient.setQueryData(
-					ticketQueryOptions(ticketId).queryKey,
-					(old) => (old ? { ...old, title: trimmedTitle } : old),
-				);
-				queryClient.invalidateQueries({
-					queryKey: projectTicketsQueryKey(ticket.projectId),
-				});
-				queryClient.invalidateQueries({
-					queryKey: ticketQueryOptions(ticketId).queryKey,
-				});
+				updateTicketCache(queryClient, ticketId, ticket.projectId, (old) => ({
+					...old,
+					title: trimmedTitle,
+				}));
 			}
 			setIsEditingTitle(false);
 			titleInputRef.current?.blur();
@@ -109,106 +100,55 @@ export function TicketDetailSheet({
 		}
 	};
 
-	const { mutate: mutateStatus } = useMutation({
-		mutationFn: (status: TicketStatusType) =>
-			updateTicketStatus(ticketId, status),
-		onSuccess: (_, variables) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old
-					? {
-							...old,
-							status: variables,
-						}
-					: old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(ticket.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
-		},
-	});
+	const { mutate: mutateStatus } = useTicketMutation(
+		ticketId,
+		ticket.projectId,
+		(status: TicketStatusType) => updateTicketStatus(ticketId, status),
+		(old, status) => ({
+			...old,
+			status,
+		}),
+	);
 
-	const { mutate: addAssignee } = useMutation({
-		mutationFn: (user: TicketUser) => addTicketAssignee(ticketId, user.id),
-		onSuccess: (_, user) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old
-					? {
-							...old,
-							assignees: [...old.assignees, user],
-						}
-					: old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(ticket.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
-		},
-	});
+	const { mutate: addAssignee } = useTicketMutation(
+		ticketId,
+		ticket.projectId,
+		(user: TicketUser) => addTicketAssignee(ticketId, user.id),
+		(old, user) => ({
+			...old,
+			assignees: [...old.assignees, user],
+		}),
+	);
 
-	const { mutate: removeAssignee } = useMutation({
-		mutationFn: (userId: string) => removeTicketAssignee(ticketId, userId),
-		onSuccess: (_, userId) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old
-					? {
-							...old,
-							assignees: old.assignees.filter((a) => a.id !== userId),
-						}
-					: old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(ticket.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
-		},
-	});
+	const { mutate: removeAssignee } = useTicketMutation(
+		ticketId,
+		ticket.projectId,
+		(userId: string) => removeTicketAssignee(ticketId, userId),
+		(old, userId) => ({
+			...old,
+			assignees: old.assignees.filter((a) => a.id !== userId),
+		}),
+	);
 
-	const { mutate: addReviewer } = useMutation({
-		mutationFn: (user: TicketUser) => addTicketReviewer(ticketId, user.id),
-		onSuccess: (_, user) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old
-					? {
-							...old,
-							reviewers: [...old.reviewers, user],
-						}
-					: old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(ticket.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
-		},
-	});
+	const { mutate: addReviewer } = useTicketMutation(
+		ticketId,
+		ticket.projectId,
+		(user: TicketUser) => addTicketReviewer(ticketId, user.id),
+		(old, user) => ({
+			...old,
+			reviewers: [...old.reviewers, user],
+		}),
+	);
 
-	const { mutate: removeReviewer } = useMutation({
-		mutationFn: (userId: string) => removeTicketReviewer(ticketId, userId),
-		onSuccess: (_, userId) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old
-					? {
-							...old,
-							reviewers: old.reviewers.filter((r) => r.id !== userId),
-						}
-					: old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: ["projects", ticket.projectId, "tickets"],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
-		},
-	});
+	const { mutate: removeReviewer } = useTicketMutation(
+		ticketId,
+		ticket.projectId,
+		(userId: string) => removeTicketReviewer(ticketId, userId),
+		(old, userId) => ({
+			...old,
+			reviewers: old.reviewers.filter((r) => r.id !== userId),
+		}),
+	);
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
@@ -459,14 +399,15 @@ export function TicketDetailSheet({
 														updateTicket(ticket.id, {
 															dueDate: date ? date.toISOString() : null,
 														}).then(() => {
-															queryClient.invalidateQueries({
-																queryKey: projectTicketsQueryKey(
-																	ticket.projectId,
-																),
-															});
-															queryClient.invalidateQueries({
-																queryKey: ticketQueryOptions(ticketId).queryKey,
-															});
+															updateTicketCache(
+																queryClient,
+																ticketId,
+																ticket.projectId,
+																(old) => ({
+																	...old,
+																	dueDate: date ? date.toISOString() : null,
+																}),
+															);
 														})
 													}
 													initialFocus
