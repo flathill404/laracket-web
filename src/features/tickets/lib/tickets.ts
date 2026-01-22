@@ -1,10 +1,17 @@
 import { queryOptions } from "@tanstack/react-query";
+import { fetchTicketActivities } from "../api/activities";
 import { fetchTicket } from "../api/tickets";
 
 export const ticketQueryOptions = (ticketId: string) =>
 	queryOptions({
 		queryKey: ["tickets", ticketId],
 		queryFn: () => fetchTicket(ticketId),
+	});
+
+export const ticketActivitiesQueryOptions = (ticketId: string) =>
+	queryOptions({
+		queryKey: ["tickets", ticketId, "activities"],
+		queryFn: () => fetchTicketActivities(ticketId),
 	});
 
 export const projectTicketsQueryKey = (projectId: string) =>
