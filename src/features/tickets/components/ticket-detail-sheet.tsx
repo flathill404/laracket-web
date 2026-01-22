@@ -16,8 +16,9 @@ import {
 	Send,
 	Smile,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppForm } from "@/hooks/use-app-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -69,36 +70,43 @@ export function TicketDetailSheet({
 	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
 
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
-	const [editedTitle, setEditedTitle] = useState(ticket.title);
+	const titleInputRef = useRef<HTMLInputElement>(null);
 
-	const { mutate: mutateTitle } = useMutation({
-		mutationFn: (title: string) => updateTicket(ticketId, { title }),
-		onSuccess: (_, title) => {
-			queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
-				old ? { ...old, title } : old,
-			);
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(ticket.projectId),
-			});
-			queryClient.invalidateQueries({
-				queryKey: ticketQueryOptions(ticketId).queryKey,
-			});
+	const titleForm = useAppForm({
+		defaultValues: {
+			title: ticket.title,
+		},
+		onSubmit: async ({ value }) => {
+			const trimmedTitle = value.title.trim();
+			if (trimmedTitle && trimmedTitle !== ticket.title) {
+				await updateTicket(ticketId, { title: trimmedTitle });
+				queryClient.setQueryData(ticketQueryOptions(ticketId).queryKey, (old) =>
+					old ? { ...old, title: trimmedTitle } : old,
+				);
+				queryClient.invalidateQueries({
+					queryKey: projectTicketsQueryKey(ticket.projectId),
+				});
+				queryClient.invalidateQueries({
+					queryKey: ticketQueryOptions(ticketId).queryKey,
+				});
+			}
 			setIsEditingTitle(false);
+			titleInputRef.current?.blur();
 		},
 	});
+
+	useEffect(() => {
+		titleForm.setFieldValue("title", ticket.title);
+	}, [ticket.title, titleForm]);
 
 	const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter") {
 			e.preventDefault();
-			if (editedTitle.trim() && editedTitle !== ticket.title) {
-				mutateTitle(editedTitle.trim());
-			} else {
-				setIsEditingTitle(false);
-				setEditedTitle(ticket.title);
-			}
+			titleForm.handleSubmit();
 		} else if (e.key === "Escape") {
+			titleForm.reset();
 			setIsEditingTitle(false);
-			setEditedTitle(ticket.title);
+			titleInputRef.current?.blur();
 		}
 	};
 
@@ -228,18 +236,22 @@ export function TicketDetailSheet({
 								</span>
 								<Separator orientation="vertical" className="h-4" />
 								<SheetTitle className="flex-1 min-w-0 m-0">
-									<Input
-										value={editedTitle}
-										onChange={(e) => setEditedTitle(e.target.value)}
-										onKeyDown={handleTitleKeyDown}
-										onFocus={() => setIsEditingTitle(true)}
-										onBlur={() => {
-											setIsEditingTitle(false);
-											setEditedTitle(ticket.title);
-										}}
-										className={`flex-1 text-lg! font-semibold h-auto py-0.5 px-1 border-transparent bg-transparent shadow-none rounded focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:border-input focus-visible:bg-background ${!isEditingTitle ? "cursor-pointer hover:bg-muted/50" : ""
-											}`}
-									/>
+									<titleForm.Field name="title">
+										{(field) => (
+											<Input
+												ref={titleInputRef}
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+												onKeyDown={handleTitleKeyDown}
+												onFocus={() => setIsEditingTitle(true)}
+												onBlur={() => {
+													setIsEditingTitle(false);
+													titleForm.reset();
+												}}
+												className={`flex-1 text-lg! font-semibold h-auto py-0.5 px-1 border-transparent bg-transparent shadow-none rounded focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:border-input focus-visible:bg-background ${!isEditingTitle ? "cursor-pointer hover:bg-muted/50" : ""}`}
+											/>
+										)}
+									</titleForm.Field>
 								</SheetTitle>
 							</div>
 						</div>
