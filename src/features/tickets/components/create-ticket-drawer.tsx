@@ -42,6 +42,7 @@ const createTicketSchema = z.object({
 	description: z.string(),
 	status: ticketStatusSchema,
 	assigneeIds: z.array(z.string()),
+	reviewerIds: z.array(z.string()),
 	dueDate: z.date().nullable(),
 });
 
@@ -87,6 +88,7 @@ export function CreateTicketDrawer({
 			description: "",
 			status: "open" as TicketStatusType,
 			assigneeIds: [] as string[],
+			reviewerIds: [] as string[],
 			dueDate: null as Date | null,
 		},
 		validators: {
@@ -106,6 +108,10 @@ export function CreateTicketDrawer({
 		.map((id) => members.find((m) => m.id === id))
 		.filter((m): m is TicketUser => !!m);
 
+	const currentReviewers = form.state.values.reviewerIds
+		.map((id) => members.find((m) => m.id === id))
+		.filter((m): m is TicketUser => !!m);
+
 	const handleAddAssignee = (user: TicketUser) => {
 		form.setFieldValue("assigneeIds", [
 			...form.state.values.assigneeIds,
@@ -117,6 +123,20 @@ export function CreateTicketDrawer({
 		form.setFieldValue(
 			"assigneeIds",
 			form.state.values.assigneeIds.filter((id) => id !== userId),
+		);
+	};
+
+	const handleAddReviewer = (user: TicketUser) => {
+		form.setFieldValue("reviewerIds", [
+			...form.state.values.reviewerIds,
+			user.id,
+		]);
+	};
+
+	const handleRemoveReviewer = (userId: string) => {
+		form.setFieldValue(
+			"reviewerIds",
+			form.state.values.reviewerIds.filter((id) => id !== userId),
 		);
 	};
 
@@ -227,6 +247,19 @@ export function CreateTicketDrawer({
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
 										onAdd={handleAddAssignee}
 										onRemove={handleRemoveAssignee}
+									/>
+
+									{/* Reviewer */}
+									<TicketUserSelector
+										ticketId="new" // Virtual ID
+										projectId={projectId}
+										users={currentReviewers}
+										label="Reviewers"
+										addButtonLabel="+ Add Reviewer"
+										addButtonVariant="outline"
+										addButtonClassName="h-8 text-muted-foreground border-dashed"
+										onAdd={handleAddReviewer}
+										onRemove={handleRemoveReviewer}
 									/>
 
 									{/* Due Date */}
