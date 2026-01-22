@@ -249,19 +249,6 @@ export function CreateTicketDrawer({
 										onRemove={handleRemoveAssignee}
 									/>
 
-									{/* Reviewer */}
-									<TicketUserSelector
-										ticketId="new" // Virtual ID
-										projectId={projectId}
-										users={currentReviewers}
-										label="Reviewers"
-										addButtonLabel="+ Add Reviewer"
-										addButtonVariant="outline"
-										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={handleAddReviewer}
-										onRemove={handleRemoveReviewer}
-									/>
-
 									{/* Due Date */}
 									<form.Field name="dueDate">
 										{(field) => (
@@ -301,6 +288,19 @@ export function CreateTicketDrawer({
 											</div>
 										)}
 									</form.Field>
+
+									{/* Reviewer */}
+									<TicketUserSelector
+										ticketId="new" // Virtual ID
+										projectId={projectId}
+										users={currentReviewers}
+										label="Reviewers"
+										addButtonLabel="+ Add Reviewer"
+										addButtonVariant="outline"
+										addButtonClassName="h-8 text-muted-foreground border-dashed"
+										onAdd={handleAddReviewer}
+										onRemove={handleRemoveReviewer}
+									/>
 								</div>
 							</div>
 
