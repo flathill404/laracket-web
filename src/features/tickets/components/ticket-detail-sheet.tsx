@@ -3,8 +3,10 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { format } from "date-fns";
 import {
 	Bold,
+	Calendar as CalendarIcon,
 	ChevronRight,
 	Image as ImageIcon,
 	Italic,
@@ -18,8 +20,14 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
@@ -30,6 +38,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { useAppForm } from "@/hooks/use-app-form";
+import { cn } from "@/utils";
 import {
 	addTicketAssignee,
 	addTicketReviewer,
@@ -415,6 +424,57 @@ export function TicketDetailSheet({
 										onAdd={(userId) => addAssignee(userId)}
 										onRemove={(userId) => removeAssignee(userId)}
 									/>
+
+									{/* Due Date */}
+									<div className="space-y-2">
+										<span className="text-xs font-medium text-muted-foreground">
+											Due Date
+										</span>
+										<Popover>
+											<PopoverTrigger asChild>
+												<Button
+													variant={"outline"}
+													className={cn(
+														"w-full justify-start text-left font-normal h-8",
+														!ticket.dueDate && "text-muted-foreground",
+													)}
+												>
+													<CalendarIcon className="mr-2 h-4 w-4" />
+													{ticket.dueDate ? (
+														format(new Date(ticket.dueDate), "PPP")
+													) : (
+														<span>Pick a date</span>
+													)}
+												</Button>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0">
+												<Calendar
+													mode="single"
+													selected={
+														ticket.dueDate
+															? new Date(ticket.dueDate)
+															: undefined
+													}
+													onSelect={(date) =>
+														updateTicket(ticket.id, {
+															dueDate: date ? date.toISOString() : null,
+														}).then(() => {
+															queryClient.invalidateQueries({
+																queryKey: projectTicketsQueryKey(
+																	ticket.projectId,
+																),
+															});
+															queryClient.invalidateQueries({
+																queryKey: ticketQueryOptions(ticketId).queryKey,
+															});
+														})
+													}
+													initialFocus
+													required={false}
+												/>
+											</PopoverContent>
+										</Popover>
+									</div>
 
 									<TicketUserSelector
 										ticketId={ticket.id}
