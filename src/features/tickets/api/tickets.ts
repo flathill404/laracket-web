@@ -76,7 +76,7 @@ export const createTicket = async (data: {
 	title: string;
 	description?: string;
 	status?: TicketStatusType;
-	assigneeId?: string;
+	assigneeIds?: string[];
 	dueDate?: string;
 }) => {
 	const response = await client.post("/tickets", data);
