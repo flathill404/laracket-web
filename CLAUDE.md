@@ -1,7 +1,3 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
 
 Laracket is a ticket management web application built with TanStack Start (SPA mode) and React 19. The frontend communicates with a Laravel backend API at `localhost:8000`.
