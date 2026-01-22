@@ -32,13 +32,9 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import {
-	getAllStatuses,
-	getStatusBadgeVariant,
-	getStatusColor,
-	getStatusLabel,
-} from "@/features/tickets/utils";
+import { getStatusLabel } from "@/features/tickets/utils";
 import { useAppForm } from "@/hooks/use-app-form";
+import { cn } from "@/utils";
 import type { Activity } from "../api/activities";
 import {
 	addTicketAssignee,
@@ -50,11 +46,12 @@ import {
 	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
+import { updateTicketCache, useTicketMutation } from "../lib/ticket-mutations";
 import {
-	projectTicketsQueryKey,
 	ticketActivitiesQueryOptions,
 	ticketQueryOptions,
 } from "../lib/tickets";
+import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
 
 function formatRelativeTime(dateString: string): string {
