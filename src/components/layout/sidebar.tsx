@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import {
+	ChevronRight,
 	Files,
 	Folder,
 	Inbox,
@@ -62,8 +63,9 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 					<Accordion type="multiple" className="w-full">
 						<AccordionItem value="projects" className="border-b-0">
 							<div className="group flex items-center justify-between pr-2">
-								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline">
+								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
 									<div className="flex items-center gap-3 px-3">
+										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
 										<Folder className="h-4 w-4" />
 										Projects
 									</div>
