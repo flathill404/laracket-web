@@ -1,4 +1,4 @@
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
 	Bold,
@@ -44,7 +44,7 @@ import {
 	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
-import { updateTicketCache, useTicketMutation } from "../lib/ticket-mutations";
+import { useTicketMutation } from "../hooks/use-ticket-mutation";
 import {
 	ticketActivitiesQueryOptions,
 	ticketQueryOptions,
@@ -64,7 +64,6 @@ export function TicketDetailSheet({
 	open,
 	onOpenChange,
 }: TicketDetailSheetProps) {
-	const queryClient = useQueryClient();
 	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
 	const { data: activities } = useSuspenseQuery(
 		ticketActivitiesQueryOptions(ticketId),
@@ -81,7 +80,7 @@ export function TicketDetailSheet({
 			const trimmedTitle = value.title.trim();
 			if (trimmedTitle && trimmedTitle !== ticket.title) {
 				await updateTicket(ticketId, { title: trimmedTitle });
-				updateTicketCache(queryClient, ticketId, ticket.projectId, (old) => ({
+				updateCache((old) => ({
 					...old,
 					title: trimmedTitle,
 				}));
@@ -106,7 +105,7 @@ export function TicketDetailSheet({
 		}
 	};
 
-	const { mutate: mutateStatus } = useTicketMutation(
+	const { mutate: mutateStatus, updateCache } = useTicketMutation(
 		ticketId,
 		ticket.projectId,
 		(status: TicketStatusType) => updateTicketStatus(ticketId, status),
@@ -370,15 +369,10 @@ export function TicketDetailSheet({
 														updateTicket(ticket.id, {
 															dueDate: date ? date.toISOString() : null,
 														}).then(() => {
-															updateTicketCache(
-																queryClient,
-																ticketId,
-																ticket.projectId,
-																(old) => ({
-																	...old,
-																	dueDate: date ? date.toISOString() : null,
-																}),
-															);
+															updateCache((old) => ({
+																...old,
+																dueDate: date ? date.toISOString() : null,
+															}));
 														})
 													}
 													initialFocus
