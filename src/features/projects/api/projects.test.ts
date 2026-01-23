@@ -1,0 +1,226 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	fetchProject,
+	fetchProjectMembers,
+	fetchProjects,
+	fetchProjectTickets,
+	projectSchema,
+	updateProject,
+} from "./projects";
+
+// Mock the client module
+vi.mock("@/lib/client", () => ({
+	client: {
+		get: vi.fn(),
+		put: vi.fn(),
+	},
+}));
+
+import { client } from "@/lib/client";
+
+const mockClient = client as unknown as {
+	get: ReturnType<typeof vi.fn>;
+	put: ReturnType<typeof vi.fn>;
+};
+
+const mockProject = {
+	id: "project-123",
+	name: "test-project",
+	displayName: "Test Project",
+	description: "A test project",
+	createdAt: "2024-01-01T00:00:00Z",
+	updatedAt: "2024-01-01T00:00:00Z",
+};
+
+const mockMember = {
+	id: "user-123",
+	name: "john",
+	displayName: "John Doe",
+	avatarUrl: "https://example.com/avatar.jpg",
+};
+
+const mockTicket = {
+	id: "ticket-123",
+	title: "Test Ticket",
+	description: "Test description",
+	status: "open",
+	dueDate: null,
+	assignees: [],
+	reviewers: [],
+	projectId: "project-123",
+	createdAt: "2024-01-01T00:00:00Z",
+	updatedAt: "2024-01-01T00:00:00Z",
+};
+
+describe("projects API", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	describe("schemas", () => {
+		describe("projectSchema", () => {
+			it("should validate a valid project", () => {
+				expect(() => projectSchema.parse(mockProject)).not.toThrow();
+			});
+
+			it("should reject missing required fields", () => {
+				const invalid = { id: "123" };
+				expect(() => projectSchema.parse(invalid)).toThrow();
+			});
+		});
+	});
+
+	describe("fetchProjects", () => {
+		it("should fetch user projects", async () => {
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: [mockProject] }),
+			});
+
+			const result = await fetchProjects("user-123");
+
+			expect(mockClient.get).toHaveBeenCalledWith("/users/user-123/projects");
+			expect(result).toEqual([mockProject]);
+		});
+	});
+
+	describe("fetchProject", () => {
+		it("should fetch single project", async () => {
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: mockProject }),
+			});
+
+			const result = await fetchProject("project-123");
+
+			expect(mockClient.get).toHaveBeenCalledWith("/projects/project-123");
+			expect(result).toEqual(mockProject);
+		});
+	});
+
+	describe("updateProject", () => {
+		it("should update project name", async () => {
+			const updated = { ...mockProject, name: "updated-name" };
+			mockClient.put.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: updated }),
+			});
+
+			const result = await updateProject("project-123", "updated-name");
+
+			expect(mockClient.put).toHaveBeenCalledWith("/projects/project-123", {
+				name: "updated-name",
+			});
+			expect(result.name).toBe("updated-name");
+		});
+	});
+
+	describe("fetchProjectTickets", () => {
+		it("should fetch project tickets without filters", async () => {
+			const paginatedResponse = {
+				data: [mockTicket],
+				links: { first: null, last: null, prev: null, next: null },
+				meta: {
+					path: "/api/tickets",
+					perPage: 10,
+					nextCursor: null,
+					prevCursor: null,
+				},
+			};
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve(paginatedResponse),
+			});
+
+			const result = await fetchProjectTickets("project-123");
+
+			expect(mockClient.get).toHaveBeenCalledWith(
+				"/projects/project-123/tickets",
+			);
+			expect(result.data).toEqual([mockTicket]);
+		});
+
+		it("should fetch project tickets with status filter", async () => {
+			const paginatedResponse = {
+				data: [mockTicket],
+				links: { first: null, last: null, prev: null, next: null },
+				meta: {
+					path: "/api/tickets",
+					perPage: 10,
+					nextCursor: null,
+					prevCursor: null,
+				},
+			};
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve(paginatedResponse),
+			});
+
+			await fetchProjectTickets("project-123", {
+				status: ["open", "in_progress"],
+			});
+
+			expect(mockClient.get).toHaveBeenCalledWith(
+				"/projects/project-123/tickets?status%5B%5D=open&status%5B%5D=in_progress",
+			);
+		});
+
+		it("should fetch project tickets with sort", async () => {
+			const paginatedResponse = {
+				data: [mockTicket],
+				links: { first: null, last: null, prev: null, next: null },
+				meta: {
+					path: "/api/tickets",
+					perPage: 10,
+					nextCursor: null,
+					prevCursor: null,
+				},
+			};
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve(paginatedResponse),
+			});
+
+			await fetchProjectTickets("project-123", { sort: "-due_date" });
+
+			expect(mockClient.get).toHaveBeenCalledWith(
+				"/projects/project-123/tickets?sort=-due_date",
+			);
+		});
+
+		it("should fetch project tickets with cursor", async () => {
+			const paginatedResponse = {
+				data: [mockTicket],
+				links: { first: null, last: null, prev: null, next: null },
+				meta: {
+					path: "/api/tickets",
+					perPage: 10,
+					nextCursor: null,
+					prevCursor: null,
+				},
+			};
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve(paginatedResponse),
+			});
+
+			await fetchProjectTickets("project-123", { cursor: "abc123" });
+
+			expect(mockClient.get).toHaveBeenCalledWith(
+				"/projects/project-123/tickets?cursor=abc123",
+			);
+		});
+	});
+
+	describe("fetchProjectMembers", () => {
+		it("should fetch project members", async () => {
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: [mockMember] }),
+			});
+
+			const result = await fetchProjectMembers("project-123");
+
+			expect(mockClient.get).toHaveBeenCalledWith(
+				"/projects/project-123/members",
+			);
+			expect(result).toEqual([mockMember]);
+		});
+	});
+});

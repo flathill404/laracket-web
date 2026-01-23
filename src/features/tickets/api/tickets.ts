@@ -1,23 +1,10 @@
 import { z } from "zod";
 import { client } from "@/lib/client";
+import { TICKET_STATUS_VALUES, type TicketStatus } from "../constants";
 
-enum TicketStatus {
-	Open = "open",
-	InProgress = "in_progress",
-	InReview = "in_review",
-	Resolved = "resolved",
-	Closed = "closed",
-}
+export const ticketStatusSchema = z.enum(TICKET_STATUS_VALUES);
 
-export const ticketStatusSchema = z.enum([
-	TicketStatus.Open,
-	TicketStatus.InProgress,
-	TicketStatus.InReview,
-	TicketStatus.Resolved,
-	TicketStatus.Closed,
-]);
-
-export type TicketStatusType = z.infer<typeof ticketStatusSchema>;
+export type TicketStatusType = TicketStatus;
 
 const ticketUserSchema = z.object({
 	id: z.string(),
