@@ -4,16 +4,25 @@ import {
 	Folder,
 	Inbox,
 	LayoutDashboard,
+	Plus,
 	Settings,
 	Users,
 } from "lucide-react";
+import { useState } from "react";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Project } from "@/features/projects/api/projects";
+import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Team } from "@/features/teams/api/teams";
 
 interface SidebarProps {
@@ -22,6 +31,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ projects, teams }: SidebarProps) {
+	const [createProjectOpen, setCreateProjectOpen] = useState(false);
+
 	return (
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
 			<div className="flex-1 overflow-auto py-4">
@@ -50,12 +61,35 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 
 					<Accordion type="multiple" className="w-full">
 						<AccordionItem value="projects" className="border-b-0">
-							<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
-								<div className="flex items-center gap-3 px-3">
-									<Folder className="h-4 w-4" />
-									Projects
-								</div>
-							</AccordionTrigger>
+							<div className="flex items-center justify-between pr-2 group">
+								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline">
+									<div className="flex items-center gap-3 px-3">
+										<Folder className="h-4 w-4" />
+										Projects
+									</div>
+								</AccordionTrigger>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<button
+												type="button"
+												onClick={(e) => {
+													e.stopPropagation();
+													setCreateProjectOpen(true);
+												}}
+												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
+											>
+												<Plus className="h-4 w-4 text-muted-foreground" />
+											</button>
+										</TooltipTrigger>
+										<TooltipContent>Create Project</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
+							<CreateProjectDialog
+								open={createProjectOpen}
+								onOpenChange={setCreateProjectOpen}
+							/>
 							<AccordionContent className="pb-0">
 								<div className="flex flex-col gap-1 pl-9">
 									{projects.map((project) => (

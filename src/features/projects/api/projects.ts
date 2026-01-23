@@ -75,3 +75,12 @@ export const fetchProjectMembers = async (
 	const json = await response.json();
 	return projectMembersSchema.parse(json.data);
 };
+
+export const createProject = async (data: {
+	name: string;
+	description: string;
+}) => {
+	const response = await client.post("/projects", data);
+	const json = await response.json();
+	return projectSchema.parse(json.data);
+};
