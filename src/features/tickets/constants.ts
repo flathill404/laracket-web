@@ -24,6 +24,14 @@ export const STATUS_COLORS: Record<TicketStatus, string> = {
 	closed: "text-slate-500 fill-slate-500",
 };
 
+export const STATUS_BG_COLORS: Record<TicketStatus, string> = {
+	open: "bg-sky-500",
+	in_progress: "bg-yellow-500",
+	in_review: "bg-indigo-500",
+	resolved: "bg-emerald-500",
+	closed: "bg-slate-500",
+};
+
 export const STATUS_BADGE_VARIANTS: Record<TicketStatus, string> = {
 	open: "text-sky-700 bg-sky-50 border-sky-200 hover:bg-sky-100 hover:text-sky-800 hover:border-sky-300 dark:bg-sky-900/20 dark:text-sky-400 dark:border-sky-900",
 	in_progress:
