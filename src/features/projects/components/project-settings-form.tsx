@@ -1,5 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { type Project, updateProject } from "@/features/projects/api/projects";
 import { projectQueryOptions } from "@/features/projects/lib/projects";
 import { useAppForm } from "@/hooks/use-app-form";
+import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 
 const updateProjectSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -20,20 +20,16 @@ interface ProjectSettingsFormProps {
 export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 	const queryClient = useQueryClient();
 
-	const { mutate, isPending } = useMutation({
+	const { mutate, isPending } = useMutationWithToast({
 		mutationFn: (values: z.infer<typeof updateProjectSchema>) =>
 			updateProject(project.id, values),
+		successMessage: "Project updated",
+		errorMessage: "Failed to update project",
 		onSuccess: (updatedProject) => {
-			toast.success("Project updated");
-			// Update the cache with the new project data
 			queryClient.setQueryData(
 				projectQueryOptions(project.id).queryKey,
 				updatedProject,
 			);
-		},
-		onError: (error) => {
-			toast.error("Failed to update project");
-			console.error(error);
 		},
 	});
 

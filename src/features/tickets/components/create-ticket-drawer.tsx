@@ -1,11 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 import {
 	Calendar as CalendarIcon,
 	ChevronRight,
 	Paperclip,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -28,13 +27,15 @@ import { projectMembersQueryOptions } from "@/features/projects/lib/projects";
 import {
 	createTicket,
 	type TicketStatusType,
-	type TicketUser,
 	ticketStatusSchema,
 } from "@/features/tickets/api/tickets";
 import { TicketStatusSelect } from "@/features/tickets/components/ticket-status-select";
 import { TicketUserSelector } from "@/features/tickets/components/ticket-user-selector";
-import { projectTicketsQueryKey } from "@/features/tickets/lib/tickets";
 import { useAppForm } from "@/hooks/use-app-form";
+import { useArrayField } from "@/hooks/use-array-field";
+import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { formatDate } from "@/lib/date";
+import { queryKeys } from "@/lib/query-keys";
 import { cn } from "@/utils";
 
 const createTicketSchema = z.object({
@@ -57,30 +58,12 @@ export function CreateTicketDrawer({
 	open,
 	onOpenChange,
 }: CreateTicketDrawerProps) {
-	const queryClient = useQueryClient();
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
 
 	const { data: members = [] } = useQuery(
 		projectMembersQueryOptions(projectId),
 	);
-
-	const { mutate, isPending } = useMutation({
-		mutationFn: createTicket,
-		onSuccess: () => {
-			toast.success("Ticket created");
-			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(projectId),
-			});
-			onOpenChange(false);
-			form.reset();
-			// Reset manual state if any
-		},
-		onError: (error) => {
-			toast.error("Failed to create ticket");
-			console.error(error);
-		},
-	});
 
 	const form = useAppForm({
 		defaultValues: {
@@ -103,42 +86,33 @@ export function CreateTicketDrawer({
 		},
 	});
 
-	// Helper for TicketUserSelector to work with form state
-	const currentAssignees = form.state.values.assigneeIds
-		.map((id) => members.find((m) => m.id === id))
-		.filter((m): m is TicketUser => !!m);
+	const { mutate, isPending } = useMutationWithToast({
+		mutationFn: createTicket,
+		successMessage: "Ticket created",
+		errorMessage: "Failed to create ticket",
+		invalidateKeys: [queryKeys.projects.tickets(projectId)],
+		onSuccess: () => {
+			onOpenChange(false);
+			form.reset();
+		},
+	});
 
-	const currentReviewers = form.state.values.reviewerIds
-		.map((id) => members.find((m) => m.id === id))
-		.filter((m): m is TicketUser => !!m);
+	const lookupMember = useCallback(
+		(id: string) => members.find((m) => m.id === id),
+		[members],
+	);
 
-	const handleAddAssignee = (user: TicketUser) => {
-		form.setFieldValue("assigneeIds", [
-			...form.state.values.assigneeIds,
-			user.id,
-		]);
-	};
+	const assignees = useArrayField({
+		ids: form.state.values.assigneeIds,
+		setIds: (ids) => form.setFieldValue("assigneeIds", ids),
+		lookup: lookupMember,
+	});
 
-	const handleRemoveAssignee = (userId: string) => {
-		form.setFieldValue(
-			"assigneeIds",
-			form.state.values.assigneeIds.filter((id) => id !== userId),
-		);
-	};
-
-	const handleAddReviewer = (user: TicketUser) => {
-		form.setFieldValue("reviewerIds", [
-			...form.state.values.reviewerIds,
-			user.id,
-		]);
-	};
-
-	const handleRemoveReviewer = (userId: string) => {
-		form.setFieldValue(
-			"reviewerIds",
-			form.state.values.reviewerIds.filter((id) => id !== userId),
-		);
-	};
+	const reviewers = useArrayField({
+		ids: form.state.values.reviewerIds,
+		setIds: (ids) => form.setFieldValue("reviewerIds", ids),
+		lookup: lookupMember,
+	});
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
@@ -240,13 +214,13 @@ export function CreateTicketDrawer({
 									<TicketUserSelector
 										ticketId="new" // Virtual ID
 										projectId={projectId}
-										users={currentAssignees}
+										users={assignees.items}
 										label="Assignees"
 										addButtonLabel="+ Add Assignee"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={handleAddAssignee}
-										onRemove={handleRemoveAssignee}
+										onAdd={assignees.add}
+										onRemove={assignees.remove}
 									/>
 
 									{/* Due Date */}
@@ -267,7 +241,7 @@ export function CreateTicketDrawer({
 														>
 															<CalendarIcon className="mr-2 h-4 w-4" />
 															{field.state.value ? (
-																format(field.state.value, "PPP")
+																formatDate(field.state.value, "long")
 															) : (
 																<span>Pick a date</span>
 															)}
@@ -293,13 +267,13 @@ export function CreateTicketDrawer({
 									<TicketUserSelector
 										ticketId="new" // Virtual ID
 										projectId={projectId}
-										users={currentReviewers}
+										users={reviewers.items}
 										label="Reviewers"
 										addButtonLabel="+ Add Reviewer"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={handleAddReviewer}
-										onRemove={handleRemoveReviewer}
+										onAdd={reviewers.add}
+										onRemove={reviewers.remove}
 									/>
 								</div>
 							</div>

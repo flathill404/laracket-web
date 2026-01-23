@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/common/user-avatar";
+import { formatRelativeTime } from "@/lib/date";
 import type { Activity } from "../api/activities";
-import { formatRelativeTime } from "../lib/date-utils";
 import { getStatusLabel } from "../utils";
 
 function getActivityDescription(activity: Activity): string {
@@ -27,12 +27,11 @@ interface ActivityItemProps {
 export function ActivityItem({ activity }: ActivityItemProps) {
 	return (
 		<div className="relative pl-14">
-			<Avatar className="absolute top-0 left-0 z-10 h-10 w-10 border-2 border-background">
-				<AvatarImage src={activity.user.avatarUrl ?? undefined} />
-				<AvatarFallback>
-					{activity.user.name.slice(0, 2).toUpperCase()}
-				</AvatarFallback>
-			</Avatar>
+			<UserAvatar
+				user={activity.user}
+				size="lg"
+				className="absolute top-0 left-0 z-10 border-2 border-background"
+			/>
 			<div className="pt-2">
 				<span className="font-semibold text-sm">
 					{activity.user.displayName}

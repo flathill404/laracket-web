@@ -51,10 +51,8 @@ describe("date-utils", () => {
 		it("should return formatted date for time more than a week ago", () => {
 			const date = new Date("2024-01-01T12:00:00Z").toISOString();
 			const result = formatRelativeTime(date);
-			// The format depends on locale, but should be a date string
-			expect(result).toMatch(
-				/\d{1,2}\/\d{1,2}\/\d{4}|\d{4}[-/]\d{1,2}[-/]\d{1,2}/,
-			);
+			// The format is "Jan 1, 2024" style
+			expect(result).toMatch(/\w+ \d{1,2}, \d{4}/);
 		});
 
 		it("should handle edge case at exactly 59 seconds", () => {

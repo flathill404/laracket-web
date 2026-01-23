@@ -1,9 +1,9 @@
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { isPast } from "date-fns";
 import { useEffect, useRef, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatarStack } from "@/components/common/user-avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Ticket } from "@/features/tickets/components/columns";
+import { formatDateLocale, isOverdue } from "@/lib/date";
 import { cn } from "@/utils";
 
 interface BoardTicketCardProps {
@@ -49,35 +49,25 @@ export function BoardTicketCard({ ticket }: BoardTicketCardProps) {
 						{ticket.description}
 					</h5>
 					<div className="mt-2 flex items-center justify-between">
-						<div className="flex gap-1.5">
-							{ticket.assignees.length > 0 ? (
-								ticket.assignees.map((assignee) => (
-									<Avatar
-										key={assignee.id}
-										className="h-5 w-5 border border-background"
-									>
-										<AvatarImage src={assignee.avatarUrl ?? undefined} />
-										<AvatarFallback className="text-[9px]">
-											{assignee.displayName.slice(0, 2).toUpperCase()}
-										</AvatarFallback>
-									</Avatar>
-								))
-							) : (
+						<UserAvatarStack
+							users={ticket.assignees}
+							size="xs"
+							emptyContent={
 								<div className="flex h-5 w-5 items-center justify-center rounded-full border border-background bg-muted">
 									<span className="text-[9px] text-muted-foreground">?</span>
 								</div>
-							)}
-						</div>
+							}
+						/>
 						{ticket.dueDate && (
 							<span
 								className={cn(
 									"text-[10px] text-muted-foreground",
-									isPast(new Date(ticket.dueDate)) &&
+									isOverdue(ticket.dueDate) &&
 										!["resolved", "closed"].includes(ticket.status) &&
 										"font-medium text-destructive",
 								)}
 							>
-								{new Date(ticket.dueDate).toLocaleDateString()}
+								{formatDateLocale(ticket.dueDate)}
 							</span>
 						)}
 					</div>

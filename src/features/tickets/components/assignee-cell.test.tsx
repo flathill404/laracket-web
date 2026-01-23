@@ -20,15 +20,17 @@ describe("AssigneeCell", () => {
 		expect(screen.getByText("Unassigned")).toBeInTheDocument();
 	});
 
-	it("should render single assignee name", () => {
-		const assignees = [createAssignee({ name: "alice" })];
+	it("should render single assignee display name", () => {
+		const assignees = [createAssignee({ displayName: "Alice Smith" })];
 		render(<AssigneeCell assignees={assignees} />);
 
-		expect(screen.getByText("alice")).toBeInTheDocument();
+		expect(screen.getByText("Alice Smith")).toBeInTheDocument();
 	});
 
-	it("should render avatar fallback with first two letters uppercase", () => {
-		const assignees = [createAssignee({ name: "bob", avatarUrl: null })];
+	it("should render avatar fallback with first two letters of displayName uppercase", () => {
+		const assignees = [
+			createAssignee({ displayName: "Bob Jones", avatarUrl: null }),
+		];
 		render(<AssigneeCell assignees={assignees} />);
 
 		expect(screen.getByText("BO")).toBeInTheDocument();
@@ -36,31 +38,31 @@ describe("AssigneeCell", () => {
 
 	it("should render multiple assignees as avatars only", () => {
 		const assignees = [
-			createAssignee({ id: "1", name: "alice" }),
-			createAssignee({ id: "2", name: "bob" }),
+			createAssignee({ id: "1", displayName: "Alice Smith" }),
+			createAssignee({ id: "2", displayName: "Bob Jones" }),
 		];
 		render(<AssigneeCell assignees={assignees} />);
 
 		// Should not show names for multiple assignees
-		expect(screen.queryByText("alice")).not.toBeInTheDocument();
-		expect(screen.queryByText("bob")).not.toBeInTheDocument();
+		expect(screen.queryByText("Alice Smith")).not.toBeInTheDocument();
+		expect(screen.queryByText("Bob Jones")).not.toBeInTheDocument();
 
-		// Should show avatar fallbacks
+		// Should show avatar fallbacks based on displayName
 		expect(screen.getByText("AL")).toBeInTheDocument();
 		expect(screen.getByText("BO")).toBeInTheDocument();
 	});
 
 	it("should show max 3 avatars and +N indicator for more", () => {
 		const assignees = [
-			createAssignee({ id: "1", name: "alice" }),
-			createAssignee({ id: "2", name: "bob" }),
-			createAssignee({ id: "3", name: "charlie" }),
-			createAssignee({ id: "4", name: "david" }),
-			createAssignee({ id: "5", name: "eve" }),
+			createAssignee({ id: "1", displayName: "Alice Smith" }),
+			createAssignee({ id: "2", displayName: "Bob Jones" }),
+			createAssignee({ id: "3", displayName: "Charlie Brown" }),
+			createAssignee({ id: "4", displayName: "David Lee" }),
+			createAssignee({ id: "5", displayName: "Eve Wilson" }),
 		];
 		render(<AssigneeCell assignees={assignees} />);
 
-		// Should show first 3 avatars
+		// Should show first 3 avatars based on displayName
 		expect(screen.getByText("AL")).toBeInTheDocument();
 		expect(screen.getByText("BO")).toBeInTheDocument();
 		expect(screen.getByText("CH")).toBeInTheDocument();

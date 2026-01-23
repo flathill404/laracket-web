@@ -76,9 +76,13 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("5 minutes ago")).toBeInTheDocument();
 	});
 
-	it("should render avatar fallback with first two letters uppercase", () => {
+	it("should render avatar fallback with first two letters of displayName uppercase", () => {
 		const activity = createMockActivity({
-			user: { ...createMockActivity().user, name: "alice", avatarUrl: null },
+			user: {
+				...createMockActivity().user,
+				displayName: "Alice Smith",
+				avatarUrl: null,
+			},
 		});
 		render(<ActivityItem activity={activity} />);
 

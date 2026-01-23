@@ -1,4 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+	UserAvatarStack,
+	UserAvatarWithName,
+} from "@/components/common/user-avatar";
 import type { Ticket } from "./types";
 
 export function AssigneeCell({
@@ -11,36 +14,14 @@ export function AssigneeCell({
 	}
 
 	if (assignees.length === 1) {
-		const assignee = assignees[0];
 		return (
-			<div className="flex items-center gap-2">
-				<Avatar className="h-6 w-6">
-					<AvatarImage src={assignee.avatarUrl ?? undefined} />
-					<AvatarFallback className="text-[10px]">
-						{assignee.name.slice(0, 2).toUpperCase()}
-					</AvatarFallback>
-				</Avatar>
-				<span className="text-muted-foreground text-sm">{assignee.name}</span>
-			</div>
+			<UserAvatarWithName
+				user={assignees[0]}
+				size="sm"
+				nameClassName="text-muted-foreground text-sm font-normal"
+			/>
 		);
 	}
 
-	// Multiple assignees: Show avatars only, max 3
-	return (
-		<div className="flex items-center -space-x-2">
-			{assignees.slice(0, 3).map((assignee) => (
-				<Avatar key={assignee.id} className="h-6 w-6">
-					<AvatarImage src={assignee.avatarUrl ?? undefined} />
-					<AvatarFallback className="text-[10px]">
-						{assignee.name.slice(0, 2).toUpperCase()}
-					</AvatarFallback>
-				</Avatar>
-			))}
-			{assignees.length > 3 && (
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted font-medium text-[10px]">
-					+{assignees.length - 3}
-				</div>
-			)}
-		</div>
-	);
+	return <UserAvatarStack users={assignees} size="sm" max={3} />;
 }

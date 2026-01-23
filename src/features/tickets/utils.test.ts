@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
 	getAllStatuses,
 	getStatusBadgeVariant,
@@ -35,11 +35,7 @@ describe("ticket utils", () => {
 		});
 
 		it("should return default color for unknown status", () => {
-			const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-			const result = getStatusColor("unknown");
-			expect(result).toBe("text-slate-500 fill-slate-500");
-			expect(consoleSpy).toHaveBeenCalledWith("Unknown status: unknown");
-			consoleSpy.mockRestore();
+			expect(getStatusColor("unknown")).toBe("text-slate-500 fill-slate-500");
 		});
 	});
 

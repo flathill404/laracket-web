@@ -1,5 +1,4 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import {
 	Bold,
 	Calendar as CalendarIcon,
@@ -18,7 +17,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-
 import {
 	Popover,
 	PopoverContent,
@@ -33,6 +31,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/use-app-form";
+import { formatDate } from "@/lib/date";
 import { cn } from "@/utils";
 import {
 	addTicketAssignee,
@@ -351,7 +350,7 @@ export function TicketDetailSheet({
 												>
 													<CalendarIcon className="mr-2 h-4 w-4" />
 													{ticket.dueDate ? (
-														format(new Date(ticket.dueDate), "PPP")
+														formatDate(ticket.dueDate, "long")
 													) : (
 														<span>Pick a date</span>
 													)}

@@ -109,8 +109,7 @@ export function ImageCropDialog({
 					onCropComplete(croppedImage);
 					onClose();
 				}
-			} catch (e) {
-				console.error(e);
+			} catch {
 				toast.error("Failed to crop image");
 			}
 		}

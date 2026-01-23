@@ -14,7 +14,6 @@ export const getStatusColor = (status: string): string => {
 	if (status in STATUS_COLORS) {
 		return STATUS_COLORS[status as TicketStatus];
 	}
-	console.warn(`Unknown status: ${status}`);
 	return DEFAULT_COLOR;
 };
 

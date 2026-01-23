@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatarWithName } from "@/components/common/user-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,20 +19,13 @@ export const columns: ColumnDef<Assignee>[] = [
 		cell: ({ row }) => {
 			const user = row.original;
 			return (
-				<div className="flex items-center gap-3">
-					<Avatar className="h-8 w-8">
-						<AvatarImage src={user.avatarUrl ?? undefined} />
-						<AvatarFallback>
-							{user.displayName.slice(0, 2).toUpperCase()}
-						</AvatarFallback>
-					</Avatar>
-					<div className="flex flex-col">
-						<span className="font-medium text-sm leading-none">
-							{user.displayName}
-						</span>
-						<span className="text-muted-foreground text-xs">{user.name}</span>
-					</div>
-				</div>
+				<UserAvatarWithName
+					user={user}
+					size="md"
+					showSecondaryName
+					secondaryName={user.name}
+					className="gap-3"
+				/>
 			);
 		},
 	},
