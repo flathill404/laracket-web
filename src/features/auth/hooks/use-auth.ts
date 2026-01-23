@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
 	forgotPassword,
 	login,
+	loginInputSchema,
 	logout,
 	register,
 	resetPassword,
@@ -11,11 +12,7 @@ import {
 } from "@/features/auth/api/auth";
 import { userQueryOptions } from "../lib/auth";
 
-export const loginSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8),
-	remember: z.boolean().default(false),
-});
+export const loginSchema = loginInputSchema;
 
 export const useAuth = () => {
 	const queryClient = useQueryClient();
