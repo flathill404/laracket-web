@@ -1,7 +1,12 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -10,10 +15,12 @@ const { fieldContext, useFieldContext, formContext, useFormContext } =
 function InputField({
 	label,
 	placeholder,
+	description,
 	type = "text",
 }: {
 	label: string;
 	placeholder?: string;
+	description?: string;
 	type?: string;
 }) {
 	const field = useFieldContext();
@@ -39,6 +46,8 @@ function InputField({
 				type={type}
 				className={hasError ? "border-red-500 focus-visible:ring-red-500" : ""}
 			/>
+
+			{description && <FieldDescription>{description}</FieldDescription>}
 
 			{hasError && <FieldError errors={field.state.meta.errors} />}
 		</Field>

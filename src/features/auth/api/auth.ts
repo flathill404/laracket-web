@@ -44,6 +44,23 @@ const login = async (input: z.infer<typeof loginInputSchema>) => {
 	return loginOutputSchema.parse(json);
 };
 
+const registerInputSchema = z.object({
+	name: z.string().min(1),
+	displayName: z.string().min(1),
+	email: z.email(),
+	password: z.string().min(8),
+	passwordConfirmation: z.string().min(8),
+});
+
+/**
+ * Registers a new user.
+ * @param input - The registration details.
+ */
+const register = async (input: z.infer<typeof registerInputSchema>) => {
+	await client.get("/csrf-cookie");
+	await client.post("/register", input);
+};
+
 /**
  * Logs out the current user.
  */
@@ -245,4 +262,5 @@ export {
 	sendVerificationEmail,
 	forgotPassword,
 	resetPassword,
+	register,
 };

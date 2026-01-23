@@ -1,5 +1,6 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { Link, useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,37 +14,40 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useAppForm } from "@/hooks/use-app-form";
 
-const loginFormSchema = z.object({
-	email: z.email(),
-	password: z.string().min(8),
-	remember: z.boolean(),
-});
+const registerSchema = z
+	.object({
+		name: z.string().min(1, "Username is required"),
+		displayName: z.string().min(1, "Display name is required"),
+		email: z.email("Invalid email address"),
+		password: z.string().min(8, "Password must be at least 8 characters"),
+		passwordConfirmation: z.string().min(8),
+	})
+	.refine((data) => data.password === data.passwordConfirmation, {
+		message: "Passwords do not match",
+		path: ["passwordConfirmation"],
+	});
 
-interface LoginFormProps {
-	redirect?: string;
-}
-
-export function LoginForm({ redirect }: LoginFormProps) {
+export function RegisterForm() {
 	const router = useRouter();
-	const { login } = useAuth();
+	const { register } = useAuth();
 
 	const form = useAppForm({
 		defaultValues: {
-			email: import.meta.env.DEV ? "jeison.stethem@acme.com" : "",
-			password: import.meta.env.DEV ? "password" : "",
-			remember: false,
+			name: "",
+			displayName: "",
+			email: "",
+			password: "",
+			passwordConfirmation: "",
 		},
 		validationLogic: revalidateLogic(),
 		validators: {
-			onDynamic: loginFormSchema,
+			onDynamic: registerSchema,
 		},
 		onSubmit: async ({ value }) => {
-			const res = await login(value);
-			if (res.twoFactor) {
-				await router.navigate({ to: "/two-factor-challenge" });
-			} else {
-				await router.navigate({ to: redirect || "/dashboard" });
-			}
+			await register(value);
+			toast.success("Account created successfully");
+			// Redirect to dashboard (or verification notice if needed)
+			await router.navigate({ to: "/dashboard" });
 		},
 	});
 
@@ -53,9 +57,9 @@ export function LoginForm({ redirect }: LoginFormProps) {
 				<div className="flex flex-col gap-6">
 					<Card>
 						<CardHeader>
-							<CardTitle>Login to your account</CardTitle>
+							<CardTitle>Create an account</CardTitle>
 							<CardDescription>
-								Enter your email below to login to your account
+								Enter your details below to create your account
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
@@ -67,6 +71,25 @@ export function LoginForm({ redirect }: LoginFormProps) {
 								}}
 							>
 								<FieldGroup>
+									<form.AppField
+										name="name"
+										children={(field) => (
+											<field.InputField
+												label="Username"
+												placeholder="jdoe"
+												description="This will be used for login."
+											/>
+										)}
+									/>
+									<form.AppField
+										name="displayName"
+										children={(field) => (
+											<field.InputField
+												label="Display Name"
+												placeholder="John Doe"
+											/>
+										)}
+									/>
 									<form.AppField
 										name="email"
 										children={(field) => (
@@ -80,43 +103,37 @@ export function LoginForm({ redirect }: LoginFormProps) {
 									<form.AppField
 										name="password"
 										children={(field) => (
-											<div className="flex flex-col gap-2">
-												<field.InputField
-													label="password"
-													placeholder="m@example.com"
-													type="password"
-												/>
-												<div className="flex items-center">
-													<Link
-														to="/forgot-password"
-														className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-													>
-														Forgot your password?
-													</Link>
-												</div>
-											</div>
+											<field.InputField
+												label="Password"
+												type="password"
+												placeholder="********"
+											/>
 										)}
 									/>
 									<form.AppField
-										name="remember"
+										name="passwordConfirmation"
 										children={(field) => (
-											<field.CheckboxField label="Remember me" />
+											<field.InputField
+												label="Confirm Password"
+												type="password"
+												placeholder="********"
+											/>
 										)}
 									/>
 									<Field>
 										<form.AppForm>
-											<form.SubscribeButton label="Login" />
+											<form.SubscribeButton label="Register" />
 										</form.AppForm>
 										<Button variant="outline" type="button">
-											Login with Google
+											Sign up with Google
 										</Button>
 										<FieldDescription className="text-center">
-											Don&apos;t have an account?{" "}
+											Already have an account?{" "}
 											<Link
-												to="/register"
+												to="/login"
 												className="font-medium underline underline-offset-4"
 											>
-												Sign up
+												Login
 											</Link>
 										</FieldDescription>
 									</Field>

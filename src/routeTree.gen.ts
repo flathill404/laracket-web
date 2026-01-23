@@ -15,6 +15,7 @@ import { Route as GuestIndexRouteImport } from './routes/_guest/index'
 import { Route as GuestWipRouteImport } from './routes/_guest/wip'
 import { Route as GuestTwoFactorChallengeRouteImport } from './routes/_guest/two-factor-challenge'
 import { Route as GuestResetPasswordRouteImport } from './routes/_guest/reset-password'
+import { Route as GuestRegisterRouteImport } from './routes/_guest/register'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as GuestForgotPasswordRouteImport } from './routes/_guest/forgot-password'
 import { Route as AuthenticatedVerifyEmailRouteImport } from './routes/_authenticated/verify-email'
@@ -54,6 +55,11 @@ const GuestTwoFactorChallengeRoute = GuestTwoFactorChallengeRouteImport.update({
 const GuestResetPasswordRoute = GuestResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => GuestRoute,
+} as any)
+const GuestRegisterRoute = GuestRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => GuestRoute,
 } as any)
 const GuestLoginRoute = GuestLoginRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
+  '/register': typeof GuestRegisterRoute
   '/reset-password': typeof GuestResetPasswordRoute
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/forgot-password': typeof GuestForgotPasswordRoute
   '/login': typeof GuestLoginRoute
+  '/register': typeof GuestRegisterRoute
   '/reset-password': typeof GuestResetPasswordRoute
   '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/_authenticated/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/_guest/forgot-password': typeof GuestForgotPasswordRoute
   '/_guest/login': typeof GuestLoginRoute
+  '/_guest/register': typeof GuestRegisterRoute
   '/_guest/reset-password': typeof GuestResetPasswordRoute
   '/_guest/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/_guest/wip': typeof GuestWipRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/forgot-password'
     | '/login'
+    | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
     | '/wip'
@@ -209,6 +219,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/forgot-password'
     | '/login'
+    | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
     | '/wip'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/_authenticated/verify-email'
     | '/_guest/forgot-password'
     | '/_guest/login'
+    | '/_guest/register'
     | '/_guest/reset-password'
     | '/_guest/two-factor-challenge'
     | '/_guest/wip'
@@ -287,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof GuestResetPasswordRouteImport
+      parentRoute: typeof GuestRoute
+    }
+    '/_guest/register': {
+      id: '/_guest/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof GuestRegisterRouteImport
       parentRoute: typeof GuestRoute
     }
     '/_guest/login': {
@@ -449,6 +468,7 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface GuestRouteChildren {
   GuestForgotPasswordRoute: typeof GuestForgotPasswordRoute
   GuestLoginRoute: typeof GuestLoginRoute
+  GuestRegisterRoute: typeof GuestRegisterRoute
   GuestResetPasswordRoute: typeof GuestResetPasswordRoute
   GuestTwoFactorChallengeRoute: typeof GuestTwoFactorChallengeRoute
   GuestWipRoute: typeof GuestWipRoute
@@ -458,6 +478,7 @@ interface GuestRouteChildren {
 const GuestRouteChildren: GuestRouteChildren = {
   GuestForgotPasswordRoute: GuestForgotPasswordRoute,
   GuestLoginRoute: GuestLoginRoute,
+  GuestRegisterRoute: GuestRegisterRoute,
   GuestResetPasswordRoute: GuestResetPasswordRoute,
   GuestTwoFactorChallengeRoute: GuestTwoFactorChallengeRoute,
   GuestWipRoute: GuestWipRoute,

@@ -5,6 +5,7 @@ import {
 	forgotPassword,
 	login,
 	logout,
+	register,
 	resetPassword,
 	twoFactorChallenge,
 } from "@/features/auth/api/auth";
@@ -52,6 +53,13 @@ export const useAuth = () => {
 		mutationFn: resetPassword,
 	});
 
+	const registerMutation = useMutation({
+		mutationFn: register,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["user"] });
+		},
+	});
+
 	return {
 		user,
 		isAuthenticated: !!user,
@@ -61,5 +69,6 @@ export const useAuth = () => {
 		twoFactorChallenge: twoFactorChallengeMutation.mutateAsync,
 		forgotPassword: forgotPasswordMutation.mutateAsync,
 		resetPassword: resetPasswordMutation.mutateAsync,
+		register: registerMutation.mutateAsync,
 	};
 };
