@@ -14,6 +14,7 @@ import {
 	Users as UsersIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -97,6 +98,8 @@ function ProjectLayout() {
 					))}
 				</TabsList>
 				<div className="flex-1"></div>
+
+				{/* Tickets & Board Actions */}
 				{["tickets", "board"].includes(currentTab ?? "") && (
 					<div className="flex items-center gap-2">
 						<div className="relative w-64">
@@ -109,6 +112,29 @@ function ProjectLayout() {
 						</div>
 						<Button onClick={() => setIsCreateOpen(true)}>
 							<Plus className="mr-2 h-4 w-4" /> New Ticket
+						</Button>
+					</div>
+				)}
+
+				{/* Members Actions */}
+				{currentTab === "members" && (
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							onClick={() =>
+								toast.info("Assign Team to Project is coming soon")
+							}
+						>
+							<UsersIcon className="mr-2 h-4 w-4" />
+							Assign Team
+						</Button>
+						<Button
+							onClick={() =>
+								toast.info("Assign Member to Project is coming soon")
+							}
+						>
+							<Plus className="mr-2 h-4 w-4" />
+							Assign Member
 						</Button>
 					</div>
 				)}
