@@ -10,6 +10,7 @@ describe("cookie utilities", () => {
 			const name =
 				eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
 			if (name) {
+				// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 				document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
 			}
 		}
@@ -18,23 +19,29 @@ describe("cookie utilities", () => {
 
 	describe("getCookie", () => {
 		it("should return cookie value when cookie exists", () => {
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "testCookie=testValue";
 			expect(getCookie("testCookie")).toBe("testValue");
 		});
 
 		it("should return null when cookie does not exist", () => {
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "otherCookie=otherValue";
 			expect(getCookie("nonExistent")).toBeNull();
 		});
 
 		it("should handle multiple cookies", () => {
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "first=1";
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "second=2";
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "third=3";
 			expect(getCookie("second")).toBe("2");
 		});
 
 		it("should decode URI-encoded values", () => {
+			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "encoded=hello%20world";
 			expect(getCookie("encoded")).toBe("hello world");
 		});
