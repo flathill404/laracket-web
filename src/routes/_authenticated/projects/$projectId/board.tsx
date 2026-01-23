@@ -3,9 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/board",
 )({
-	component: RouteComponent,
+	component: ProjectBoard,
 });
 
-function RouteComponent() {
-	return <div>Hello "/_authenticated/projects/$projectId/board"!</div>;
+function ProjectBoard() {
+	return (
+		<div className="flex flex-col gap-4">
+			<h2 className="text-2xl font-bold tracking-tight">Board</h2>
+			<p className="text-muted-foreground">Kanban board view coming soon.</p>
+		</div>
+	);
 }
