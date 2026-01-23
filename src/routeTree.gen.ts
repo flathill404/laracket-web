@@ -13,16 +13,17 @@ import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as GuestIndexRouteImport } from './routes/_guest/index'
 import { Route as GuestWipRouteImport } from './routes/_guest/wip'
-import { Route as GuestTwoFactorChallengeRouteImport } from './routes/_guest/two-factor-challenge'
-import { Route as GuestResetPasswordRouteImport } from './routes/_guest/reset-password'
-import { Route as GuestRegisterRouteImport } from './routes/_guest/register'
-import { Route as GuestLoginRouteImport } from './routes/_guest/login'
-import { Route as GuestForgotPasswordRouteImport } from './routes/_guest/forgot-password'
+import { Route as GuestFormRouteImport } from './routes/_guest/_form'
 import { Route as AuthenticatedVerifyEmailRouteImport } from './routes/_authenticated/verify-email'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMyWorkRouteImport } from './routes/_authenticated/my-work'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTicketsRouteRouteImport } from './routes/_authenticated/tickets/route'
+import { Route as GuestFormTwoFactorChallengeRouteImport } from './routes/_guest/_form/two-factor-challenge'
+import { Route as GuestFormResetPasswordRouteImport } from './routes/_guest/_form/reset-password'
+import { Route as GuestFormRegisterRouteImport } from './routes/_guest/_form/register'
+import { Route as GuestFormLoginRouteImport } from './routes/_guest/_form/login'
+import { Route as GuestFormForgotPasswordRouteImport } from './routes/_guest/_form/forgot-password'
 import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets/$ticketId'
 import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams/$teamId/tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects/$projectId/tickets'
@@ -47,29 +48,8 @@ const GuestWipRoute = GuestWipRouteImport.update({
   path: '/wip',
   getParentRoute: () => GuestRoute,
 } as any)
-const GuestTwoFactorChallengeRoute = GuestTwoFactorChallengeRouteImport.update({
-  id: '/two-factor-challenge',
-  path: '/two-factor-challenge',
-  getParentRoute: () => GuestRoute,
-} as any)
-const GuestResetPasswordRoute = GuestResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => GuestRoute,
-} as any)
-const GuestRegisterRoute = GuestRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => GuestRoute,
-} as any)
-const GuestLoginRoute = GuestLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => GuestRoute,
-} as any)
-const GuestForgotPasswordRoute = GuestForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
+const GuestFormRoute = GuestFormRouteImport.update({
+  id: '/_form',
   getParentRoute: () => GuestRoute,
 } as any)
 const AuthenticatedVerifyEmailRoute =
@@ -99,6 +79,32 @@ const AuthenticatedTicketsRouteRoute =
     path: '/tickets',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const GuestFormTwoFactorChallengeRoute =
+  GuestFormTwoFactorChallengeRouteImport.update({
+    id: '/two-factor-challenge',
+    path: '/two-factor-challenge',
+    getParentRoute: () => GuestFormRoute,
+  } as any)
+const GuestFormResetPasswordRoute = GuestFormResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => GuestFormRoute,
+} as any)
+const GuestFormRegisterRoute = GuestFormRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => GuestFormRoute,
+} as any)
+const GuestFormLoginRoute = GuestFormLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => GuestFormRoute,
+} as any)
+const GuestFormForgotPasswordRoute = GuestFormForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => GuestFormRoute,
+} as any)
 const AuthenticatedTicketsTicketIdRoute =
   AuthenticatedTicketsTicketIdRouteImport.update({
     id: '/$ticketId',
@@ -136,14 +142,14 @@ export interface FileRoutesByFullPath {
   '/my-work': typeof AuthenticatedMyWorkRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
-  '/forgot-password': typeof GuestForgotPasswordRoute
-  '/login': typeof GuestLoginRoute
-  '/register': typeof GuestRegisterRoute
-  '/reset-password': typeof GuestResetPasswordRoute
-  '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
+  '/forgot-password': typeof GuestFormForgotPasswordRoute
+  '/login': typeof GuestFormLoginRoute
+  '/register': typeof GuestFormRegisterRoute
+  '/reset-password': typeof GuestFormResetPasswordRoute
+  '/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
   '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
@@ -155,14 +161,14 @@ export interface FileRoutesByTo {
   '/my-work': typeof AuthenticatedMyWorkRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
-  '/forgot-password': typeof GuestForgotPasswordRoute
-  '/login': typeof GuestLoginRoute
-  '/register': typeof GuestRegisterRoute
-  '/reset-password': typeof GuestResetPasswordRoute
-  '/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
+  '/forgot-password': typeof GuestFormForgotPasswordRoute
+  '/login': typeof GuestFormLoginRoute
+  '/register': typeof GuestFormRegisterRoute
+  '/reset-password': typeof GuestFormResetPasswordRoute
+  '/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
   '/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
@@ -177,14 +183,15 @@ export interface FileRoutesById {
   '/_authenticated/my-work': typeof AuthenticatedMyWorkRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/verify-email': typeof AuthenticatedVerifyEmailRoute
-  '/_guest/forgot-password': typeof GuestForgotPasswordRoute
-  '/_guest/login': typeof GuestLoginRoute
-  '/_guest/register': typeof GuestRegisterRoute
-  '/_guest/reset-password': typeof GuestResetPasswordRoute
-  '/_guest/two-factor-challenge': typeof GuestTwoFactorChallengeRoute
+  '/_guest/_form': typeof GuestFormRouteWithChildren
   '/_guest/wip': typeof GuestWipRoute
   '/_guest/': typeof GuestIndexRoute
   '/_authenticated/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
+  '/_guest/_form/forgot-password': typeof GuestFormForgotPasswordRoute
+  '/_guest/_form/login': typeof GuestFormLoginRoute
+  '/_guest/_form/register': typeof GuestFormRegisterRoute
+  '/_guest/_form/reset-password': typeof GuestFormResetPasswordRoute
+  '/_guest/_form/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
   '/_authenticated/projects/$projectId/tickets': typeof AuthenticatedProjectsProjectIdTicketsRouteWithChildren
   '/_authenticated/teams/$teamId/tickets': typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
   '/_authenticated/projects/$projectId/tickets/$ticketId': typeof AuthenticatedProjectsProjectIdTicketsTicketIdRoute
@@ -198,14 +205,14 @@ export interface FileRouteTypes {
     | '/my-work'
     | '/settings'
     | '/verify-email'
+    | '/wip'
+    | '/'
+    | '/tickets/$ticketId'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
-    | '/wip'
-    | '/'
-    | '/tickets/$ticketId'
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
     | '/projects/$projectId/tickets/$ticketId'
@@ -217,14 +224,14 @@ export interface FileRouteTypes {
     | '/my-work'
     | '/settings'
     | '/verify-email'
+    | '/wip'
+    | '/'
+    | '/tickets/$ticketId'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
-    | '/wip'
-    | '/'
-    | '/tickets/$ticketId'
     | '/projects/$projectId/tickets'
     | '/teams/$teamId/tickets'
     | '/projects/$projectId/tickets/$ticketId'
@@ -238,14 +245,15 @@ export interface FileRouteTypes {
     | '/_authenticated/my-work'
     | '/_authenticated/settings'
     | '/_authenticated/verify-email'
-    | '/_guest/forgot-password'
-    | '/_guest/login'
-    | '/_guest/register'
-    | '/_guest/reset-password'
-    | '/_guest/two-factor-challenge'
+    | '/_guest/_form'
     | '/_guest/wip'
     | '/_guest/'
     | '/_authenticated/tickets/$ticketId'
+    | '/_guest/_form/forgot-password'
+    | '/_guest/_form/login'
+    | '/_guest/_form/register'
+    | '/_guest/_form/reset-password'
+    | '/_guest/_form/two-factor-challenge'
     | '/_authenticated/projects/$projectId/tickets'
     | '/_authenticated/teams/$teamId/tickets'
     | '/_authenticated/projects/$projectId/tickets/$ticketId'
@@ -287,39 +295,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestWipRouteImport
       parentRoute: typeof GuestRoute
     }
-    '/_guest/two-factor-challenge': {
-      id: '/_guest/two-factor-challenge'
-      path: '/two-factor-challenge'
-      fullPath: '/two-factor-challenge'
-      preLoaderRoute: typeof GuestTwoFactorChallengeRouteImport
-      parentRoute: typeof GuestRoute
-    }
-    '/_guest/reset-password': {
-      id: '/_guest/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof GuestResetPasswordRouteImport
-      parentRoute: typeof GuestRoute
-    }
-    '/_guest/register': {
-      id: '/_guest/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof GuestRegisterRouteImport
-      parentRoute: typeof GuestRoute
-    }
-    '/_guest/login': {
-      id: '/_guest/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof GuestLoginRouteImport
-      parentRoute: typeof GuestRoute
-    }
-    '/_guest/forgot-password': {
-      id: '/_guest/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof GuestForgotPasswordRouteImport
+    '/_guest/_form': {
+      id: '/_guest/_form'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof GuestFormRouteImport
       parentRoute: typeof GuestRoute
     }
     '/_authenticated/verify-email': {
@@ -356,6 +336,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/tickets'
       preLoaderRoute: typeof AuthenticatedTicketsRouteRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_guest/_form/two-factor-challenge': {
+      id: '/_guest/_form/two-factor-challenge'
+      path: '/two-factor-challenge'
+      fullPath: '/two-factor-challenge'
+      preLoaderRoute: typeof GuestFormTwoFactorChallengeRouteImport
+      parentRoute: typeof GuestFormRoute
+    }
+    '/_guest/_form/reset-password': {
+      id: '/_guest/_form/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof GuestFormResetPasswordRouteImport
+      parentRoute: typeof GuestFormRoute
+    }
+    '/_guest/_form/register': {
+      id: '/_guest/_form/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof GuestFormRegisterRouteImport
+      parentRoute: typeof GuestFormRoute
+    }
+    '/_guest/_form/login': {
+      id: '/_guest/_form/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof GuestFormLoginRouteImport
+      parentRoute: typeof GuestFormRoute
+    }
+    '/_guest/_form/forgot-password': {
+      id: '/_guest/_form/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof GuestFormForgotPasswordRouteImport
+      parentRoute: typeof GuestFormRoute
     }
     '/_authenticated/tickets/$ticketId': {
       id: '/_authenticated/tickets/$ticketId'
@@ -465,22 +480,34 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface GuestFormRouteChildren {
+  GuestFormForgotPasswordRoute: typeof GuestFormForgotPasswordRoute
+  GuestFormLoginRoute: typeof GuestFormLoginRoute
+  GuestFormRegisterRoute: typeof GuestFormRegisterRoute
+  GuestFormResetPasswordRoute: typeof GuestFormResetPasswordRoute
+  GuestFormTwoFactorChallengeRoute: typeof GuestFormTwoFactorChallengeRoute
+}
+
+const GuestFormRouteChildren: GuestFormRouteChildren = {
+  GuestFormForgotPasswordRoute: GuestFormForgotPasswordRoute,
+  GuestFormLoginRoute: GuestFormLoginRoute,
+  GuestFormRegisterRoute: GuestFormRegisterRoute,
+  GuestFormResetPasswordRoute: GuestFormResetPasswordRoute,
+  GuestFormTwoFactorChallengeRoute: GuestFormTwoFactorChallengeRoute,
+}
+
+const GuestFormRouteWithChildren = GuestFormRoute._addFileChildren(
+  GuestFormRouteChildren,
+)
+
 interface GuestRouteChildren {
-  GuestForgotPasswordRoute: typeof GuestForgotPasswordRoute
-  GuestLoginRoute: typeof GuestLoginRoute
-  GuestRegisterRoute: typeof GuestRegisterRoute
-  GuestResetPasswordRoute: typeof GuestResetPasswordRoute
-  GuestTwoFactorChallengeRoute: typeof GuestTwoFactorChallengeRoute
+  GuestFormRoute: typeof GuestFormRouteWithChildren
   GuestWipRoute: typeof GuestWipRoute
   GuestIndexRoute: typeof GuestIndexRoute
 }
 
 const GuestRouteChildren: GuestRouteChildren = {
-  GuestForgotPasswordRoute: GuestForgotPasswordRoute,
-  GuestLoginRoute: GuestLoginRoute,
-  GuestRegisterRoute: GuestRegisterRoute,
-  GuestResetPasswordRoute: GuestResetPasswordRoute,
-  GuestTwoFactorChallengeRoute: GuestTwoFactorChallengeRoute,
+  GuestFormRoute: GuestFormRouteWithChildren,
   GuestWipRoute: GuestWipRoute,
   GuestIndexRoute: GuestIndexRoute,
 }

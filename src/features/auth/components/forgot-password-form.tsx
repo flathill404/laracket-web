@@ -3,8 +3,6 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { GuestFormLayout } from "@/components/layout/guest-form-layout";
-
 import {
 	Card,
 	CardContent,
@@ -48,48 +46,46 @@ export function ForgotPasswordForm() {
 	});
 
 	return (
-		<GuestFormLayout>
-			<Card>
-				<CardHeader>
-					<CardTitle>Forgot Password</CardTitle>
-					<CardDescription>
-						Enter your email address and we will send you a password reset link.
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form
-						noValidate
-						onSubmit={(e) => {
-							e.preventDefault();
-							form.handleSubmit();
-						}}
-					>
-						<FieldGroup>
-							<form.AppField
-								name="email"
-								children={(field) => (
-									<field.InputField
-										label="Email"
-										placeholder="m@example.com"
-										type="email"
-									/>
-								)}
-							/>
-							<Field>
-								<form.AppForm>
-									<form.SubscribeButton label="Email Password Reset Link" />
-								</form.AppForm>
-								<Link
-									to="/login"
-									className="flex w-full justify-center text-sm font-medium text-muted-foreground hover:underline"
-								>
-									Back to Login
-								</Link>
-							</Field>
-						</FieldGroup>
-					</form>
-				</CardContent>
-			</Card>
-		</GuestFormLayout>
+		<Card>
+			<CardHeader>
+				<CardTitle>Forgot Password</CardTitle>
+				<CardDescription>
+					Enter your email address and we will send you a password reset link.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form
+					noValidate
+					onSubmit={(e) => {
+						e.preventDefault();
+						form.handleSubmit();
+					}}
+				>
+					<FieldGroup>
+						<form.AppField
+							name="email"
+							children={(field) => (
+								<field.InputField
+									label="Email"
+									placeholder="m@example.com"
+									type="email"
+								/>
+							)}
+						/>
+						<Field>
+							<form.AppForm>
+								<form.SubscribeButton label="Email Password Reset Link" />
+							</form.AppForm>
+							<Link
+								to="/login"
+								className="flex w-full justify-center text-sm font-medium text-muted-foreground hover:underline"
+							>
+								Back to Login
+							</Link>
+						</Field>
+					</FieldGroup>
+				</form>
+			</CardContent>
+		</Card>
 	);
 }

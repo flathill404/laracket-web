@@ -1,7 +1,6 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
-import { GuestFormLayout } from "@/components/layout/guest-form-layout";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -49,80 +48,76 @@ export function LoginForm({ redirect }: LoginFormProps) {
 	});
 
 	return (
-		<GuestFormLayout>
-			<Card>
-				<CardHeader>
-					<CardTitle>Login to your account</CardTitle>
-					<CardDescription>
-						Enter your email below to login to your account
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<form
-						noValidate
-						onSubmit={(e) => {
-							e.preventDefault();
-							form.handleSubmit();
-						}}
-					>
-						<FieldGroup>
-							<form.AppField
-								name="email"
-								children={(field) => (
+		<Card>
+			<CardHeader>
+				<CardTitle>Login to your account</CardTitle>
+				<CardDescription>
+					Enter your email below to login to your account
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form
+					noValidate
+					onSubmit={(e) => {
+						e.preventDefault();
+						form.handleSubmit();
+					}}
+				>
+					<FieldGroup>
+						<form.AppField
+							name="email"
+							children={(field) => (
+								<field.InputField
+									label="Email"
+									placeholder="m@example.com"
+									type="email"
+								/>
+							)}
+						/>
+						<form.AppField
+							name="password"
+							children={(field) => (
+								<div className="flex flex-col gap-2">
 									<field.InputField
-										label="Email"
+										label="password"
 										placeholder="m@example.com"
-										type="email"
+										type="password"
 									/>
-								)}
-							/>
-							<form.AppField
-								name="password"
-								children={(field) => (
-									<div className="flex flex-col gap-2">
-										<field.InputField
-											label="password"
-											placeholder="m@example.com"
-											type="password"
-										/>
-										<div className="flex items-center">
-											<Link
-												to="/forgot-password"
-												className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-											>
-												Forgot your password?
-											</Link>
-										</div>
+									<div className="flex items-center">
+										<Link
+											to="/forgot-password"
+											className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+										>
+											Forgot your password?
+										</Link>
 									</div>
-								)}
-							/>
-							<form.AppField
-								name="remember"
-								children={(field) => (
-									<field.CheckboxField label="Remember me" />
-								)}
-							/>
-							<Field>
-								<form.AppForm>
-									<form.SubscribeButton label="Login" />
-								</form.AppForm>
-								<Button variant="outline" type="button">
-									Login with Google
-								</Button>
-								<FieldDescription className="text-center">
-									Don&apos;t have an account?{" "}
-									<Link
-										to="/register"
-										className="font-medium underline underline-offset-4"
-									>
-										Sign up
-									</Link>
-								</FieldDescription>
-							</Field>
-						</FieldGroup>
-					</form>
-				</CardContent>
-			</Card>
-		</GuestFormLayout>
+								</div>
+							)}
+						/>
+						<form.AppField
+							name="remember"
+							children={(field) => <field.CheckboxField label="Remember me" />}
+						/>
+						<Field>
+							<form.AppForm>
+								<form.SubscribeButton label="Login" />
+							</form.AppForm>
+							<Button variant="outline" type="button">
+								Login with Google
+							</Button>
+							<FieldDescription className="text-center">
+								Don&apos;t have an account?{" "}
+								<Link
+									to="/register"
+									className="font-medium underline underline-offset-4"
+								>
+									Sign up
+								</Link>
+							</FieldDescription>
+						</Field>
+					</FieldGroup>
+				</form>
+			</CardContent>
+		</Card>
 	);
 }

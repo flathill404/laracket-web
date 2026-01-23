@@ -7,7 +7,7 @@ const resetPasswordSearchSchema = z.object({
 	email: z.string().email(),
 });
 
-export const Route = createFileRoute("/_guest/reset-password")({
+export const Route = createFileRoute("/_guest/_form/reset-password")({
 	validateSearch: resetPasswordSearchSchema,
 	component: ResetPasswordPage,
 });
