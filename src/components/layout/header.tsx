@@ -11,7 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import type { userSchema } from "@/features/auth/api/auth";
+import type { userSchema } from "@/features/auth/api";
 
 type User = z.infer<typeof userSchema>;
 

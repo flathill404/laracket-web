@@ -28,7 +28,7 @@ import {
 	deleteAvatar,
 	updateAvatar,
 	updateProfileInformation,
-} from "@/features/auth/api/auth";
+} from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 import { ImageCropDialog } from "./image-crop-dialog";

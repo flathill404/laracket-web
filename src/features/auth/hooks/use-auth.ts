@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { z } from "zod";
+
 import {
 	forgotPassword,
 	login,
@@ -9,7 +9,7 @@ import {
 	register,
 	resetPassword,
 	twoFactorChallenge,
-} from "@/features/auth/api/auth";
+} from "@/features/auth/api";
 import { userQueryOptions } from "../lib/auth";
 
 export const loginSchema = loginInputSchema;

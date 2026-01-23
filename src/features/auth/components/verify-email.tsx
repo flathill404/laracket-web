@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import {
 	sendVerificationEmail,
 	updateProfileInformation,
-} from "@/features/auth/api/auth";
+} from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 
 export function VerifyEmail() {

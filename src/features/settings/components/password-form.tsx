@@ -9,7 +9,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { updatePassword } from "@/features/auth/api/auth";
+import { updatePassword } from "@/features/auth/api";
 import { formContext, useAppForm } from "@/hooks/use-app-form";
 
 const passwordSchema = z

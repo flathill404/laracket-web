@@ -8,7 +8,7 @@ import {
 	enableTwoFactor,
 	fetchTwoFactorQrCode,
 	fetchTwoFactorRecoveryCodes,
-} from "@/features/auth/api/auth";
+} from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 
 type PendingAction = "enable" | "show-recovery-codes" | null;
