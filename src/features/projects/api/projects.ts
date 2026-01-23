@@ -36,8 +36,11 @@ export const fetchProject = async (projectId: string) => {
 	return projectSchema.parse(json.data);
 };
 
-export const updateProject = async (projectId: string, name: string) => {
-	const response = await client.put(`/projects/${projectId}`, { name });
+export const updateProject = async (
+	projectId: string,
+	data: { name: string; description: string },
+) => {
+	const response = await client.put(`/projects/${projectId}`, data);
 	const json = await response.json();
 	return projectSchema.parse(json.data);
 };
