@@ -1,7 +1,7 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,7 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
-import { Input } from "@/components/ui/input";
-import {
-	fetchProject,
-	fetchProjectTickets,
-} from "@/features/projects/api/projects";
+import { fetchProjectTickets } from "@/features/projects/api/projects";
 import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
 import { TicketList } from "@/features/tickets/components/ticket-list";
 import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
@@ -31,12 +27,6 @@ const ticketsQuery = (
 	queryOptions({
 		queryKey: ["projects", projectId, "tickets", filters],
 		queryFn: () => fetchProjectTickets(projectId, filters),
-	});
-
-const projectQuery = (projectId: string) =>
-	queryOptions({
-		queryKey: ["projects", projectId],
-		queryFn: () => fetchProject(projectId),
 	});
 
 const searchSchema = z.object({
@@ -56,7 +46,6 @@ export const Route = createFileRoute(
 	}) => {
 		await Promise.all([
 			queryClient.ensureQueryData(ticketsQuery(projectId, { status, sort })),
-			queryClient.ensureQueryData(projectQuery(projectId)),
 		]);
 	},
 	component: ProjectDetail,
@@ -67,7 +56,6 @@ function ProjectDetail() {
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
-	const { data: project } = useSuspenseQuery(projectQuery(projectId));
 
 	// Use infinite query hook
 	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
@@ -104,26 +92,6 @@ function ProjectDetail() {
 
 	return (
 		<div className="flex h-full flex-col bg-background">
-			{/* Page Header */}
-			<div className="flex shrink-0 items-center justify-between border-b px-6 py-5">
-				<h1 className="font-semibold text-2xl tracking-tight">
-					{project.name}
-				</h1>
-				<div className="flex items-center gap-2">
-					<div className="relative w-64">
-						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Search tickets..."
-							className="h-9 w-full pl-9"
-						/>
-					</div>
-					<Button onClick={() => setIsCreateOpen(true)}>
-						<Plus className="mr-2 h-4 w-4" /> New Ticket
-					</Button>
-				</div>
-			</div>
-
 			<TicketList
 				pages={pages}
 				isLoading={isLoading}
