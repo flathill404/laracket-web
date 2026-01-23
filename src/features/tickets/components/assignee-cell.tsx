@@ -1,7 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Ticket } from "./types";
 
-export function AssigneeCell({ assignees }: { assignees: Ticket["assignees"] }) {
+export function AssigneeCell({
+	assignees,
+}: {
+	assignees: Ticket["assignees"];
+}) {
 	if (assignees.length === 0) {
 		return <span className="text-sm text-muted-foreground">Unassigned</span>;
 	}

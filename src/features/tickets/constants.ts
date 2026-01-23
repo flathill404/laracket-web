@@ -6,7 +6,8 @@ export const TICKET_STATUSES = {
 	closed: "closed",
 } as const;
 
-export type TicketStatus = (typeof TICKET_STATUSES)[keyof typeof TICKET_STATUSES];
+export type TicketStatus =
+	(typeof TICKET_STATUSES)[keyof typeof TICKET_STATUSES];
 
 export const STATUS_COLORS: Record<TicketStatus, string> = {
 	open: "text-sky-500 fill-sky-500",

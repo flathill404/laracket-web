@@ -1,6 +1,10 @@
 import { cn } from "@/utils";
 
-export function DueDateCell({ dueDate }: { dueDate: string | null | undefined }) {
+export function DueDateCell({
+	dueDate,
+}: {
+	dueDate: string | null | undefined;
+}) {
 	if (!dueDate) {
 		return <span className="text-sm text-muted-foreground">—</span>;
 	}
