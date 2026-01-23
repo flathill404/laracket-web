@@ -13,10 +13,12 @@ import {
 	Settings as SettingsIcon,
 	Users as UsersIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { projectQueryOptions } from "@/features/projects/lib/projects";
+import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
 
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 	loader: async ({ context, params }) => {
@@ -30,6 +32,7 @@ export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 function ProjectLayout() {
 	const params = Route.useParams();
 	const location = useLocation();
+	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const { data: project } = useSuspenseQuery(
 		projectQueryOptions(params.projectId),
 	);
@@ -94,19 +97,21 @@ function ProjectLayout() {
 					))}
 				</TabsList>
 				<div className="flex-1"></div>
-				<div className="flex items-center gap-2">
-					<div className="relative w-64">
-						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
-						<Input
-							type="search"
-							placeholder="Search tickets..."
-							className="h-9 w-full pl-9"
-						/>
+				{["tickets", "board"].includes(currentTab ?? "") && (
+					<div className="flex items-center gap-2">
+						<div className="relative w-64">
+							<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
+							<Input
+								type="search"
+								placeholder="Search tickets..."
+								className="h-9 w-full pl-9"
+							/>
+						</div>
+						<Button onClick={() => setIsCreateOpen(true)}>
+							<Plus className="mr-2 h-4 w-4" /> New Ticket
+						</Button>
 					</div>
-					<Button>
-						<Plus className="mr-2 h-4 w-4" /> New Ticket
-					</Button>
-				</div>
+				)}
 			</div>
 
 			{/* Page Content */}
@@ -116,6 +121,11 @@ function ProjectLayout() {
 			>
 				<Outlet />
 			</TabsContent>
+			<CreateTicketDrawer
+				projectId={params.projectId}
+				open={isCreateOpen}
+				onOpenChange={setIsCreateOpen}
+			/>
 		</Tabs>
 	);
 }
