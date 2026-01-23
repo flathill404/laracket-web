@@ -8,9 +8,13 @@ import {
 import {
 	Kanban,
 	LayoutList,
+	Plus,
+	Search,
 	Settings as SettingsIcon,
 	Users as UsersIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { projectQueryOptions } from "@/features/projects/lib/projects";
 
@@ -63,31 +67,55 @@ function ProjectLayout() {
 	)?.value;
 
 	return (
-		<div className="flex h-full flex-col overflow-hidden">
-			<Tabs defaultValue="overview" value={currentTab}>
-				<div className="grid grid-cols-2">
-					<h1 className="font-bold text-2xl">{project?.name}</h1>
-					<TabsList>
-						{navItems.map((item) => (
-							<TabsTrigger key={item.value} value={item.value} asChild>
-								<Link
-									to={item.to}
-									params={{ projectId: params.projectId }}
-									className="group"
-								>
-									<div className="flex items-center gap-2">
-										{item.icon}
-										{item.label}
-									</div>
-								</Link>
-							</TabsTrigger>
-						))}
-					</TabsList>
+		<Tabs
+			defaultValue="overview"
+			value={currentTab}
+			className="flex h-full flex-col bg-background"
+		>
+			{/* Page Header */}
+			<div className="flex shrink-0 items-center justify-between border-b px-6 py-5">
+				<h1 className="font-semibold text-2xl tracking-tight">
+					{project?.name}
+				</h1>
+				<TabsList className="ml-4">
+					{navItems.map((item) => (
+						<TabsTrigger key={item.value} value={item.value} asChild>
+							<Link
+								to={item.to}
+								params={{ projectId: params.projectId }}
+								className="group"
+							>
+								<div className="flex items-center gap-2">
+									{item.icon}
+									{item.label}
+								</div>
+							</Link>
+						</TabsTrigger>
+					))}
+				</TabsList>
+				<div className="flex-1"></div>
+				<div className="flex items-center gap-2">
+					<div className="relative w-64">
+						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
+						<Input
+							type="search"
+							placeholder="Search tickets..."
+							className="h-9 w-full pl-9"
+						/>
+					</div>
+					<Button>
+						<Plus className="mr-2 h-4 w-4" /> New Ticket
+					</Button>
 				</div>
-				<TabsContent value={currentTab ?? ""}>
-					<Outlet />
-				</TabsContent>
-			</Tabs>
-		</div>
+			</div>
+
+			{/* Page Content */}
+			<TabsContent
+				value={currentTab ?? ""}
+				className="flex-1 overflow-hidden data-[state=active]:flex data-[state=active]:flex-col"
+			>
+				<Outlet />
+			</TabsContent>
+		</Tabs>
 	);
 }
