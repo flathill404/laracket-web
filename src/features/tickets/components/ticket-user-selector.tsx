@@ -62,12 +62,12 @@ export function TicketUserSelector({
 
 	return (
 		<div className="space-y-2">
-			<span className="text-xs font-medium text-muted-foreground">{label}</span>
-			<div className="flex flex-wrap gap-2 min-h-[2.5rem] items-center">
+			<span className="font-medium text-muted-foreground text-xs">{label}</span>
+			<div className="flex min-h-[2.5rem] flex-wrap items-center gap-2">
 				{users.map((user) => (
 					<div
 						key={user.id}
-						className="flex items-center gap-2 bg-background border px-2 py-1 rounded-md shadow-sm group"
+						className="group flex items-center gap-2 rounded-md border bg-background px-2 py-1 shadow-sm"
 					>
 						<Avatar className="h-5 w-5">
 							<AvatarImage src={user.avatarUrl ?? undefined} />
@@ -75,11 +75,11 @@ export function TicketUserSelector({
 								{user.name.slice(0, 2).toUpperCase()}
 							</AvatarFallback>
 						</Avatar>
-						<span className="text-sm font-medium">{user.name}</span>
+						<span className="font-medium text-sm">{user.name}</span>
 						<button
 							type="button"
 							onClick={() => onRemove(user.id)}
-							className="ml-1 h-4 w-4 rounded-full hover:bg-muted flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+							className="ml-1 flex h-4 w-4 items-center justify-center rounded-full opacity-0 transition-opacity hover:bg-muted group-hover:opacity-100"
 						>
 							<X className="h-3 w-3 text-muted-foreground" />
 						</button>
@@ -110,7 +110,7 @@ export function TicketUserSelector({
 											value={member.name}
 											onSelect={() => handleSelect(member.id)}
 										>
-											<Avatar className="h-5 w-5 mr-2">
+											<Avatar className="mr-2 h-5 w-5">
 												<AvatarImage src={member.avatarUrl ?? undefined} />
 												<AvatarFallback className="text-[10px]">
 													{member.name.slice(0, 2).toUpperCase()}

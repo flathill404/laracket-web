@@ -9,7 +9,7 @@ export const Route = createFileRoute(
 function ProjectBoard() {
 	return (
 		<div className="flex flex-col gap-4">
-			<h2 className="text-2xl font-bold tracking-tight">Board</h2>
+			<h2 className="font-bold text-2xl tracking-tight">Board</h2>
 			<p className="text-muted-foreground">Kanban board view coming soon.</p>
 		</div>
 	);

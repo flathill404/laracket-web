@@ -60,7 +60,7 @@ function AuthLayout() {
 			<div className="flex flex-1 overflow-hidden">
 				{isVerified && <Sidebar projects={projects} teams={teams} />}
 
-				<main className="flex-1 overflow-hidden flex flex-col">
+				<main className="flex flex-1 flex-col overflow-hidden">
 					<Outlet />
 				</main>
 			</div>

@@ -27,7 +27,7 @@ interface ActivityItemProps {
 export function ActivityItem({ activity }: ActivityItemProps) {
 	return (
 		<div className="relative pl-14">
-			<Avatar className="absolute left-0 top-0 h-10 w-10 border-2 border-background z-10">
+			<Avatar className="absolute top-0 left-0 z-10 h-10 w-10 border-2 border-background">
 				<AvatarImage src={activity.user.avatarUrl ?? undefined} />
 				<AvatarFallback>
 					{activity.user.name.slice(0, 2).toUpperCase()}
@@ -37,10 +37,10 @@ export function ActivityItem({ activity }: ActivityItemProps) {
 				<span className="font-semibold text-sm">
 					{activity.user.displayName}
 				</span>{" "}
-				<span className="text-sm text-muted-foreground">
+				<span className="text-muted-foreground text-sm">
 					{getActivityDescription(activity)}
 				</span>
-				<span className="ml-2 text-xs text-muted-foreground">
+				<span className="ml-2 text-muted-foreground text-xs">
 					{formatRelativeTime(activity.createdAt)}
 				</span>
 			</div>

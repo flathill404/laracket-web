@@ -36,7 +36,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 	return (
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
 			<div className="flex-1 overflow-auto py-4">
-				<nav className="flex flex-col gap-1 px-4 text-sm font-medium">
+				<nav className="flex flex-col gap-1 px-4 font-medium text-sm">
 					<Link
 						to="/dashboard"
 						className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
@@ -61,7 +61,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 
 					<Accordion type="multiple" className="w-full">
 						<AccordionItem value="projects" className="border-b-0">
-							<div className="flex items-center justify-between pr-2 group">
+							<div className="group flex items-center justify-between pr-2">
 								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline">
 									<div className="flex items-center gap-3 px-3">
 										<Folder className="h-4 w-4" />
@@ -97,7 +97,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 											key={project.id}
 											to="/projects/$projectId/tickets"
 											params={{ projectId: project.id }}
-											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
+											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 										>
 											{project.name}
 										</Link>
@@ -120,7 +120,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 											key={team.id}
 											to="/teams/$teamId/tickets"
 											params={{ teamId: team.id }}
-											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:text-primary [&.active]:font-semibold"
+											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 										>
 											{team.name}
 										</Link>
@@ -135,7 +135,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 			<div className="mt-auto border-t p-4">
 				<Link
 					to="/settings"
-					className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
+					className="flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-muted-foreground text-sm transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
 				>
 					<Settings className="h-4 w-4" />
 					Settings

@@ -106,7 +106,7 @@ export function CreateProjectDialog({
 										placeholder="e.g. Laracket Web"
 									/>
 									{field.state.meta.errors ? (
-										<p className="text-sm text-destructive">
+										<p className="text-destructive text-sm">
 											{field.state.meta.errors.join(", ")}
 										</p>
 									) : null}
@@ -128,7 +128,7 @@ export function CreateProjectDialog({
 										placeholder="Project description..."
 									/>
 									{field.state.meta.errors ? (
-										<p className="text-sm text-destructive">
+										<p className="text-destructive text-sm">
 											{field.state.meta.errors.join(", ")}
 										</p>
 									) : null}

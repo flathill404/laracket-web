@@ -154,7 +154,7 @@ export function ProfileForm() {
 									<Button
 										variant="destructive"
 										size="icon"
-										className="absolute -right-2 -top-2 h-6 w-6 rounded-full shadow-sm"
+										className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-sm"
 									>
 										<X className="h-3 w-3" />
 										<span className="sr-only">Delete avatar</span>
@@ -223,7 +223,7 @@ export function ProfileForm() {
 					>
 						<div className="space-y-2">
 							<FieldLabel>Name</FieldLabel>
-							<div className="p-2 border rounded-md bg-muted text-muted-foreground text-sm">
+							<div className="rounded-md border bg-muted p-2 text-muted-foreground text-sm">
 								{user?.name || "No name"}
 							</div>
 							<p className="text-[0.8rem] text-muted-foreground">

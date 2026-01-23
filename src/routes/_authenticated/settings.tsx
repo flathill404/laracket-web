@@ -9,9 +9,9 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function Settings() {
 	return (
-		<div className="flex-1 w-full overflow-y-auto">
-			<div className="flex flex-col gap-8 p-8 max-w-4xl mx-auto">
-				<h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+		<div className="w-full flex-1 overflow-y-auto">
+			<div className="mx-auto flex max-w-4xl flex-col gap-8 p-8">
+				<h1 className="font-semibold text-2xl tracking-tight">Settings</h1>
 				<div className="flex flex-col gap-8">
 					<ProfileForm />
 					<PasswordForm />

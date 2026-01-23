@@ -29,7 +29,7 @@ function WipPage() {
 		<div className="flex min-h-svh w-full flex-col items-center justify-center bg-background p-6 md:p-10">
 			<div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
 				<div className="flex flex-col items-center gap-2 text-center">
-					<h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+					<h1 className="font-extrabold text-4xl tracking-tight lg:text-5xl">
 						WORK IN PROGRESS
 					</h1>
 					<div className="flex gap-2">
@@ -71,14 +71,14 @@ function WipPage() {
 					</CardHeader>
 					<CardContent className="space-y-6">
 						<div className="space-y-2">
-							<div className="flex items-center justify-between text-sm text-muted-foreground">
+							<div className="flex items-center justify-between text-muted-foreground text-sm">
 								<span>Loading Core Systems...</span>
 								<span>78%</span>
 							</div>
 							<div className="flex h-2 w-full gap-1 overflow-hidden rounded-full bg-secondary">
-								<div className="h-full w-[40%] bg-primary animate-pulse" />
-								<div className="h-full w-[20%] bg-primary/80 animate-pulse delay-75" />
-								<div className="h-full w-[18%] bg-primary/60 animate-pulse delay-150" />
+								<div className="h-full w-[40%] animate-pulse bg-primary" />
+								<div className="h-full w-[20%] animate-pulse bg-primary/80 delay-75" />
+								<div className="h-full w-[18%] animate-pulse bg-primary/60 delay-150" />
 							</div>
 						</div>
 
@@ -105,7 +105,7 @@ function WipPage() {
 							<div className="flex items-center justify-between rounded-lg border p-4">
 								<div className="space-y-0.5">
 									<Label htmlFor={turboModeId}>Turbo Mode</Label>
-									<p className="text-sm text-muted-foreground">
+									<p className="text-muted-foreground text-sm">
 										Enable unsafe rendering speeds.
 									</p>
 								</div>
@@ -124,13 +124,13 @@ function WipPage() {
 						</div>
 					</CardContent>
 					<CardFooter className="bg-muted/50 px-6 py-4">
-						<p className="text-xs text-muted-foreground font-mono">
+						<p className="font-mono text-muted-foreground text-xs">
 							{"BUILD_ID: 9a8f7b6c // COMMIT: pending // BLAME: @flathill404"}
 						</p>
 					</CardFooter>
 				</Card>
 
-				<div className="text-center text-sm text-muted-foreground">
+				<div className="text-center text-muted-foreground text-sm">
 					<p>
 						Estimated time to completion:{" "}
 						<span className="font-mono">UNKNOWN</span>

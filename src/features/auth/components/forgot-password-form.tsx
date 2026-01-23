@@ -78,7 +78,7 @@ export function ForgotPasswordForm() {
 							</form.AppForm>
 							<Link
 								to="/login"
-								className="flex w-full justify-center text-sm font-medium text-muted-foreground hover:underline"
+								className="flex w-full justify-center font-medium text-muted-foreground text-sm hover:underline"
 							>
 								Back to Login
 							</Link>

@@ -36,7 +36,7 @@ export function QrCodeSetup({
 					key and provide the generated OTP code.
 				</p>
 				<img
-					className="p-4 bg-white w-fit rounded-lg"
+					className="w-fit rounded-lg bg-white p-4"
 					src={`data:image/svg+xml;utf8,${encodeURIComponent(qrCodeSvg)}`}
 					alt="2FA QR Code"
 				/>

@@ -159,12 +159,12 @@ export function TicketDetailSheet({
 		<Sheet open={open} onOpenChange={onOpenChange}>
 			<SheetContent
 				side="right"
-				className="w-[90%] sm:max-w-5xl p-0 gap-0 overflow-hidden"
+				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-5xl"
 			>
-				<div className="flex flex-col h-full">
+				<div className="flex h-full flex-col">
 					{/* Header */}
-					<div className="flex items-center justify-between gap-4 px-6 py-3 border-b shrink-0 bg-background z-10">
-						<div className="flex flex-1 items-center gap-4 min-w-0">
+					<div className="z-10 flex shrink-0 items-center justify-between gap-4 border-b bg-background px-6 py-3">
+						<div className="flex min-w-0 flex-1 items-center gap-4">
 							<SheetClose asChild>
 								<Button
 									variant="ghost"
@@ -174,12 +174,12 @@ export function TicketDetailSheet({
 									<ChevronRight className="h-5 w-5" />
 								</Button>
 							</SheetClose>
-							<div className="flex flex-1 items-center gap-3 min-w-0">
-								<span className="text-sm font-medium text-muted-foreground shrink-0">
+							<div className="flex min-w-0 flex-1 items-center gap-3">
+								<span className="shrink-0 font-medium text-muted-foreground text-sm">
 									[T-{ticket.id.slice(0, 8)}]
 								</span>
 								<Separator orientation="vertical" className="h-4" />
-								<SheetTitle className="flex-1 min-w-0 m-0">
+								<SheetTitle className="m-0 min-w-0 flex-1">
 									<titleForm.Field name="title">
 										{(field) => (
 											<Input
@@ -192,7 +192,7 @@ export function TicketDetailSheet({
 													setIsEditingTitle(false);
 													titleForm.reset();
 												}}
-												className={`flex-1 text-lg! font-semibold h-auto py-0.5 px-1 border-transparent bg-transparent shadow-none rounded focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:border-input focus-visible:bg-background ${!isEditingTitle ? "cursor-pointer hover:bg-muted/50" : ""}`}
+												className={`h-auto flex-1 rounded border-transparent bg-transparent px-1 py-0.5 font-semibold text-lg! shadow-none focus-visible:border-input focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-offset-0 ${!isEditingTitle ? "cursor-pointer hover:bg-muted/50" : ""}`}
 											/>
 										)}
 									</titleForm.Field>
@@ -215,12 +215,12 @@ export function TicketDetailSheet({
 					{/* Body: 2 Columns */}
 					<div className="flex flex-1 overflow-hidden">
 						{/* Main Column (Left) */}
-						<div className="flex-1 flex flex-col w-[65%] min-w-0 bg-background">
+						<div className="flex w-[65%] min-w-0 flex-1 flex-col bg-background">
 							{/* Scrollable Content */}
 							<div className="flex-1 overflow-y-auto px-8 py-6">
 								{/* Description Section */}
-								<div className="flex gap-4 mb-8">
-									<Avatar className="h-10 w-10 mt-1">
+								<div className="mb-8 flex gap-4">
+									<Avatar className="mt-1 h-10 w-10">
 										<AvatarImage
 											src={ticket.assignees[0]?.avatarUrl ?? undefined}
 										/>
@@ -234,7 +234,7 @@ export function TicketDetailSheet({
 											<span className="font-semibold">
 												{ticket.assignees[0]?.name ?? "Unassigned"}
 											</span>
-											<span className="text-xs text-muted-foreground">
+											<span className="text-muted-foreground text-xs">
 												created this ticket on{" "}
 												{new Date(ticket.createdAt).toLocaleDateString()}
 											</span>
@@ -252,13 +252,13 @@ export function TicketDetailSheet({
 							</div>
 
 							{/* Sticky Footer Input */}
-							<div className="p-4 border-t bg-background shrink-0">
-								<div className="border rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-ring">
+							<div className="shrink-0 border-t bg-background p-4">
+								<div className="rounded-lg border shadow-sm focus-within:ring-2 focus-within:ring-ring">
 									<Textarea
 										placeholder="Leave a comment..."
-										className="min-h-[80px] border-0 focus-visible:ring-0 resize-none p-3 text-sm"
+										className="min-h-[80px] resize-none border-0 p-3 text-sm focus-visible:ring-0"
 									/>
-									<div className="flex items-center justify-between p-2 bg-muted/20 border-t rounded-b-lg">
+									<div className="flex items-center justify-between rounded-b-lg border-t bg-muted/20 p-2">
 										<div className="flex items-center gap-1">
 											<Button
 												variant="ghost"
@@ -281,7 +281,7 @@ export function TicketDetailSheet({
 											>
 												<List className="h-4 w-4" />
 											</Button>
-											<Separator orientation="vertical" className="h-4 mx-1" />
+											<Separator orientation="vertical" className="mx-1 h-4" />
 											<Button
 												variant="ghost"
 												size="icon"
@@ -315,10 +315,10 @@ export function TicketDetailSheet({
 						</div>
 
 						{/* Sidebar Column (Right) */}
-						<div className="w-[35%] min-w-[300px] border-l bg-muted/5 overflow-y-auto p-6 space-y-8">
+						<div className="w-[35%] min-w-[300px] space-y-8 overflow-y-auto border-l bg-muted/5 p-6">
 							{/* Properties */}
 							<div className="space-y-6">
-								<h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+								<h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
 									Properties
 								</h4>
 
@@ -337,7 +337,7 @@ export function TicketDetailSheet({
 
 									{/* Due Date */}
 									<div className="space-y-2">
-										<span className="text-xs font-medium text-muted-foreground">
+										<span className="font-medium text-muted-foreground text-xs">
 											Due Date
 										</span>
 										<Popover>
@@ -345,7 +345,7 @@ export function TicketDetailSheet({
 												<Button
 													variant={"outline"}
 													className={cn(
-														"w-full justify-start text-left font-normal h-8",
+														"h-8 w-full justify-start text-left font-normal",
 														!ticket.dueDate && "text-muted-foreground",
 													)}
 												>
@@ -400,22 +400,22 @@ export function TicketDetailSheet({
 
 							{/* Related */}
 							<div className="space-y-4">
-								<h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+								<h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
 									Related Tickets
 								</h4>
 								<div className="space-y-2">
 									<Button
 										variant="ghost"
-										className="h-auto p-0 hover:bg-transparent hover:underline justify-start font-normal text-sm"
+										className="h-auto justify-start p-0 font-normal text-sm hover:bg-transparent hover:underline"
 									>
-										<span className="text-muted-foreground mr-2">#1230</span>
+										<span className="mr-2 text-muted-foreground">#1230</span>
 										Frontend layout implementation
 									</Button>
 									<Button
 										variant="ghost"
-										className="h-auto p-0 hover:bg-transparent hover:underline justify-start font-normal text-sm"
+										className="h-auto justify-start p-0 font-normal text-sm hover:bg-transparent hover:underline"
 									>
-										<span className="text-muted-foreground mr-2">#1228</span>
+										<span className="mr-2 text-muted-foreground">#1228</span>
 										API schema verification
 									</Button>
 								</div>
@@ -425,32 +425,32 @@ export function TicketDetailSheet({
 
 							{/* Attachments */}
 							<div className="space-y-4">
-								<h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+								<h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
 									Attachments
 								</h4>
 								<div className="grid gap-2">
-									<div className="flex items-center gap-3 p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group">
-										<div className="h-8 w-8 flex items-center justify-center rounded bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+									<div className="group flex cursor-pointer items-center gap-3 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/50">
+										<div className="flex h-8 w-8 items-center justify-center rounded bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
 											<ImageIcon className="h-4 w-4" />
 										</div>
-										<div className="flex-1 min-w-0">
-											<div className="text-sm font-medium truncate">
+										<div className="min-w-0 flex-1">
+											<div className="truncate font-medium text-sm">
 												screenshot-error.png
 											</div>
-											<div className="text-xs text-muted-foreground">
+											<div className="text-muted-foreground text-xs">
 												2.4 MB
 											</div>
 										</div>
 									</div>
-									<div className="flex items-center gap-3 p-3 bg-background border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group">
-										<div className="h-8 w-8 flex items-center justify-center rounded bg-orange-50 text-orange-600 dark:bg-orange-950 dark:text-orange-400">
+									<div className="group flex cursor-pointer items-center gap-3 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/50">
+										<div className="flex h-8 w-8 items-center justify-center rounded bg-orange-50 text-orange-600 dark:bg-orange-950 dark:text-orange-400">
 											<Paperclip className="h-4 w-4" />
 										</div>
-										<div className="flex-1 min-w-0">
-											<div className="text-sm font-medium truncate">
+										<div className="min-w-0 flex-1">
+											<div className="truncate font-medium text-sm">
 												server-logs.txt
 											</div>
-											<div className="text-xs text-muted-foreground">
+											<div className="text-muted-foreground text-xs">
 												128 KB
 											</div>
 										</div>

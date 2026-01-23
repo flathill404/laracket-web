@@ -144,7 +144,7 @@ export function CreateTicketDrawer({
 		<Sheet open={open} onOpenChange={onOpenChange}>
 			<SheetContent
 				side="right"
-				className="w-[90%] sm:max-w-5xl p-0 gap-0 overflow-hidden"
+				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-5xl"
 			>
 				<form
 					onSubmit={(e) => {
@@ -152,11 +152,11 @@ export function CreateTicketDrawer({
 						e.stopPropagation();
 						form.handleSubmit();
 					}}
-					className="flex flex-col h-full"
+					className="flex h-full flex-col"
 				>
 					{/* Header */}
-					<div className="flex items-center justify-between gap-4 px-6 py-3 border-b shrink-0 bg-background z-10">
-						<div className="flex flex-1 items-center gap-4 min-w-0">
+					<div className="z-10 flex shrink-0 items-center justify-between gap-4 border-b bg-background px-6 py-3">
+						<div className="flex min-w-0 flex-1 items-center gap-4">
 							<SheetClose asChild>
 								<Button
 									variant="ghost"
@@ -166,12 +166,12 @@ export function CreateTicketDrawer({
 									<ChevronRight className="h-5 w-5" />
 								</Button>
 							</SheetClose>
-							<div className="flex flex-1 items-center gap-3 min-w-0">
-								<span className="text-sm font-medium text-muted-foreground shrink-0">
+							<div className="flex min-w-0 flex-1 items-center gap-3">
+								<span className="shrink-0 font-medium text-muted-foreground text-sm">
 									[New Ticket]
 								</span>
 								<Separator orientation="vertical" className="h-4" />
-								<SheetTitle className="flex-1 min-w-0 m-0">
+								<SheetTitle className="m-0 min-w-0 flex-1">
 									<form.Field name="title">
 										{(field) => (
 											<div className="relative">
@@ -183,7 +183,7 @@ export function CreateTicketDrawer({
 													onFocus={() => setIsEditingTitle(true)}
 													onBlur={() => setIsEditingTitle(false)}
 													className={cn(
-														"flex-1 text-lg font-semibold h-auto py-0.5 px-1 border-transparent bg-transparent shadow-none rounded focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:border-input focus-visible:bg-background placeholder:text-muted-foreground/50",
+														"h-auto flex-1 rounded border-transparent bg-transparent px-1 py-0.5 font-semibold text-lg shadow-none placeholder:text-muted-foreground/50 focus-visible:border-input focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-offset-0",
 														!isEditingTitle &&
 															"cursor-pointer hover:bg-muted/50",
 													)}
@@ -212,13 +212,13 @@ export function CreateTicketDrawer({
 					{/* Body: 2 Columns */}
 					<div className="flex flex-1 overflow-hidden">
 						{/* Main Column (Left) */}
-						<div className="flex-1 flex flex-col w-[65%] min-w-0 bg-background">
+						<div className="flex w-[65%] min-w-0 flex-1 flex-col bg-background">
 							<div className="flex-1 overflow-y-auto px-8 py-6">
 								<form.Field name="description">
 									{(field) => (
 										<Textarea
 											placeholder="Add a description..."
-											className="min-h-[300px] border-none resize-none px-0 text-base focus-visible:ring-0"
+											className="min-h-[300px] resize-none border-none px-0 text-base focus-visible:ring-0"
 											value={field.state.value}
 											onChange={(e) => field.handleChange(e.target.value)}
 										/>
@@ -228,10 +228,10 @@ export function CreateTicketDrawer({
 						</div>
 
 						{/* Sidebar Column (Right) */}
-						<div className="w-[35%] min-w-[300px] border-l bg-muted/5 overflow-y-auto p-6 space-y-8">
+						<div className="w-[35%] min-w-[300px] space-y-8 overflow-y-auto border-l bg-muted/5 p-6">
 							{/* Properties */}
 							<div className="space-y-6">
-								<h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+								<h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
 									Properties
 								</h4>
 
@@ -253,7 +253,7 @@ export function CreateTicketDrawer({
 									<form.Field name="dueDate">
 										{(field) => (
 											<div className="space-y-2">
-												<span className="text-xs font-medium text-muted-foreground">
+												<span className="font-medium text-muted-foreground text-xs">
 													Due Date
 												</span>
 												<Popover>
@@ -261,7 +261,7 @@ export function CreateTicketDrawer({
 														<Button
 															variant={"outline"}
 															className={cn(
-																"w-full justify-start text-left font-normal h-8",
+																"h-8 w-full justify-start text-left font-normal",
 																!field.state.value && "text-muted-foreground",
 															)}
 														>
@@ -308,12 +308,12 @@ export function CreateTicketDrawer({
 
 							{/* Attachments Placeholder */}
 							<div className="space-y-4">
-								<h4 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+								<h4 className="font-semibold text-muted-foreground text-sm uppercase tracking-wider">
 									Attachments
 								</h4>
 								<button
 									type="button"
-									className="flex w-full items-center justify-center p-8 border-2 border-dashed rounded-lg text-muted-foreground text-sm cursor-pointer hover:bg-muted/50 transition-colors"
+									className="flex w-full cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-8 text-muted-foreground text-sm transition-colors hover:bg-muted/50"
 									onClick={() => toast.info("Attachments not implemented yet")}
 								>
 									<div className="flex flex-col items-center gap-2">

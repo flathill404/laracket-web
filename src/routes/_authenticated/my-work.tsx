@@ -53,10 +53,10 @@ function MyWork() {
 	}, [allTickets, user]);
 
 	return (
-		<div className="flex flex-col h-full bg-background">
+		<div className="flex h-full flex-col bg-background">
 			{/* Page Header */}
-			<div className="flex items-center justify-between border-b px-6 py-5 shrink-0">
-				<h1 className="text-2xl font-semibold tracking-tight">My Work</h1>
+			<div className="flex shrink-0 items-center justify-between border-b px-6 py-5">
+				<h1 className="font-semibold text-2xl tracking-tight">My Work</h1>
 				<Button>
 					<Plus className="mr-2 h-4 w-4" /> New Ticket
 				</Button>

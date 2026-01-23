@@ -8,7 +8,7 @@ export function SubjectCell({ ticket }: { ticket: Ticket }) {
 					[T-{ticket.id.slice(-8)}] {ticket.title}
 				</span>
 			</div>
-			<span className="text-xs text-muted-foreground line-clamp-1">
+			<span className="line-clamp-1 text-muted-foreground text-xs">
 				{ticket.description}
 			</span>
 		</div>

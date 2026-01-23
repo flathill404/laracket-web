@@ -145,14 +145,14 @@ export function TicketList(props: TicketListProps) {
 
 	return (
 		<div className="flex-1 overflow-hidden bg-muted/5 p-6">
-			<div className="flex flex-col h-full rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
+			<div className="flex h-full flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm">
 				{/* Header - Fixed, not scrollable */}
 				<Table className="table-fixed">
 					<TableHeader className="bg-muted/50 backdrop-blur-sm">
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow
 								key={headerGroup.id}
-								className="hover:bg-transparent border-b-muted"
+								className="border-b-muted hover:bg-transparent"
 							>
 								{headerGroup.headers.map((header) => {
 									const meta = header.column.columnDef.meta as
@@ -215,7 +215,7 @@ export function TicketList(props: TicketListProps) {
 										type="button"
 										data-state={row.getIsSelected() && "selected"}
 										onClick={() => onTicketClick(row.original)}
-										className="cursor-pointer hover:bg-muted/50 border-b flex items-center focus:outline-none focus:bg-muted/50 w-full text-left bg-transparent"
+										className="flex w-full cursor-pointer items-center border-b bg-transparent text-left hover:bg-muted/50 focus:bg-muted/50 focus:outline-none"
 										style={{
 											position: "absolute",
 											top: 0,
@@ -262,7 +262,7 @@ export function TicketList(props: TicketListProps) {
 				</div>
 
 				{/* Footer with count and loading indicator */}
-				<div className="border-t p-4 flex items-center justify-center gap-2 text-xs text-muted-foreground bg-card">
+				<div className="flex items-center justify-center gap-2 border-t bg-card p-4 text-muted-foreground text-xs">
 					{isFetchingNextPage ? (
 						<>
 							<Loader2 className="h-3 w-3 animate-spin" />

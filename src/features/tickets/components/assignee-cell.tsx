@@ -7,7 +7,7 @@ export function AssigneeCell({
 	assignees: Ticket["assignees"];
 }) {
 	if (assignees.length === 0) {
-		return <span className="text-sm text-muted-foreground">Unassigned</span>;
+		return <span className="text-muted-foreground text-sm">Unassigned</span>;
 	}
 
 	if (assignees.length === 1) {
@@ -20,7 +20,7 @@ export function AssigneeCell({
 						{assignee.name.slice(0, 2).toUpperCase()}
 					</AvatarFallback>
 				</Avatar>
-				<span className="text-sm text-muted-foreground">{assignee.name}</span>
+				<span className="text-muted-foreground text-sm">{assignee.name}</span>
 			</div>
 		);
 	}
@@ -37,7 +37,7 @@ export function AssigneeCell({
 				</Avatar>
 			))}
 			{assignees.length > 3 && (
-				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted text-[10px] font-medium">
+				<div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted font-medium text-[10px]">
 					+{assignees.length - 3}
 				</div>
 			)}

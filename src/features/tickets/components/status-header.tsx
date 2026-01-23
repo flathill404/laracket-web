@@ -37,9 +37,9 @@ export function StatusHeader({
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50",
+							"-ml-3 h-8 hover:bg-accent/50 data-[state=open]:bg-accent",
 							selectedStatuses.length > 0 &&
-								"bg-accent/50 text-accent-foreground font-medium",
+								"bg-accent/50 font-medium text-accent-foreground",
 						)}
 					>
 						<span>Status</span>
@@ -55,7 +55,7 @@ export function StatusHeader({
 							className={cn(
 								"ml-2 h-4 w-4",
 								selectedStatuses.length > 0
-									? "text-primary fill-primary/20"
+									? "fill-primary/20 text-primary"
 									: "text-muted-foreground",
 							)}
 						/>

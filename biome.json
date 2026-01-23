@@ -20,6 +20,15 @@
 		"rules": {
 			"correctness": {
 				"noChildrenProp": "off"
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"fix": "safe",
+					"level": "error",
+					"options": {
+						"functions": ["twMerge", "twJoin", "cn"]
+					}
+				}
 			}
 		}
 	},

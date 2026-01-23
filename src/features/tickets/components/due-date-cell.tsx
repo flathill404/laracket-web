@@ -6,7 +6,7 @@ export function DueDateCell({
 	dueDate: string | null | undefined;
 }) {
 	if (!dueDate) {
-		return <span className="text-sm text-muted-foreground">—</span>;
+		return <span className="text-muted-foreground text-sm">—</span>;
 	}
 	const date = new Date(dueDate);
 	const formatted = date.toLocaleDateString("en-US", {
@@ -17,7 +17,7 @@ export function DueDateCell({
 	const isPastDue = date < new Date();
 	return (
 		<span
-			className={cn("text-sm", isPastDue && "text-destructive font-medium")}
+			className={cn("text-sm", isPastDue && "font-medium text-destructive")}
 		>
 			{formatted}
 		</span>

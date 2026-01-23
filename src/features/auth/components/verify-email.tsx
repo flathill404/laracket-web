@@ -110,18 +110,18 @@ export function VerifyEmail() {
 						</form>
 					) : (
 						<div className="flex flex-col gap-4">
-							<p className="text-center text-sm text-muted-foreground">
+							<p className="text-center text-muted-foreground text-sm">
 								Current email:{" "}
 								<span className="text-foreground">{user?.email}</span>
 								<Button
 									variant="link"
-									className="px-2 h-auto text-primary"
+									className="h-auto px-2 text-primary"
 									onClick={() => setIsEditing(true)}
 								>
 									Edit?
 								</Button>
 							</p>
-							<p className="text-center text-sm text-muted-foreground">
+							<p className="text-center text-muted-foreground text-sm">
 								If you didn't receive the email, we will gladly send you
 								another.
 							</p>

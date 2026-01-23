@@ -139,8 +139,8 @@ export function ImageCropDialog({
 						/>
 					)}
 				</div>
-				<div className="py-2 flex items-center gap-4">
-					<span className="text-sm text-muted-foreground w-12">Zoom</span>
+				<div className="flex items-center gap-4 py-2">
+					<span className="w-12 text-muted-foreground text-sm">Zoom</span>
 					<Slider
 						value={[zoom]}
 						min={1}

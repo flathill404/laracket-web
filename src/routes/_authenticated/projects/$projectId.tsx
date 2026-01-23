@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
 	createFileRoute,
 	Link,
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { projectQueryOptions } from "@/features/projects/lib/projects";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 	loader: async ({ context, params }) => {
@@ -63,10 +63,10 @@ function ProjectLayout() {
 	)?.value;
 
 	return (
-		<div className="flex flex-col h-full overflow-hidden">
+		<div className="flex h-full flex-col overflow-hidden">
 			<Tabs defaultValue="overview" value={currentTab}>
 				<div className="grid grid-cols-2">
-					<h1 className="text-2xl font-bold">{project?.name}</h1>
+					<h1 className="font-bold text-2xl">{project?.name}</h1>
 					<TabsList>
 						{navItems.map((item) => (
 							<TabsTrigger key={item.value} value={item.value} asChild>

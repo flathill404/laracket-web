@@ -13,7 +13,7 @@ export function DueDateHeader({ column }: { column: Column<Ticket> }) {
 			size="sm"
 			type="button"
 			className={cn(
-				"-ml-3 h-8 data-[state=open]:bg-accent hover:bg-accent/50",
+				"-ml-3 h-8 hover:bg-accent/50 data-[state=open]:bg-accent",
 				sorted && "text-foreground",
 			)}
 			onClick={() => column.toggleSorting()}

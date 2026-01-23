@@ -32,7 +32,7 @@ export function Header({ user, isVerified, logout }: HeaderProps) {
 			<div className="flex w-full max-w-sm items-center space-x-2">
 				{isVerified && (
 					<div className="relative w-full">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
 							type="search"
 							placeholder="Search tickets..."
@@ -68,8 +68,8 @@ export function Header({ user, isVerified, logout }: HeaderProps) {
 					<DropdownMenuContent className="w-56" align="end" forceMount>
 						<DropdownMenuLabel className="font-normal">
 							<div className="flex flex-col space-y-1">
-								<p className="text-sm font-medium leading-none">{user.name}</p>
-								<p className="text-xs leading-none text-muted-foreground">
+								<p className="font-medium text-sm leading-none">{user.name}</p>
+								<p className="text-muted-foreground text-xs leading-none">
 									{user.email}
 								</p>
 							</div>

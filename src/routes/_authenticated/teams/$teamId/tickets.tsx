@@ -44,13 +44,13 @@ function TeamDetail() {
 	const { data: team } = useSuspenseQuery(teamQuery(teamId));
 
 	return (
-		<div className="flex flex-col h-full bg-background">
+		<div className="flex h-full flex-col bg-background">
 			{/* Page Header */}
-			<div className="flex items-center justify-between border-b px-6 py-5 shrink-0">
-				<h1 className="text-2xl font-semibold tracking-tight">{team.name}</h1>
+			<div className="flex shrink-0 items-center justify-between border-b px-6 py-5">
+				<h1 className="font-semibold text-2xl tracking-tight">{team.name}</h1>
 				<div className="flex items-center gap-2">
 					<div className="relative w-64">
-						<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
 							type="search"
 							placeholder="Search tickets..."
