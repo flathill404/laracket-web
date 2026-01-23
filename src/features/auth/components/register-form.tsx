@@ -2,6 +2,7 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { Link, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
+import { GuestFormLayout } from "@/components/layout/guest-form-layout";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -52,97 +53,93 @@ export function RegisterForm() {
 	});
 
 	return (
-		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-			<div className="w-full max-w-sm">
-				<div className="flex flex-col gap-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Create an account</CardTitle>
-							<CardDescription>
-								Enter your details below to create your account
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<form
-								noValidate
-								onSubmit={(e) => {
-									e.preventDefault();
-									form.handleSubmit();
-								}}
-							>
-								<FieldGroup>
-									<form.AppField
-										name="name"
-										children={(field) => (
-											<field.InputField
-												label="Username"
-												placeholder="jdoe"
-												description="This will be used for login."
-											/>
-										)}
+		<GuestFormLayout>
+			<Card>
+				<CardHeader>
+					<CardTitle>Create an account</CardTitle>
+					<CardDescription>
+						Enter your details below to create your account
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						noValidate
+						onSubmit={(e) => {
+							e.preventDefault();
+							form.handleSubmit();
+						}}
+					>
+						<FieldGroup>
+							<form.AppField
+								name="name"
+								children={(field) => (
+									<field.InputField
+										label="Username"
+										placeholder="jdoe"
+										description="This will be used for login."
 									/>
-									<form.AppField
-										name="displayName"
-										children={(field) => (
-											<field.InputField
-												label="Display Name"
-												placeholder="John Doe"
-											/>
-										)}
+								)}
+							/>
+							<form.AppField
+								name="displayName"
+								children={(field) => (
+									<field.InputField
+										label="Display Name"
+										placeholder="John Doe"
 									/>
-									<form.AppField
-										name="email"
-										children={(field) => (
-											<field.InputField
-												label="Email"
-												placeholder="m@example.com"
-												type="email"
-											/>
-										)}
+								)}
+							/>
+							<form.AppField
+								name="email"
+								children={(field) => (
+									<field.InputField
+										label="Email"
+										placeholder="m@example.com"
+										type="email"
 									/>
-									<form.AppField
-										name="password"
-										children={(field) => (
-											<field.InputField
-												label="Password"
-												type="password"
-												placeholder="********"
-											/>
-										)}
+								)}
+							/>
+							<form.AppField
+								name="password"
+								children={(field) => (
+									<field.InputField
+										label="Password"
+										type="password"
+										placeholder="********"
 									/>
-									<form.AppField
-										name="passwordConfirmation"
-										children={(field) => (
-											<field.InputField
-												label="Confirm Password"
-												type="password"
-												placeholder="********"
-											/>
-										)}
+								)}
+							/>
+							<form.AppField
+								name="passwordConfirmation"
+								children={(field) => (
+									<field.InputField
+										label="Confirm Password"
+										type="password"
+										placeholder="********"
 									/>
-									<Field>
-										<form.AppForm>
-											<form.SubscribeButton label="Register" />
-										</form.AppForm>
-										<Button variant="outline" type="button">
-											Sign up with Google
-										</Button>
-										<FieldDescription className="text-center">
-											Already have an account?{" "}
-											<Link
-												to="/login"
-												className="font-medium underline underline-offset-4"
-											>
-												Login
-											</Link>
-										</FieldDescription>
-									</Field>
-								</FieldGroup>
-							</form>
-						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</div>
+								)}
+							/>
+							<Field>
+								<form.AppForm>
+									<form.SubscribeButton label="Register" />
+								</form.AppForm>
+								<Button variant="outline" type="button">
+									Sign up with Google
+								</Button>
+								<FieldDescription className="text-center">
+									Already have an account?{" "}
+									<Link
+										to="/login"
+										className="font-medium underline underline-offset-4"
+									>
+										Login
+									</Link>
+								</FieldDescription>
+							</Field>
+						</FieldGroup>
+					</form>
+				</CardContent>
+			</Card>
+		</GuestFormLayout>
 	);
 }

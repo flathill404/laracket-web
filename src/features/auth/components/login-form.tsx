@@ -1,6 +1,7 @@
 import { revalidateLogic } from "@tanstack/react-form";
 import { Link, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
+import { GuestFormLayout } from "@/components/layout/guest-form-layout";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -48,84 +49,80 @@ export function LoginForm({ redirect }: LoginFormProps) {
 	});
 
 	return (
-		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-			<div className="w-full max-w-sm">
-				<div className="flex flex-col gap-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Login to your account</CardTitle>
-							<CardDescription>
-								Enter your email below to login to your account
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<form
-								noValidate
-								onSubmit={(e) => {
-									e.preventDefault();
-									form.handleSubmit();
-								}}
-							>
-								<FieldGroup>
-									<form.AppField
-										name="email"
-										children={(field) => (
-											<field.InputField
-												label="Email"
-												placeholder="m@example.com"
-												type="email"
-											/>
-										)}
+		<GuestFormLayout>
+			<Card>
+				<CardHeader>
+					<CardTitle>Login to your account</CardTitle>
+					<CardDescription>
+						Enter your email below to login to your account
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						noValidate
+						onSubmit={(e) => {
+							e.preventDefault();
+							form.handleSubmit();
+						}}
+					>
+						<FieldGroup>
+							<form.AppField
+								name="email"
+								children={(field) => (
+									<field.InputField
+										label="Email"
+										placeholder="m@example.com"
+										type="email"
 									/>
-									<form.AppField
-										name="password"
-										children={(field) => (
-											<div className="flex flex-col gap-2">
-												<field.InputField
-													label="password"
-													placeholder="m@example.com"
-													type="password"
-												/>
-												<div className="flex items-center">
-													<Link
-														to="/forgot-password"
-														className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-													>
-														Forgot your password?
-													</Link>
-												</div>
-											</div>
-										)}
-									/>
-									<form.AppField
-										name="remember"
-										children={(field) => (
-											<field.CheckboxField label="Remember me" />
-										)}
-									/>
-									<Field>
-										<form.AppForm>
-											<form.SubscribeButton label="Login" />
-										</form.AppForm>
-										<Button variant="outline" type="button">
-											Login with Google
-										</Button>
-										<FieldDescription className="text-center">
-											Don&apos;t have an account?{" "}
+								)}
+							/>
+							<form.AppField
+								name="password"
+								children={(field) => (
+									<div className="flex flex-col gap-2">
+										<field.InputField
+											label="password"
+											placeholder="m@example.com"
+											type="password"
+										/>
+										<div className="flex items-center">
 											<Link
-												to="/register"
-												className="font-medium underline underline-offset-4"
+												to="/forgot-password"
+												className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
 											>
-												Sign up
+												Forgot your password?
 											</Link>
-										</FieldDescription>
-									</Field>
-								</FieldGroup>
-							</form>
-						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</div>
+										</div>
+									</div>
+								)}
+							/>
+							<form.AppField
+								name="remember"
+								children={(field) => (
+									<field.CheckboxField label="Remember me" />
+								)}
+							/>
+							<Field>
+								<form.AppForm>
+									<form.SubscribeButton label="Login" />
+								</form.AppForm>
+								<Button variant="outline" type="button">
+									Login with Google
+								</Button>
+								<FieldDescription className="text-center">
+									Don&apos;t have an account?{" "}
+									<Link
+										to="/register"
+										className="font-medium underline underline-offset-4"
+									>
+										Sign up
+									</Link>
+								</FieldDescription>
+							</Field>
+						</FieldGroup>
+					</form>
+				</CardContent>
+			</Card>
+		</GuestFormLayout>
 	);
 }

@@ -2,6 +2,7 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
+import { GuestFormLayout } from "@/components/layout/guest-form-layout";
 import {
 	Card,
 	CardContent,
@@ -45,57 +46,53 @@ export function TwoFactorChallengeForm() {
 	});
 
 	return (
-		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-			<div className="w-full max-w-sm">
-				<div className="flex flex-col gap-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Two-Factor Authentication</CardTitle>
-							<CardDescription>
-								Please enter the code from your authenticator app.
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<form
-								onSubmit={(e) => {
-									e.preventDefault();
-									e.stopPropagation();
-									otpForm.handleSubmit();
-								}}
-							>
-								<FieldGroup>
-									<otpForm.AppField
-										name="code"
-										children={(field) => (
-											<div className="flex justify-center">
-												<InputOTP
-													maxLength={6}
-													value={field.state.value}
-													onChange={(value) => field.handleChange(value)}
-												>
-													<InputOTPGroup>
-														<InputOTPSlot index={0} />
-														<InputOTPSlot index={1} />
-														<InputOTPSlot index={2} />
-														<InputOTPSlot index={3} />
-														<InputOTPSlot index={4} />
-														<InputOTPSlot index={5} />
-													</InputOTPGroup>
-												</InputOTP>
-											</div>
-										)}
-									/>
-									<Field>
-										<otpForm.AppForm>
-											<otpForm.SubscribeButton label="Verify" />
-										</otpForm.AppForm>
-									</Field>
-								</FieldGroup>
-							</form>
-						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</div>
+		<GuestFormLayout>
+			<Card>
+				<CardHeader>
+					<CardTitle>Two-Factor Authentication</CardTitle>
+					<CardDescription>
+						Please enter the code from your authenticator app.
+					</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							e.stopPropagation();
+							otpForm.handleSubmit();
+						}}
+					>
+						<FieldGroup>
+							<otpForm.AppField
+								name="code"
+								children={(field) => (
+									<div className="flex justify-center">
+										<InputOTP
+											maxLength={6}
+											value={field.state.value}
+											onChange={(value) => field.handleChange(value)}
+										>
+											<InputOTPGroup>
+												<InputOTPSlot index={0} />
+												<InputOTPSlot index={1} />
+												<InputOTPSlot index={2} />
+												<InputOTPSlot index={3} />
+												<InputOTPSlot index={4} />
+												<InputOTPSlot index={5} />
+											</InputOTPGroup>
+										</InputOTP>
+									</div>
+								)}
+							/>
+							<Field>
+								<otpForm.AppForm>
+									<otpForm.SubscribeButton label="Verify" />
+								</otpForm.AppForm>
+							</Field>
+						</FieldGroup>
+					</form>
+				</CardContent>
+			</Card>
+		</GuestFormLayout>
 	);
 }

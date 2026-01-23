@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { GuestFormLayout } from "@/components/layout/guest-form-layout";
+
 import {
 	Card,
 	CardContent,
@@ -55,54 +57,50 @@ export function ResetPasswordForm({ email, token }: ResetPasswordFormProps) {
 	});
 
 	return (
-		<div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-			<div className="w-full max-w-sm">
-				<div className="flex flex-col gap-6">
-					<Card>
-						<CardHeader>
-							<CardTitle>Reset Password</CardTitle>
-							<CardDescription>Enter your new password.</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<form
-								noValidate
-								onSubmit={(e) => {
-									e.preventDefault();
-									form.handleSubmit();
-								}}
-							>
-								<FieldGroup>
-									<form.AppField
-										name="password"
-										children={(field) => (
-											<field.InputField
-												label="Password"
-												type="password"
-												placeholder="********"
-											/>
-										)}
+		<GuestFormLayout>
+			<Card>
+				<CardHeader>
+					<CardTitle>Reset Password</CardTitle>
+					<CardDescription>Enter your new password.</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<form
+						noValidate
+						onSubmit={(e) => {
+							e.preventDefault();
+							form.handleSubmit();
+						}}
+					>
+						<FieldGroup>
+							<form.AppField
+								name="password"
+								children={(field) => (
+									<field.InputField
+										label="Password"
+										type="password"
+										placeholder="********"
 									/>
-									<form.AppField
-										name="passwordConfirmation"
-										children={(field) => (
-											<field.InputField
-												label="Confirm Password"
-												type="password"
-												placeholder="********"
-											/>
-										)}
+								)}
+							/>
+							<form.AppField
+								name="passwordConfirmation"
+								children={(field) => (
+									<field.InputField
+										label="Confirm Password"
+										type="password"
+										placeholder="********"
 									/>
-									<Field>
-										<form.AppForm>
-											<form.SubscribeButton label="Reset Password" />
-										</form.AppForm>
-									</Field>
-								</FieldGroup>
-							</form>
-						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</div>
+								)}
+							/>
+							<Field>
+								<form.AppForm>
+									<form.SubscribeButton label="Reset Password" />
+								</form.AppForm>
+							</Field>
+						</FieldGroup>
+					</form>
+				</CardContent>
+			</Card>
+		</GuestFormLayout>
 	);
 }
