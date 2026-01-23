@@ -1,7 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { login, logout, twoFactorChallenge } from "@/features/auth/api/auth";
+import {
+	forgotPassword,
+	login,
+	logout,
+	resetPassword,
+	twoFactorChallenge,
+} from "@/features/auth/api/auth";
 import { userQueryOptions } from "../lib/auth";
 
 export const loginSchema = z.object({
@@ -38,6 +44,14 @@ export const useAuth = () => {
 		},
 	});
 
+	const forgotPasswordMutation = useMutation({
+		mutationFn: forgotPassword,
+	});
+
+	const resetPasswordMutation = useMutation({
+		mutationFn: resetPassword,
+	});
+
 	return {
 		user,
 		isAuthenticated: !!user,
@@ -45,5 +59,7 @@ export const useAuth = () => {
 		login: loginMutation.mutateAsync,
 		logout: logoutMutation.mutateAsync,
 		twoFactorChallenge: twoFactorChallengeMutation.mutateAsync,
+		forgotPassword: forgotPasswordMutation.mutateAsync,
+		resetPassword: resetPasswordMutation.mutateAsync,
 	};
 };

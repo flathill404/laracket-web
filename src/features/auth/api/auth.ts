@@ -191,6 +191,37 @@ const twoFactorChallenge = async (
 /**
  * Sends a new verification email to the user.
  */
+const forgotPasswordInputSchema = z.object({
+	email: z.email(),
+});
+
+/**
+ * Sends a password reset link to the user.
+ * @param input - The email address.
+ */
+const forgotPassword = async (
+	input: z.infer<typeof forgotPasswordInputSchema>,
+) => {
+	await client.post("/forgot-password", input);
+};
+
+const resetPasswordInputSchema = z.object({
+	email: z.email(),
+	password: z.string().min(8),
+	passwordConfirmation: z.string().min(8),
+	token: z.string(),
+});
+
+/**
+ * Resets the user's password.
+ * @param input - The new password and token.
+ */
+const resetPassword = async (
+	input: z.infer<typeof resetPasswordInputSchema>,
+) => {
+	await client.post("/reset-password", input);
+};
+
 const sendVerificationEmail = async () => {
 	await client.post("/email/verification-notification");
 };
@@ -212,4 +243,6 @@ export {
 	confirmTwoFactor,
 	twoFactorChallenge,
 	sendVerificationEmail,
+	forgotPassword,
+	resetPassword,
 };

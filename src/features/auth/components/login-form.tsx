@@ -80,11 +80,21 @@ export function LoginForm({ redirect }: LoginFormProps) {
 									<form.AppField
 										name="password"
 										children={(field) => (
-											<field.InputField
-												label="password"
-												placeholder="m@example.com"
-												type="password"
-											/>
+											<div className="flex flex-col gap-2">
+												<field.InputField
+													label="password"
+													placeholder="m@example.com"
+													type="password"
+												/>
+												<div className="flex items-center">
+													<Link
+														to="/forgot-password"
+														className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+													>
+														Forgot your password?
+													</Link>
+												</div>
+											</div>
 										)}
 									/>
 									<form.AppField
