@@ -78,66 +78,69 @@ function ProjectLayout() {
 		>
 			{/* Page Header */}
 			<div className="flex shrink-0 items-center justify-between border-b px-6 py-5">
-				<h1 className="font-semibold text-2xl tracking-tight">
-					{project?.name}
-				</h1>
-				<TabsList className="ml-4">
-					{navItems.map((item) => (
-						<TabsTrigger key={item.value} value={item.value} asChild>
-							<Link
-								to={item.to}
-								params={{ projectId: params.projectId }}
-								className="group"
+				<div className="flex items-center gap-6">
+					<h1 className="font-semibold text-2xl tracking-tight">
+						{project?.name}
+					</h1>
+					<TabsList>
+						{navItems.map((item) => (
+							<TabsTrigger key={item.value} value={item.value} asChild>
+								<Link
+									to={item.to}
+									params={{ projectId: params.projectId }}
+									className="group"
+								>
+									<div className="flex items-center gap-2">
+										{item.icon}
+										{item.label}
+									</div>
+								</Link>
+							</TabsTrigger>
+						))}
+					</TabsList>
+				</div>
+
+				<div className="flex items-center gap-4">
+					{/* Tickets & Board Actions */}
+					{["tickets", "board"].includes(currentTab ?? "") && (
+						<>
+							<div className="relative w-64">
+								<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
+								<Input
+									type="search"
+									placeholder="Search tickets..."
+									className="h-9 w-full pl-9"
+								/>
+							</div>
+							<Button onClick={() => setIsCreateOpen(true)}>
+								<Plus className="mr-2 h-4 w-4" /> New Ticket
+							</Button>
+						</>
+					)}
+
+					{/* Members Actions */}
+					{currentTab === "members" && (
+						<>
+							<Button
+								variant="outline"
+								onClick={() =>
+									toast.info("Assign Team to Project is coming soon")
+								}
 							>
-								<div className="flex items-center gap-2">
-									{item.icon}
-									{item.label}
-								</div>
-							</Link>
-						</TabsTrigger>
-					))}
-				</TabsList>
-				<div className="flex-1"></div>
-
-				{/* Tickets & Board Actions */}
-				{["tickets", "board"].includes(currentTab ?? "") && (
-					<div className="flex items-center gap-2">
-						<div className="relative w-64">
-							<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
-							<Input
-								type="search"
-								placeholder="Search tickets..."
-								className="h-9 w-full pl-9"
-							/>
-						</div>
-						<Button onClick={() => setIsCreateOpen(true)}>
-							<Plus className="mr-2 h-4 w-4" /> New Ticket
-						</Button>
-					</div>
-				)}
-
-				{/* Members Actions */}
-				{currentTab === "members" && (
-					<div className="flex items-center gap-2">
-						<Button
-							variant="outline"
-							onClick={() =>
-								toast.info("Assign Team to Project is coming soon")
-							}
-						>
-							<UsersIcon className="mr-2 h-4 w-4" />
-							Assign Team
-						</Button>
-						<Button
-							onClick={() =>
-								toast.info("Assign Member to Project is coming soon")
-							}
-						>
-							<Plus className="mr-2 h-4 w-4" />
-							Assign Member
-						</Button>
-					</div>
-				)}
+								<UsersIcon className="mr-2 h-4 w-4" />
+								Assign Team
+							</Button>
+							<Button
+								onClick={() =>
+									toast.info("Assign Member to Project is coming soon")
+								}
+							>
+								<Plus className="mr-2 h-4 w-4" />
+								Assign Member
+							</Button>
+						</>
+					)}
+				</div>
 			</div>
 
 			{/* Page Content */}

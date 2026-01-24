@@ -24,7 +24,7 @@ export const columns: ColumnDef<Assignee>[] = [
 					size="md"
 					showSecondaryName
 					secondaryName={user.name}
-					className="gap-3"
+					className="min-w-[200px] gap-3"
 				/>
 			);
 		},
@@ -61,9 +61,6 @@ export const columns: ColumnDef<Assignee>[] = [
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
-						{/* <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>
-              Copy ID
-            </DropdownMenuItem> */}
 						<DropdownMenuItem
 							onClick={() =>
 								toast.info(`Withdraw ${user.displayName} is coming soon`)

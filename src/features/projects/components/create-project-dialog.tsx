@@ -1,4 +1,3 @@
-import { useForm } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -13,9 +12,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { FieldGroup } from "@/components/ui/field";
+import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { queryKeys } from "@/lib/query-keys";
 import { createProject } from "../api/projects";
@@ -58,7 +56,7 @@ export function CreateProjectDialog({
 		},
 	});
 
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			name: "",
 			description: "",
@@ -87,53 +85,29 @@ export function CreateProjectDialog({
 						e.stopPropagation();
 						form.handleSubmit();
 					}}
-					className="grid gap-4 py-4"
+					className="py-4"
 				>
-					<div className="grid gap-2">
-						<Label htmlFor="name">Name</Label>
-						<form.Field
+					<FieldGroup>
+						<form.AppField
 							name="name"
 							children={(field) => (
-								<>
-									<Input
-										id="name"
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										placeholder="e.g. Laracket Web"
-									/>
-									{field.state.meta.errors ? (
-										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
-										</p>
-									) : null}
-								</>
+								<field.InputField
+									label="Name"
+									placeholder="e.g. Laracket Web"
+								/>
 							)}
 						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="description">Description</Label>
-						<form.Field
+						<form.AppField
 							name="description"
 							children={(field) => (
-								<>
-									<Textarea
-										id="description"
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										placeholder="Project description..."
-									/>
-									{field.state.meta.errors ? (
-										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
-										</p>
-									) : null}
-								</>
+								<field.TextareaField
+									label="Description"
+									placeholder="Project description..."
+								/>
 							)}
 						/>
-					</div>
-					<DialogFooter>
+					</FieldGroup>
+					<DialogFooter className="mt-4">
 						<Button type="submit" disabled={mutation.isPending}>
 							{mutation.isPending && (
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />

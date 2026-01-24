@@ -23,11 +23,11 @@ function ProjectSettings() {
 	return (
 		<div className="flex h-full flex-col bg-background">
 			<div className="flex-1 overflow-auto p-6">
-				<div className="space-y-6">
+				<div className="mx-auto max-w-4xl space-y-8">
 					<div>
-						<h2 className="font-bold text-2xl tracking-tight">Settings</h2>
+						<h3 className="font-medium text-lg">General</h3>
 						<p className="text-muted-foreground text-sm">
-							Manage your project settings.
+							Manage your project settings and preferences.
 						</p>
 					</div>
 					<ProjectSettingsForm project={project} />

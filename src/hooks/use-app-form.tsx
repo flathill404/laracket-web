@@ -8,6 +8,7 @@ import {
 	FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const { fieldContext, useFieldContext, formContext, useFormContext } =
 	createFormHookContexts();
@@ -45,6 +46,51 @@ function InputField({
 				placeholder={placeholder}
 				type={type}
 				className={hasError ? "border-red-500 focus-visible:ring-red-500" : ""}
+			/>
+
+			{description && <FieldDescription>{description}</FieldDescription>}
+
+			{hasError && <FieldError errors={field.state.meta.errors} />}
+		</Field>
+	);
+}
+
+function TextareaField({
+	label,
+	placeholder,
+	description,
+	className,
+}: {
+	label: string;
+	placeholder?: string;
+	description?: string;
+	className?: string;
+}) {
+	const field = useFieldContext();
+
+	const hasError = field.state.meta.isTouched && !field.state.meta.isValid;
+
+	return (
+		<Field>
+			<FieldLabel
+				htmlFor={field.name}
+				className={hasError ? "text-red-600" : ""}
+			>
+				{label}
+			</FieldLabel>
+
+			<Textarea
+				id={field.name}
+				name={field.name}
+				value={field.state.value as string}
+				onBlur={field.handleBlur}
+				onChange={(e) => field.handleChange(e.target.value)}
+				placeholder={placeholder}
+				className={
+					hasError
+						? "border-red-500 focus-visible:ring-red-500"
+						: "" + (className ? ` ${className}` : "")
+				}
 			/>
 
 			{description && <FieldDescription>{description}</FieldDescription>}
@@ -95,6 +141,7 @@ const { useAppForm, withForm } = createFormHook({
 	fieldComponents: {
 		InputField,
 		CheckboxField,
+		TextareaField,
 	},
 	formComponents: {
 		SubscribeButton,

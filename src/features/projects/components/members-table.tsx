@@ -36,7 +36,7 @@ export function MembersTable({ data }: MembersTableProps) {
 	});
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="space-y-4">
 			<div className="rounded-md border">
 				<Table>
 					<TableHeader>
@@ -60,14 +60,13 @@ export function MembersTable({ data }: MembersTableProps) {
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								// Matches ticket list row styling
 								<TableRow
 									key={row.id}
 									data-state={row.getIsSelected() && "selected"}
-									className="bg-card hover:bg-muted/50 data-[state=selected]:bg-muted"
+									className="group/row"
 								>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="py-2.5">
+										<TableCell key={cell.id} className="py-3">
 											{flexRender(
 												cell.column.columnDef.cell,
 												cell.getContext(),
@@ -80,7 +79,7 @@ export function MembersTable({ data }: MembersTableProps) {
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center"
+									className="h-24 text-center text-muted-foreground"
 								>
 									No members found.
 								</TableCell>
@@ -89,8 +88,7 @@ export function MembersTable({ data }: MembersTableProps) {
 					</TableBody>
 				</Table>
 			</div>
-			{/* Pagination Controls */}
-			<div className="flex items-center justify-end space-x-2 py-4">
+			<div className="flex items-center justify-end space-x-2">
 				<div className="flex-1 text-muted-foreground text-sm">
 					{table.getFilteredRowModel().rows.length} member(s)
 				</div>
@@ -101,7 +99,7 @@ export function MembersTable({ data }: MembersTableProps) {
 						onClick={() => table.previousPage()}
 						disabled={!table.getCanPreviousPage()}
 					>
-						<ChevronLeft className="h-4 w-4" />
+						<ChevronLeft className="mr-2 h-4 w-4" />
 						Previous
 					</Button>
 					<Button
@@ -111,7 +109,7 @@ export function MembersTable({ data }: MembersTableProps) {
 						disabled={!table.getCanNextPage()}
 					>
 						Next
-						<ChevronRight className="h-4 w-4" />
+						<ChevronRight className="ml-2 h-4 w-4" />
 					</Button>
 				</div>
 			</div>
