@@ -118,7 +118,7 @@ export function RegisterForm() {
 							<form.AppForm>
 								<form.SubscribeButton label="Register" />
 							</form.AppForm>
-							<Button variant="outline" type="button">
+							<Button variant="outline" type="button" className="w-full">
 								Sign up with Google
 							</Button>
 							<FieldDescription className="text-center">

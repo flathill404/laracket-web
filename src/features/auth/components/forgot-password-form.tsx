@@ -33,14 +33,6 @@ export function ForgotPasswordForm() {
 		onSubmit: async ({ value }) => {
 			await forgotPassword(value);
 			toast.success("Password reset link sent to your email");
-			// Optionally show a success toast here
-			// For now, we remain on page or redirect to login
-			// TanStack Router doesn't have a built-in toast, relying on shadcn/sonner usually.
-			// Let's redirect to login with a query param or just stay.
-			// Staying is better so they can retry if typo.
-			// But meaningful feedback is good.
-			// Assuming user has a way to see feedback.
-			// Let's navigate to login to indicate "Check your email".
 			await router.navigate({ to: "/login" });
 		},
 	});

@@ -79,8 +79,8 @@ export function LoginForm({ redirect }: LoginFormProps) {
 							children={(field) => (
 								<div className="flex flex-col gap-2">
 									<field.InputField
-										label="password"
-										placeholder="m@example.com"
+										label="Password"
+										placeholder="********"
 										type="password"
 									/>
 									<div className="flex items-center">
@@ -102,7 +102,7 @@ export function LoginForm({ redirect }: LoginFormProps) {
 							<form.AppForm>
 								<form.SubscribeButton label="Login" />
 							</form.AppForm>
-							<Button variant="outline" type="button">
+							<Button variant="outline" type="button" className="w-full">
 								Login with Google
 							</Button>
 							<FieldDescription className="text-center">
