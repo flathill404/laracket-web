@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import {
 	Building2,
 	Files,
@@ -16,6 +15,7 @@ import type { Project } from "@/features/projects/api/projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Team } from "@/features/teams/api/teams";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
+import { SidebarLink } from "./sidebar-link";
 import { SidebarSection } from "./sidebar-section";
 
 interface SidebarProps {
@@ -33,27 +33,15 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
 			<div className="flex-1 overflow-auto py-4">
 				<nav className="flex flex-col gap-1 px-4 font-medium text-sm">
-					<Link
-						to="/dashboard"
-						className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-					>
-						<LayoutDashboard className="h-4 w-4" />
+					<SidebarLink to="/dashboard" icon={LayoutDashboard}>
 						Dashboard
-					</Link>
-					<Link
-						to="/my-work"
-						className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-					>
-						<Inbox className="h-4 w-4" />
+					</SidebarLink>
+					<SidebarLink to="/my-work" icon={Inbox}>
 						My Work
-					</Link>
-					<Link
-						to="/tickets"
-						className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-					>
-						<Files className="h-4 w-4" />
+					</SidebarLink>
+					<SidebarLink to="/tickets" icon={Files}>
 						All Tickets
-					</Link>
+					</SidebarLink>
 
 					<Accordion type="multiple" className="w-full">
 						<SidebarSection
@@ -64,14 +52,13 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 							addTooltip="Create Project"
 						>
 							{projects.map((project) => (
-								<Link
+								<SidebarLink
 									key={project.id}
 									to="/projects/$projectId/tickets"
 									params={{ projectId: project.id }}
-									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 								>
 									{project.name}
-								</Link>
+								</SidebarLink>
 							))}
 						</SidebarSection>
 						<CreateProjectDialog
@@ -87,14 +74,13 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 							addTooltip="Create Team"
 						>
 							{teams.map((team) => (
-								<Link
+								<SidebarLink
 									key={team.id}
 									to="/teams/$teamId/tickets"
 									params={{ teamId: team.id }}
-									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 								>
 									{team.displayName}
-								</Link>
+								</SidebarLink>
 							))}
 						</SidebarSection>
 						<CreateTeamDialog
@@ -110,14 +96,13 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 							addTooltip="Create Organization"
 						>
 							{organizations.map((organization) => (
-								<Link
+								<SidebarLink
 									key={organization.id}
 									to="/organizations/$organizationId/overview"
 									params={{ organizationId: organization.id }}
-									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 								>
 									{organization.displayName}
-								</Link>
+								</SidebarLink>
 							))}
 						</SidebarSection>
 						<CreateOrganizationDialog
@@ -129,13 +114,9 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 			</div>
 
 			<div className="mt-auto border-t p-4">
-				<Link
-					to="/settings"
-					className="flex items-center gap-3 rounded-lg px-3 py-2 font-medium text-muted-foreground text-sm transition-all hover:text-primary [&.active]:bg-muted [&.active]:text-primary"
-				>
-					<Settings className="h-4 w-4" />
+				<SidebarLink to="/settings" icon={Settings}>
 					Settings
-				</Link>
+				</SidebarLink>
 			</div>
 		</aside>
 	);
