@@ -12,10 +12,14 @@ vi.mock("@/lib/errors", () => ({
 	UnauthorizedError: class extends Error {},
 }));
 
+const mockFetchUser = vi.mocked(fetchUser);
+
 describe("auth lib", () => {
 	it("userQueryOptions success", async () => {
 		const mockUser = { id: 1, name: "Test" };
-		(fetchUser as any).mockResolvedValue(mockUser);
+		mockFetchUser.mockResolvedValue(
+			mockUser as unknown as Awaited<ReturnType<typeof fetchUser>>,
+		);
 
 		expect(userQueryOptions.queryKey).toEqual(queryKeys.user());
 		// @ts-expect-error
@@ -25,7 +29,7 @@ describe("auth lib", () => {
 	});
 
 	it("userQueryOptions unauthorized", async () => {
-		(fetchUser as any).mockRejectedValue(new UnauthorizedError());
+		mockFetchUser.mockRejectedValue(new UnauthorizedError());
 		// @ts-expect-error
 		const result = await userQueryOptions.queryFn();
 		expect(result).toBeNull();
@@ -33,7 +37,7 @@ describe("auth lib", () => {
 
 	it("userQueryOptions other error", async () => {
 		const error = new Error("Boom");
-		(fetchUser as any).mockRejectedValue(error);
+		mockFetchUser.mockRejectedValue(error);
 		// @ts-expect-error
 		await expect(userQueryOptions.queryFn()).rejects.toThrow("Boom");
 	});

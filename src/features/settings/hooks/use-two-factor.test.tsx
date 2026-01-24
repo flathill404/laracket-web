@@ -29,7 +29,7 @@ describe("useTwoFactor", () => {
 	it("initializes with pending state", () => {
 		mockUseAuth.mockReturnValue({
 			user: { twoFactorStatus: "pending" },
-		} as any);
+		} as unknown as ReturnType<typeof useAuth>);
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -44,7 +44,7 @@ describe("useTwoFactor", () => {
 	it("initializes with confirmed state", () => {
 		mockUseAuth.mockReturnValue({
 			user: { twoFactorStatus: "enabled" },
-		} as any);
+		} as unknown as ReturnType<typeof useAuth>);
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -57,7 +57,9 @@ describe("useTwoFactor", () => {
 	});
 
 	it("handleEnableClick opens confirm password dialog", () => {
-		(useAuth as any).mockReturnValue({ user: { twoFactorStatus: "disabled" } });
+		mockUseAuth.mockReturnValue({
+			user: { twoFactorStatus: "disabled" },
+		} as unknown as ReturnType<typeof useAuth>);
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -73,7 +75,9 @@ describe("useTwoFactor", () => {
 	});
 
 	it("completes enablement flow", async () => {
-		(useAuth as any).mockReturnValue({ user: { twoFactorStatus: "disabled" } });
+		mockUseAuth.mockReturnValue({
+			user: { twoFactorStatus: "disabled" },
+		} as unknown as ReturnType<typeof useAuth>);
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

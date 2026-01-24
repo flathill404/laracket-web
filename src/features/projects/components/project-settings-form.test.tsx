@@ -2,6 +2,7 @@
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { createTestQueryClient } from "@/test/utils";
@@ -16,13 +17,18 @@ vi.mock("@/features/projects/api/projects", () => ({
 	fetchProject: vi.fn(),
 }));
 
+const mockUseMutationWithToast = vi.mocked(useMutationWithToast);
+
 describe("ProjectSettingsForm", () => {
 	it("calls mutate on submit", async () => {
 		const mutate = vi.fn();
-		(useMutationWithToast as any).mockReturnValue({ mutate, isPending: false });
+		mockUseMutationWithToast.mockReturnValue({
+			mutate,
+			isPending: false,
+		} as unknown as ReturnType<typeof useMutationWithToast>);
 
 		const queryClient = createTestQueryClient();
-		const Wrapper = ({ children }: any) => (
+		const Wrapper = ({ children }: { children: ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		);
 

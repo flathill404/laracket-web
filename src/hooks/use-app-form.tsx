@@ -89,7 +89,7 @@ function TextareaField({
 				className={
 					hasError
 						? "border-red-500 focus-visible:ring-red-500"
-						: "" + (className ? ` ${className}` : "")
+						: (className ?? "")
 				}
 			/>
 

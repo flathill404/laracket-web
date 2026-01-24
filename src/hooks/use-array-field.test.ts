@@ -55,36 +55,36 @@ describe("useArrayField", () => {
 		// To fully test toggle with state updates, we need a wrapper or manually update props
 		const { rerender } = renderHook(
 			({ ids }) =>
-				useArrayField({
+				useArrayField<TestItem>({
 					ids,
 					setIds: () => {},
-					lookup: (id) => ({ id }) as any,
+					lookup: (id) => ({ id, name: `Item ${id}` }),
 				}),
 			{ initialProps: { ids: ["1"] } },
 		);
 
 		// Mock setIds to verify
 		const setIds = vi.fn();
-		rerender({ ids: ["1"] } as any);
+		rerender({ ids: ["1"] });
 
 		// Re-setup with spy
 		const { result: result2 } = renderHook(
 			({ ids }) =>
-				useArrayField({
+				useArrayField<TestItem>({
 					ids,
 					setIds,
-					lookup: (id) => ({ id }) as any,
+					lookup: (id) => ({ id, name: `Item ${id}` }),
 				}),
 			{ initialProps: { ids: ["1"] } },
 		);
 
 		act(() => {
-			result2.current.toggle({ id: "1" } as any);
+			result2.current.toggle({ id: "1", name: "Item 1" });
 		});
 		expect(setIds).toHaveBeenCalledWith([]);
 
 		act(() => {
-			result2.current.toggle({ id: "2" } as any);
+			result2.current.toggle({ id: "2", name: "Item 2" });
 		});
 		expect(setIds).toHaveBeenCalledWith(["1", "2"]);
 	});
@@ -92,10 +92,10 @@ describe("useArrayField", () => {
 	it("clears items", () => {
 		const setIds = vi.fn();
 		const { result } = renderHook(() =>
-			useArrayField({
+			useArrayField<TestItem>({
 				ids: ["1", "2"],
 				setIds,
-				lookup: (id) => ({ id }) as any,
+				lookup: (id) => ({ id, name: `Item ${id}` }),
 			}),
 		);
 

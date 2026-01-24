@@ -10,6 +10,8 @@ vi.mock("@/features/projects/api/projects", () => ({
 	fetchProjectTickets: vi.fn(),
 }));
 
+const mockFetchProjectTickets = vi.mocked(fetchProjectTickets);
+
 describe("useInfiniteTickets", () => {
 	it("fetches tickets with correct params", async () => {
 		const queryClient = createTestQueryClient();
@@ -17,10 +19,10 @@ describe("useInfiniteTickets", () => {
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 		);
 
-		(fetchProjectTickets as any).mockResolvedValue({
+		mockFetchProjectTickets.mockResolvedValue({
 			data: [],
 			meta: { nextCursor: "next-page" },
-		});
+		} as unknown as Awaited<ReturnType<typeof fetchProjectTickets>>);
 
 		const { result } = renderHook(
 			() => useInfiniteTickets("proj-1", { status: ["open"], sort: "newest" }),
