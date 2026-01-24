@@ -2,7 +2,7 @@ import {
 	UserAvatarStack,
 	UserAvatarWithName,
 } from "@/components/common/user-avatar";
-import type { Ticket } from "./types";
+import type { Ticket } from "../types";
 
 export function AssigneeCell({
 	assignees,

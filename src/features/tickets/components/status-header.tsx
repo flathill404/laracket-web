@@ -14,8 +14,8 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib";
-import { ALL_STATUSES, STATUS_LABELS } from "../constants";
-import { getStatusColor } from "../utils";
+import { ALL_STATUSES, STATUS_LABELS } from "../utils/constants";
+import { getStatusColor } from "../utils/status";
 
 const statuses = ALL_STATUSES.map((status) => ({
 	value: status,

@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { MembersTable } from "@/features/projects/components/members-table";
-import { projectMembersQueryOptions } from "@/features/projects/lib/projects";
+import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/members",

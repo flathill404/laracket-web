@@ -23,7 +23,7 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { projectMembersQueryOptions } from "@/features/projects/lib/projects";
+import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
 import {
 	createTicket,
 	type TicketStatusType,

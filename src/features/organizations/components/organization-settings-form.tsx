@@ -6,7 +6,7 @@ import {
 	type Organization,
 	updateOrganization,
 } from "@/features/organizations/api/organizations";
-import { organizationQueryOptions } from "@/features/organizations/lib/organizations";
+import { organizationQueryOptions } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 

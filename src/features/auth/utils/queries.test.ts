@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { UnauthorizedError } from "@/lib/errors";
 import { queryKeys } from "@/lib/query-keys";
 import { fetchUser } from "../api";
-import { userQueryOptions } from "./auth";
+import { userQueryOptions } from "./queries";
 
 vi.mock("../api", () => ({
 	fetchUser: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock("@/lib/errors", () => ({
 
 const mockFetchUser = vi.mocked(fetchUser);
 
-describe("auth lib", () => {
+describe("auth queries", () => {
 	it("userQueryOptions success", async () => {
 		const mockUser = { id: 1, name: "Test" };
 		mockFetchUser.mockResolvedValue(

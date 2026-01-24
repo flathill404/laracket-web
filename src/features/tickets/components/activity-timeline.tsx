@@ -1,7 +1,7 @@
 import { UserAvatar } from "@/components/common/user-avatar";
 import { formatRelativeTime } from "@/lib/date";
 import type { Activity } from "../api/activities";
-import { getStatusLabel } from "../utils";
+import { getStatusLabel } from "../utils/status";
 
 function getActivityDescription(activity: Activity): string {
 	if (activity.type === "created") {

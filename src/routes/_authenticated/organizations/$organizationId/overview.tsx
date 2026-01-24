@@ -7,7 +7,7 @@ import {
 	organizationProjectsQueryOptions,
 	organizationQueryOptions,
 	organizationTeamsQueryOptions,
-} from "@/features/organizations/lib/organizations";
+} from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId/overview",

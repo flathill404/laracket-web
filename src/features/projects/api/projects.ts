@@ -5,19 +5,11 @@ import {
 	paginatedTicketsSchema,
 } from "@/features/tickets/api/tickets";
 import { client } from "@/lib/client";
+import { projectSchema, projectsSchema } from "../types/schemas";
 
-export const projectSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-	description: z.string(),
-	createdAt: z.iso.datetime(),
-	updatedAt: z.iso.datetime(),
-});
-
-export type Project = z.infer<typeof projectSchema>;
-
-const projectsSchema = z.array(projectSchema);
+export type { Project } from "../types";
+// Re-export schema and type for backwards compatibility
+export { projectSchema } from "../types/schemas";
 
 /**
  * Fetches the list of projects for a specific user.

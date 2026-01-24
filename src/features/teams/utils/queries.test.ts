@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/query-keys";
 import { fetchTeams } from "../api/teams";
-import { teamsQueryOptions } from "./teams";
+import { teamsQueryOptions } from "./queries";
 
 vi.mock("../api/teams", () => ({
 	fetchTeams: vi.fn(),
 }));
 
-describe("teams lib", () => {
+describe("teams queries", () => {
 	it("teamsQueryOptions", async () => {
 		const userId = "user-1";
 		const options = teamsQueryOptions(userId);

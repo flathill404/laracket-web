@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { TeamsList } from "@/features/organizations/components/teams-list";
-import { organizationTeamsQueryOptions } from "@/features/organizations/lib/organizations";
+import { organizationTeamsQueryOptions } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId/teams",

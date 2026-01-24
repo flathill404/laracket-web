@@ -17,7 +17,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Ticket } from "./types";
+import type { Ticket } from "../types";
 
 export function ActionsCell({
 	ticket,

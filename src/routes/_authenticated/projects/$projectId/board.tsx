@@ -5,7 +5,10 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { updateTicketStatus } from "@/features/tickets/api/tickets";
 import { BoardColumn } from "@/features/tickets/components/board/board-column";
-import { ALL_STATUSES, type TicketStatus } from "@/features/tickets/constants";
+import {
+	ALL_STATUSES,
+	type TicketStatus,
+} from "@/features/tickets/utils/constants";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/board",

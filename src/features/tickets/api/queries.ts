@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
-import { fetchTicketActivities } from "../api/activities";
-import { fetchTicket } from "../api/tickets";
+import { fetchTicketActivities } from "./activities";
+import { fetchTicket } from "./tickets";
 
 export const ticketQueryOptions = (ticketId: string) =>
 	queryOptions({

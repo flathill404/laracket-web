@@ -1,52 +1,35 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { client } from "@/lib/client";
-import { TICKET_STATUS_VALUES, type TicketStatus } from "../constants";
+import {
+	assigneeSchema,
+	paginatedTicketsSchema,
+	reviewerSchema,
+	ticketSchema,
+	ticketStatusSchema,
+	ticketsSchema,
+	ticketUserSchema,
+} from "../types/schemas";
+import type { TicketStatus } from "../utils/constants";
 
-export const ticketStatusSchema = z.enum(TICKET_STATUS_VALUES);
+// Re-export schemas for backwards compatibility
+export {
+	assigneeSchema,
+	paginatedTicketsSchema,
+	reviewerSchema,
+	ticketSchema,
+	ticketStatusSchema,
+	ticketsSchema,
+	ticketUserSchema,
+};
 
+// Re-export types
 export type TicketStatusType = TicketStatus;
-
-const ticketUserSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-	avatarUrl: z.string().nullish(),
-});
-
-export const ticketSchema = z.object({
-	id: z.string(),
-	title: z.string(),
-	description: z.string(),
-	status: ticketStatusSchema,
-	dueDate: z.iso.datetime().nullish(),
-	assignees: z.array(ticketUserSchema),
-	reviewers: z.array(ticketUserSchema),
-	projectId: z.string(),
-	createdAt: z.iso.datetime(),
-	updatedAt: z.iso.datetime(),
-});
-
-export const ticketsSchema = z.array(ticketSchema);
-
-// Schema for Laravel cursor pagination response
-export const paginatedTicketsSchema = z.object({
-	data: z.array(ticketSchema),
-	links: z.object({
-		first: z.string().nullable(),
-		last: z.string().nullable(),
-		prev: z.string().nullable(),
-		next: z.string().nullable(),
-	}),
-	meta: z.object({
-		path: z.string(),
-		perPage: z.number(),
-		nextCursor: z.string().nullable(),
-		prevCursor: z.string().nullable(),
-	}),
-});
-
 export type PaginatedTicketsResponse = z.infer<typeof paginatedTicketsSchema>;
+export type TicketUser = z.infer<typeof ticketUserSchema>;
+export type Assignee = TicketUser;
+export type Reviewer = TicketUser;
 
+// API Functions
 export const fetchTicket = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}`);
 	const json = await response.json();
@@ -115,12 +98,3 @@ export const removeTicketReviewer = async (
 ) => {
 	await client.delete(`/tickets/${ticketId}/reviewers/${userId}`);
 };
-
-export {
-	ticketUserSchema as assigneeSchema,
-	ticketUserSchema as reviewerSchema,
-	ticketUserSchema,
-};
-export type TicketUser = z.infer<typeof ticketUserSchema>;
-export type Assignee = TicketUser;
-export type Reviewer = TicketUser;

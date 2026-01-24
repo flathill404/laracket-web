@@ -1,4 +1,4 @@
-import type { Ticket } from "./types";
+import type { Ticket } from "../types";
 
 export function SubjectCell({ ticket }: { ticket: Ticket }) {
 	return (

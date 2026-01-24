@@ -13,7 +13,7 @@ import {
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { userQueryOptions } from "@/features/auth/lib/auth";
+import { userQueryOptions } from "@/features/auth/utils/queries";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
 import { TicketList } from "@/features/tickets/components/ticket-list";
 

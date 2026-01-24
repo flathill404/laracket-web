@@ -1,16 +1,10 @@
-import { z } from "zod";
 import { ticketsSchema } from "@/features/tickets/api/tickets";
 import { client } from "@/lib/client";
+import { teamSchema, teamsSchema } from "../types/schemas";
 
-export const teamSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-});
-
-export type Team = z.infer<typeof teamSchema>;
-
-const teamsSchema = z.array(teamSchema);
+export type { Team } from "../types";
+// Re-export schema and type for backwards compatibility
+export { teamSchema } from "../types/schemas";
 
 /**
  * Fetches the list of teams for a specific user.

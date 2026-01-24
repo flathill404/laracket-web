@@ -7,7 +7,7 @@ import {
 	organizationQueryOptions,
 	organizationsQueryOptions,
 	organizationTeamsQueryOptions,
-} from "./organizations";
+} from "./queries";
 
 vi.mock("../api/organizations", () => ({
 	fetchOrganizations: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock("../api/organizations", () => ({
 	fetchOrganizationTeams: vi.fn(),
 }));
 
-describe("organizations lib", () => {
+describe("organizations queries", () => {
 	it("organizationsQueryOptions", () => {
 		const options = organizationsQueryOptions();
 		expect(options.queryKey).toEqual(queryKeys.organizations.list());

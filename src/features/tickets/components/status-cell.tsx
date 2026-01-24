@@ -1,5 +1,5 @@
 import { Circle } from "lucide-react";
-import { getStatusColor, getStatusLabel } from "../utils";
+import { getStatusColor, getStatusLabel } from "../utils/status";
 
 export function StatusCell({ status }: { status: string }) {
 	return (

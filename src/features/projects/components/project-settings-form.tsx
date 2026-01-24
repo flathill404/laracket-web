@@ -3,7 +3,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { type Project, updateProject } from "@/features/projects/api/projects";
-import { projectQueryOptions } from "@/features/projects/lib/projects";
+import { projectQueryOptions } from "@/features/projects/utils/queries";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 

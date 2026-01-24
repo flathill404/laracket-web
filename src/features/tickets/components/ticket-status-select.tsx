@@ -6,13 +6,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import type { TicketStatusType } from "../api/tickets";
 import {
 	getAllStatuses,
 	getStatusBadgeVariant,
 	getStatusColor,
 	getStatusLabel,
-} from "@/features/tickets/utils";
-import type { TicketStatusType } from "../api/tickets";
+} from "../utils/status";
 
 interface TicketStatusSelectProps {
 	value: TicketStatusType;

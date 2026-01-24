@@ -2,13 +2,13 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@/lib";
+import { useInfiniteTickets } from "../../hooks/use-infinite-tickets";
 import {
 	STATUS_BG_COLORS,
 	STATUS_LABELS,
 	type TicketStatus,
-} from "@/features/tickets/constants";
-import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
-import { cn } from "@/lib";
+} from "../../utils/constants";
 import { BoardTicketCard } from "./board-ticket-card";
 
 interface BoardColumnProps {

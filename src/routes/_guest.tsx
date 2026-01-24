@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { userQueryOptions } from "@/features/auth/lib/auth";
+import { userQueryOptions } from "@/features/auth/utils/queries";
 
 export const Route = createFileRoute("/_guest")({
 	beforeLoad: async ({ context }) => {

@@ -4,10 +4,10 @@ import { AuthenticatedNotFound } from "@/components/common/authenticated-not-fou
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { userQueryOptions } from "@/features/auth/lib/auth";
-import { organizationsQueryOptions } from "@/features/organizations/lib/organizations";
-import { projectsQueryOptions } from "@/features/projects/lib/projects";
-import { teamsQueryOptions } from "@/features/teams/lib/teams";
+import { userQueryOptions } from "@/features/auth/utils/queries";
+import { organizationsQueryOptions } from "@/features/organizations/utils/queries";
+import { projectsQueryOptions } from "@/features/projects/utils/queries";
+import { teamsQueryOptions } from "@/features/teams/utils/queries";
 
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: async ({ context, location }) => {

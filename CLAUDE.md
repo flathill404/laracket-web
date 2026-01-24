@@ -25,16 +25,30 @@ bun run format         # Biome format only
 - **UI**: shadcn/ui (new-york style) with Tailwind CSS v4
 - **Validation**: Zod v4
 
-### Feature-Based Structure
-Each domain feature in `src/features/` follows this pattern:
-```
+### Feature-Based Structure (Best Practice)
+Each domain feature in `src/features/` MUST follow this unified pattern to ensure scalability and maintainability:
+
+```text
 features/<feature>/
-  api/       # API functions with Zod schemas (e.g., fetchUser, ticketSchema)
-  lib/       # TanStack Query options (e.g., userQueryOptions)
-  hooks/     # React hooks
-  components/
-  types/
+  api/          # API communication & Query logic
+    ├── queries.ts    # Fetch functions & Query Options (get)
+    └── mutations.ts  # Modification functions (create, update, delete)
+  components/   # Feature-specific UI components
+  hooks/        # Feature-specific hooks
+  types/        # TypeScript definitions
+    ├── index.ts      # Interfaces and Types
+    └── schemas.ts    # Zod schemas
+  utils/        # Pure helper functions (replaces 'lib')
+  index.ts      # Barrel file exporting ONLY public components/hooks
 ```
+
+### Coding Standards
+
+#### Import Paths
+- **Internal Imports (Same Feature)**: Use **Relative Paths** (`./` or `../`).
+  - *Goal:* Maintain feature portability and isolation.
+- **External Imports (Shared/Other Features)**: Use **Absolute Paths** (`@/...`).
+  - *Goal:* Improve readability and avoid deep relative paths.
 
 ### Route Layout
 - `src/routes/__root.tsx` - Root shell with QueryClientProvider and devtools
@@ -45,10 +59,3 @@ features/<feature>/
 - `src/lib/client.ts` - HTTP client wrapper with error handling
 - Backend uses Laravel conventions; frontend sends `Key-Inflection: camel` header
 - Sorting utilities in `src/lib/sorting.ts` convert between camelCase (frontend) and snake_case (backend)
-
-### Mock Service Worker
-MSW handlers in `src/mocks/handlers.ts` use `zocker` to generate fake data from Zod schemas for development/testing.
-
-## Path Aliases
-
-`@/*` maps to `./src/*`

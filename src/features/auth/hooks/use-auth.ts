@@ -10,7 +10,7 @@ import {
 	resetPassword,
 	twoFactorChallenge,
 } from "@/features/auth/api";
-import { userQueryOptions } from "../lib/auth";
+import { userQueryOptions } from "../utils/queries";
 
 export const loginSchema = loginInputSchema;
 

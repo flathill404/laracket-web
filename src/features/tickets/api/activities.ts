@@ -1,38 +1,14 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { client } from "@/lib/client";
-import { ticketStatusSchema } from "./tickets";
+import { activitiesSchema, activitySchema } from "../types/schemas";
 
-const activityUserSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-	avatarUrl: z.string().nullish(),
-});
+// Re-export schemas for backwards compatibility
+export { activitiesSchema, activitySchema };
 
-const statusChangePayloadSchema = z.object({
-	status: z.object({
-		from: ticketStatusSchema,
-		to: ticketStatusSchema,
-	}),
-});
-
-const activityPayloadSchema = z
-	.union([statusChangePayloadSchema, z.record(z.string(), z.unknown())])
-	.nullish();
-
-export const activitySchema = z.object({
-	id: z.number(),
-	type: z.enum(["created", "updated"]),
-	payload: activityPayloadSchema,
-	createdAt: z.iso.datetime(),
-	user: activityUserSchema,
-});
-
-export const activitiesSchema = z.array(activitySchema);
-
+// Re-export types
 export type Activity = z.infer<typeof activitySchema>;
-export type ActivityUser = z.infer<typeof activityUserSchema>;
 
+// API Functions
 export const fetchTicketActivities = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}/activities`);
 	const json = await response.json();

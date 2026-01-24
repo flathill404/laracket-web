@@ -5,7 +5,7 @@ import {
 	projectMembersQueryOptions,
 	projectQueryOptions,
 	projectsQueryOptions,
-} from "./projects";
+} from "./queries";
 
 vi.mock("../api/projects", () => ({
 	fetchProjects: vi.fn(),
@@ -13,7 +13,7 @@ vi.mock("../api/projects", () => ({
 	fetchProject: vi.fn(),
 }));
 
-describe("projects lib", () => {
+describe("projects queries", () => {
 	it("projectsQueryOptions", async () => {
 		const userId = "user-1";
 		const options = projectsQueryOptions(userId);

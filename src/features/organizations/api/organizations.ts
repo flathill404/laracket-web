@@ -3,16 +3,11 @@ import { type Project, projectSchema } from "@/features/projects/api/projects";
 import { type Team, teamSchema } from "@/features/teams/api/teams";
 import { type Assignee, assigneeSchema } from "@/features/tickets/api/tickets";
 import { client } from "@/lib/client";
+import { organizationSchema, organizationsSchema } from "../types/schemas";
 
-export const organizationSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-	displayName: z.string(),
-});
-
-export type Organization = z.infer<typeof organizationSchema>;
-
-const organizationsSchema = z.array(organizationSchema);
+export type { Organization } from "../types";
+// Re-export schema and type for backwards compatibility
+export { organizationSchema } from "../types/schemas";
 
 /**
  * Fetches the list of organizations for the logged-in user.

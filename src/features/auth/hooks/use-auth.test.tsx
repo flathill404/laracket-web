@@ -25,7 +25,7 @@ vi.mock("@/features/auth/api", () => ({
 // Mock user query options
 const mockFetchUser = vi.fn();
 
-vi.mock("../lib/auth", () => ({
+vi.mock("../utils/queries", () => ({
 	userQueryOptions: {
 		queryKey: ["user"],
 		queryFn: () => mockFetchUser(),

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ticketQueryOptions } from "@/features/tickets/api/queries";
 import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
-import { ticketQueryOptions } from "@/features/tickets/lib/tickets";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets/$ticketId",

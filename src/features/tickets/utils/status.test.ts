@@ -4,7 +4,7 @@ import {
 	getStatusBadgeVariant,
 	getStatusColor,
 	getStatusLabel,
-} from "./utils";
+} from "./status";
 
 describe("ticket utils", () => {
 	describe("getStatusColor", () => {

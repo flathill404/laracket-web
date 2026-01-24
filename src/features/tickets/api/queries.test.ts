@@ -1,22 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/query-keys";
-import { fetchTicketActivities } from "../api/activities";
-import { fetchTicket } from "../api/tickets";
+import { fetchTicketActivities } from "./activities";
 import {
 	projectTicketsQueryKey,
 	ticketActivitiesQueryOptions,
 	ticketQueryOptions,
-} from "./tickets";
+} from "./queries";
+import { fetchTicket } from "./tickets";
 
-vi.mock("../api/activities", () => ({
+vi.mock("./activities", () => ({
 	fetchTicketActivities: vi.fn(),
 }));
 
-vi.mock("../api/tickets", () => ({
+vi.mock("./tickets", () => ({
 	fetchTicket: vi.fn(),
 }));
 
-describe("tickets lib", () => {
+describe("tickets queries", () => {
 	it("ticketQueryOptions generates correct options", () => {
 		const ticketId = "123";
 		const options = ticketQueryOptions(ticketId);

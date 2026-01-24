@@ -34,6 +34,10 @@ import { useAppForm } from "@/hooks/use-app-form";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
 import {
+	ticketActivitiesQueryOptions,
+	ticketQueryOptions,
+} from "../api/queries";
+import {
 	addTicketAssignee,
 	addTicketReviewer,
 	removeTicketAssignee,
@@ -44,10 +48,6 @@ import {
 	updateTicketStatus,
 } from "../api/tickets";
 import { useTicketMutation } from "../hooks/use-ticket-mutation";
-import {
-	ticketActivitiesQueryOptions,
-	ticketQueryOptions,
-} from "../lib/tickets";
 import { ActivityTimeline } from "./activity-timeline";
 import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
