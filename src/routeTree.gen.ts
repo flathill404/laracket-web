@@ -26,11 +26,17 @@ import { Route as GuestFormLoginRouteImport } from './routes/_guest/_form/login'
 import { Route as GuestFormForgotPasswordRouteImport } from './routes/_guest/_form/forgot-password'
 import { Route as AuthenticatedTicketsTicketIdRouteImport } from './routes/_authenticated/tickets/$ticketId'
 import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects/$projectId'
+import { Route as AuthenticatedOrganizationsOrganizationIdRouteImport } from './routes/_authenticated/organizations/$organizationId'
 import { Route as AuthenticatedTeamsTeamIdTicketsRouteImport } from './routes/_authenticated/teams/$teamId/tickets'
 import { Route as AuthenticatedProjectsProjectIdTicketsRouteImport } from './routes/_authenticated/projects/$projectId/tickets'
 import { Route as AuthenticatedProjectsProjectIdSettingsRouteImport } from './routes/_authenticated/projects/$projectId/settings'
 import { Route as AuthenticatedProjectsProjectIdMembersRouteImport } from './routes/_authenticated/projects/$projectId/members'
 import { Route as AuthenticatedProjectsProjectIdBoardRouteImport } from './routes/_authenticated/projects/$projectId/board'
+import { Route as AuthenticatedOrganizationsOrganizationIdTeamsRouteImport } from './routes/_authenticated/organizations/$organizationId/teams'
+import { Route as AuthenticatedOrganizationsOrganizationIdSettingsRouteImport } from './routes/_authenticated/organizations/$organizationId/settings'
+import { Route as AuthenticatedOrganizationsOrganizationIdProjectsRouteImport } from './routes/_authenticated/organizations/$organizationId/projects'
+import { Route as AuthenticatedOrganizationsOrganizationIdOverviewRouteImport } from './routes/_authenticated/organizations/$organizationId/overview'
+import { Route as AuthenticatedOrganizationsOrganizationIdMembersRouteImport } from './routes/_authenticated/organizations/$organizationId/members'
 import { Route as AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport } from './routes/_authenticated/teams/$teamId/tickets.$ticketId'
 import { Route as AuthenticatedProjectsProjectIdTicketsTicketIdRouteImport } from './routes/_authenticated/projects/$projectId/tickets.$ticketId'
 
@@ -121,6 +127,12 @@ const AuthenticatedProjectsProjectIdRoute =
     path: '/projects/$projectId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedOrganizationsOrganizationIdRoute =
+  AuthenticatedOrganizationsOrganizationIdRouteImport.update({
+    id: '/organizations/$organizationId',
+    path: '/organizations/$organizationId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedTeamsTeamIdTicketsRoute =
   AuthenticatedTeamsTeamIdTicketsRouteImport.update({
     id: '/teams/$teamId/tickets',
@@ -151,6 +163,36 @@ const AuthenticatedProjectsProjectIdBoardRoute =
     path: '/board',
     getParentRoute: () => AuthenticatedProjectsProjectIdRoute,
   } as any)
+const AuthenticatedOrganizationsOrganizationIdTeamsRoute =
+  AuthenticatedOrganizationsOrganizationIdTeamsRouteImport.update({
+    id: '/teams',
+    path: '/teams',
+    getParentRoute: () => AuthenticatedOrganizationsOrganizationIdRoute,
+  } as any)
+const AuthenticatedOrganizationsOrganizationIdSettingsRoute =
+  AuthenticatedOrganizationsOrganizationIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedOrganizationsOrganizationIdRoute,
+  } as any)
+const AuthenticatedOrganizationsOrganizationIdProjectsRoute =
+  AuthenticatedOrganizationsOrganizationIdProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedOrganizationsOrganizationIdRoute,
+  } as any)
+const AuthenticatedOrganizationsOrganizationIdOverviewRoute =
+  AuthenticatedOrganizationsOrganizationIdOverviewRouteImport.update({
+    id: '/overview',
+    path: '/overview',
+    getParentRoute: () => AuthenticatedOrganizationsOrganizationIdRoute,
+  } as any)
+const AuthenticatedOrganizationsOrganizationIdMembersRoute =
+  AuthenticatedOrganizationsOrganizationIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedOrganizationsOrganizationIdRoute,
+  } as any)
 const AuthenticatedTeamsTeamIdTicketsTicketIdRoute =
   AuthenticatedTeamsTeamIdTicketsTicketIdRouteImport.update({
     id: '/$ticketId',
@@ -172,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
+  '/organizations/$organizationId': typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRouteWithChildren
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/forgot-password': typeof GuestFormForgotPasswordRoute
@@ -179,6 +222,11 @@ export interface FileRoutesByFullPath {
   '/register': typeof GuestFormRegisterRoute
   '/reset-password': typeof GuestFormResetPasswordRoute
   '/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
+  '/organizations/$organizationId/members': typeof AuthenticatedOrganizationsOrganizationIdMembersRoute
+  '/organizations/$organizationId/overview': typeof AuthenticatedOrganizationsOrganizationIdOverviewRoute
+  '/organizations/$organizationId/projects': typeof AuthenticatedOrganizationsOrganizationIdProjectsRoute
+  '/organizations/$organizationId/settings': typeof AuthenticatedOrganizationsOrganizationIdSettingsRoute
+  '/organizations/$organizationId/teams': typeof AuthenticatedOrganizationsOrganizationIdTeamsRoute
   '/projects/$projectId/board': typeof AuthenticatedProjectsProjectIdBoardRoute
   '/projects/$projectId/members': typeof AuthenticatedProjectsProjectIdMembersRoute
   '/projects/$projectId/settings': typeof AuthenticatedProjectsProjectIdSettingsRoute
@@ -195,6 +243,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
   '/': typeof GuestIndexRoute
+  '/organizations/$organizationId': typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRouteWithChildren
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/forgot-password': typeof GuestFormForgotPasswordRoute
@@ -202,6 +251,11 @@ export interface FileRoutesByTo {
   '/register': typeof GuestFormRegisterRoute
   '/reset-password': typeof GuestFormResetPasswordRoute
   '/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
+  '/organizations/$organizationId/members': typeof AuthenticatedOrganizationsOrganizationIdMembersRoute
+  '/organizations/$organizationId/overview': typeof AuthenticatedOrganizationsOrganizationIdOverviewRoute
+  '/organizations/$organizationId/projects': typeof AuthenticatedOrganizationsOrganizationIdProjectsRoute
+  '/organizations/$organizationId/settings': typeof AuthenticatedOrganizationsOrganizationIdSettingsRoute
+  '/organizations/$organizationId/teams': typeof AuthenticatedOrganizationsOrganizationIdTeamsRoute
   '/projects/$projectId/board': typeof AuthenticatedProjectsProjectIdBoardRoute
   '/projects/$projectId/members': typeof AuthenticatedProjectsProjectIdMembersRoute
   '/projects/$projectId/settings': typeof AuthenticatedProjectsProjectIdSettingsRoute
@@ -222,6 +276,7 @@ export interface FileRoutesById {
   '/_guest/_form': typeof GuestFormRouteWithChildren
   '/_guest/wip': typeof GuestWipRoute
   '/_guest/': typeof GuestIndexRoute
+  '/_authenticated/organizations/$organizationId': typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRouteWithChildren
   '/_authenticated/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
   '/_guest/_form/forgot-password': typeof GuestFormForgotPasswordRoute
@@ -229,6 +284,11 @@ export interface FileRoutesById {
   '/_guest/_form/register': typeof GuestFormRegisterRoute
   '/_guest/_form/reset-password': typeof GuestFormResetPasswordRoute
   '/_guest/_form/two-factor-challenge': typeof GuestFormTwoFactorChallengeRoute
+  '/_authenticated/organizations/$organizationId/members': typeof AuthenticatedOrganizationsOrganizationIdMembersRoute
+  '/_authenticated/organizations/$organizationId/overview': typeof AuthenticatedOrganizationsOrganizationIdOverviewRoute
+  '/_authenticated/organizations/$organizationId/projects': typeof AuthenticatedOrganizationsOrganizationIdProjectsRoute
+  '/_authenticated/organizations/$organizationId/settings': typeof AuthenticatedOrganizationsOrganizationIdSettingsRoute
+  '/_authenticated/organizations/$organizationId/teams': typeof AuthenticatedOrganizationsOrganizationIdTeamsRoute
   '/_authenticated/projects/$projectId/board': typeof AuthenticatedProjectsProjectIdBoardRoute
   '/_authenticated/projects/$projectId/members': typeof AuthenticatedProjectsProjectIdMembersRoute
   '/_authenticated/projects/$projectId/settings': typeof AuthenticatedProjectsProjectIdSettingsRoute
@@ -247,6 +307,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/wip'
     | '/'
+    | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/tickets/$ticketId'
     | '/forgot-password'
@@ -254,6 +315,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
+    | '/organizations/$organizationId/members'
+    | '/organizations/$organizationId/overview'
+    | '/organizations/$organizationId/projects'
+    | '/organizations/$organizationId/settings'
+    | '/organizations/$organizationId/teams'
     | '/projects/$projectId/board'
     | '/projects/$projectId/members'
     | '/projects/$projectId/settings'
@@ -270,6 +336,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/wip'
     | '/'
+    | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/tickets/$ticketId'
     | '/forgot-password'
@@ -277,6 +344,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/two-factor-challenge'
+    | '/organizations/$organizationId/members'
+    | '/organizations/$organizationId/overview'
+    | '/organizations/$organizationId/projects'
+    | '/organizations/$organizationId/settings'
+    | '/organizations/$organizationId/teams'
     | '/projects/$projectId/board'
     | '/projects/$projectId/members'
     | '/projects/$projectId/settings'
@@ -296,6 +368,7 @@ export interface FileRouteTypes {
     | '/_guest/_form'
     | '/_guest/wip'
     | '/_guest/'
+    | '/_authenticated/organizations/$organizationId'
     | '/_authenticated/projects/$projectId'
     | '/_authenticated/tickets/$ticketId'
     | '/_guest/_form/forgot-password'
@@ -303,6 +376,11 @@ export interface FileRouteTypes {
     | '/_guest/_form/register'
     | '/_guest/_form/reset-password'
     | '/_guest/_form/two-factor-challenge'
+    | '/_authenticated/organizations/$organizationId/members'
+    | '/_authenticated/organizations/$organizationId/overview'
+    | '/_authenticated/organizations/$organizationId/projects'
+    | '/_authenticated/organizations/$organizationId/settings'
+    | '/_authenticated/organizations/$organizationId/teams'
     | '/_authenticated/projects/$projectId/board'
     | '/_authenticated/projects/$projectId/members'
     | '/_authenticated/projects/$projectId/settings'
@@ -438,6 +516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/organizations/$organizationId': {
+      id: '/_authenticated/organizations/$organizationId'
+      path: '/organizations/$organizationId'
+      fullPath: '/organizations/$organizationId'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/teams/$teamId/tickets': {
       id: '/_authenticated/teams/$teamId/tickets'
       path: '/teams/$teamId/tickets'
@@ -473,6 +558,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsProjectIdBoardRouteImport
       parentRoute: typeof AuthenticatedProjectsProjectIdRoute
     }
+    '/_authenticated/organizations/$organizationId/teams': {
+      id: '/_authenticated/organizations/$organizationId/teams'
+      path: '/teams'
+      fullPath: '/organizations/$organizationId/teams'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdTeamsRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsOrganizationIdRoute
+    }
+    '/_authenticated/organizations/$organizationId/settings': {
+      id: '/_authenticated/organizations/$organizationId/settings'
+      path: '/settings'
+      fullPath: '/organizations/$organizationId/settings'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsOrganizationIdRoute
+    }
+    '/_authenticated/organizations/$organizationId/projects': {
+      id: '/_authenticated/organizations/$organizationId/projects'
+      path: '/projects'
+      fullPath: '/organizations/$organizationId/projects'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdProjectsRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsOrganizationIdRoute
+    }
+    '/_authenticated/organizations/$organizationId/overview': {
+      id: '/_authenticated/organizations/$organizationId/overview'
+      path: '/overview'
+      fullPath: '/organizations/$organizationId/overview'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdOverviewRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsOrganizationIdRoute
+    }
+    '/_authenticated/organizations/$organizationId/members': {
+      id: '/_authenticated/organizations/$organizationId/members'
+      path: '/members'
+      fullPath: '/organizations/$organizationId/members'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrganizationIdMembersRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsOrganizationIdRoute
+    }
     '/_authenticated/teams/$teamId/tickets/$ticketId': {
       id: '/_authenticated/teams/$teamId/tickets/$ticketId'
       path: '/$ticketId'
@@ -502,6 +622,33 @@ const AuthenticatedTicketsRouteRouteChildren: AuthenticatedTicketsRouteRouteChil
 const AuthenticatedTicketsRouteRouteWithChildren =
   AuthenticatedTicketsRouteRoute._addFileChildren(
     AuthenticatedTicketsRouteRouteChildren,
+  )
+
+interface AuthenticatedOrganizationsOrganizationIdRouteChildren {
+  AuthenticatedOrganizationsOrganizationIdMembersRoute: typeof AuthenticatedOrganizationsOrganizationIdMembersRoute
+  AuthenticatedOrganizationsOrganizationIdOverviewRoute: typeof AuthenticatedOrganizationsOrganizationIdOverviewRoute
+  AuthenticatedOrganizationsOrganizationIdProjectsRoute: typeof AuthenticatedOrganizationsOrganizationIdProjectsRoute
+  AuthenticatedOrganizationsOrganizationIdSettingsRoute: typeof AuthenticatedOrganizationsOrganizationIdSettingsRoute
+  AuthenticatedOrganizationsOrganizationIdTeamsRoute: typeof AuthenticatedOrganizationsOrganizationIdTeamsRoute
+}
+
+const AuthenticatedOrganizationsOrganizationIdRouteChildren: AuthenticatedOrganizationsOrganizationIdRouteChildren =
+  {
+    AuthenticatedOrganizationsOrganizationIdMembersRoute:
+      AuthenticatedOrganizationsOrganizationIdMembersRoute,
+    AuthenticatedOrganizationsOrganizationIdOverviewRoute:
+      AuthenticatedOrganizationsOrganizationIdOverviewRoute,
+    AuthenticatedOrganizationsOrganizationIdProjectsRoute:
+      AuthenticatedOrganizationsOrganizationIdProjectsRoute,
+    AuthenticatedOrganizationsOrganizationIdSettingsRoute:
+      AuthenticatedOrganizationsOrganizationIdSettingsRoute,
+    AuthenticatedOrganizationsOrganizationIdTeamsRoute:
+      AuthenticatedOrganizationsOrganizationIdTeamsRoute,
+  }
+
+const AuthenticatedOrganizationsOrganizationIdRouteWithChildren =
+  AuthenticatedOrganizationsOrganizationIdRoute._addFileChildren(
+    AuthenticatedOrganizationsOrganizationIdRouteChildren,
   )
 
 interface AuthenticatedProjectsProjectIdTicketsRouteChildren {
@@ -564,6 +711,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedMyWorkRoute: typeof AuthenticatedMyWorkRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVerifyEmailRoute: typeof AuthenticatedVerifyEmailRoute
+  AuthenticatedOrganizationsOrganizationIdRoute: typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   AuthenticatedProjectsProjectIdRoute: typeof AuthenticatedProjectsProjectIdRouteWithChildren
   AuthenticatedTeamsTeamIdTicketsRoute: typeof AuthenticatedTeamsTeamIdTicketsRouteWithChildren
 }
@@ -574,6 +722,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMyWorkRoute: AuthenticatedMyWorkRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVerifyEmailRoute: AuthenticatedVerifyEmailRoute,
+  AuthenticatedOrganizationsOrganizationIdRoute:
+    AuthenticatedOrganizationsOrganizationIdRouteWithChildren,
   AuthenticatedProjectsProjectIdRoute:
     AuthenticatedProjectsProjectIdRouteWithChildren,
   AuthenticatedTeamsTeamIdTicketsRoute:

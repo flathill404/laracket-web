@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { userQueryOptions } from "@/features/auth/lib/auth";
+import { organizationsQueryOptions } from "@/features/organizations/lib/organizations";
 import { projectsQueryOptions } from "@/features/projects/lib/projects";
 import { teamsQueryOptions } from "@/features/teams/lib/teams";
 
@@ -30,10 +31,11 @@ export const Route = createFileRoute("/_authenticated")({
 			}
 		}
 
-		// Load projects and teams for sidebar
+		// Load projects, teams, and organizations for sidebar
 		const promises = [
 			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
 			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
+			context.queryClient.ensureQueryData(organizationsQueryOptions(user.id)),
 		];
 		await Promise.all(promises);
 	},
@@ -48,6 +50,9 @@ function AuthLayout() {
 
 	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
+	const { data: organizations } = useSuspenseQuery(
+		organizationsQueryOptions(userId),
+	);
 
 	// We can safely assume user is not null here because of beforeLoad check
 	// But typescript might complain if type includes null (and useAuth returns user | undefined)
@@ -58,7 +63,13 @@ function AuthLayout() {
 			<Header user={user} isVerified={isVerified} logout={logout} />
 
 			<div className="flex flex-1 overflow-hidden">
-				{isVerified && <Sidebar projects={projects} teams={teams} />}
+				{isVerified && (
+					<Sidebar
+						projects={projects}
+						teams={teams}
+						organizations={organizations}
+					/>
+				)}
 
 				<main className="flex flex-1 flex-col overflow-hidden">
 					<Outlet />

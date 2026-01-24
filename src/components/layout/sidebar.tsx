@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import {
+	Building2,
 	ChevronRight,
 	Files,
 	Folder,
@@ -22,6 +23,8 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Organization } from "@/features/organizations/api/organizations";
+import { CreateOrganizationDialog } from "@/features/organizations/components/create-organization-dialog";
 import type { Project } from "@/features/projects/api/projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Team } from "@/features/teams/api/teams";
@@ -30,11 +33,13 @@ import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog
 interface SidebarProps {
 	projects: Project[];
 	teams: Team[];
+	organizations: Organization[];
 }
 
-export function Sidebar({ projects, teams }: SidebarProps) {
+export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 	const [createProjectOpen, setCreateProjectOpen] = useState(false);
 	const [createTeamOpen, setCreateTeamOpen] = useState(false);
+	const [createOrganizationOpen, setCreateOrganizationOpen] = useState(false);
 
 	return (
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
@@ -151,6 +156,53 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 										>
 											{team.displayName}
+										</Link>
+									))}
+								</div>
+							</AccordionContent>
+						</AccordionItem>
+
+						<AccordionItem value="organizations" className="border-b-0">
+							<div className="group flex items-center justify-between pr-2">
+								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
+									<div className="flex items-center gap-3 px-3">
+										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+										<Building2 className="h-4 w-4" />
+										Organizations
+									</div>
+								</AccordionTrigger>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<button
+												type="button"
+												onClick={(e) => {
+													e.stopPropagation();
+													setCreateOrganizationOpen(true);
+												}}
+												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
+											>
+												<Plus className="h-4 w-4 text-muted-foreground" />
+											</button>
+										</TooltipTrigger>
+										<TooltipContent>Create Organization</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
+							<CreateOrganizationDialog
+								open={createOrganizationOpen}
+								onOpenChange={setCreateOrganizationOpen}
+							/>
+							<AccordionContent className="pb-0">
+								<div className="flex flex-col gap-1 pl-9">
+									{organizations.map((organization) => (
+										<Link
+											key={organization.id}
+											to="/organizations/$organizationId/overview"
+											params={{ organizationId: organization.id }}
+											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
+										>
+											{organization.displayName}
 										</Link>
 									))}
 								</div>

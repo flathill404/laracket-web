@@ -23,6 +23,19 @@ export const queryKeys = {
 		tickets: (teamId: string) => ["teams", teamId, "tickets"] as const,
 	},
 
+	organizations: {
+		all: () => ["organizations"] as const,
+		list: (userId: string) => ["organizations", userId] as const,
+		detail: (organizationId: string) =>
+			["organizations", organizationId] as const,
+		members: (organizationId: string) =>
+			["organizations", organizationId, "members"] as const,
+		projects: (organizationId: string) =>
+			["organizations", organizationId, "projects"] as const,
+		teams: (organizationId: string) =>
+			["organizations", organizationId, "teams"] as const,
+	},
+
 	users: {
 		tickets: (userId: string) => ["users", userId, "tickets"] as const,
 	},
