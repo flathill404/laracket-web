@@ -1,11 +1,25 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { teamSchema } from "../types/schemas";
-import { fetchTeam, fetchTeams, fetchTeamTickets } from "./teams";
+import {
+	addTeamMember,
+	deleteTeam,
+	fetchTeam,
+	fetchTeamMembers,
+	fetchTeams,
+	fetchTeamTickets,
+	removeTeamMember,
+	updateTeam,
+	updateTeamMember,
+} from "./teams";
 
 // Mock the client module
 vi.mock("@/lib/client", () => ({
 	client: {
 		get: vi.fn(),
+		post: vi.fn(),
+		put: vi.fn(),
+		patch: vi.fn(),
+		delete: vi.fn(),
 	},
 }));
 
@@ -13,6 +27,10 @@ import { client } from "@/lib/client";
 
 const mockClient = client as unknown as {
 	get: ReturnType<typeof vi.fn>;
+	post: ReturnType<typeof vi.fn>;
+	put: ReturnType<typeof vi.fn>;
+	patch: ReturnType<typeof vi.fn>;
+	delete: ReturnType<typeof vi.fn>;
 };
 
 const mockTeam = {
@@ -111,6 +129,103 @@ describe("teams API", () => {
 			const result = await fetchTeamTickets("team-123");
 
 			expect(result).toEqual([]);
+		});
+	});
+
+	describe("updateTeam", () => {
+		it("should update team", async () => {
+			const updateData = { name: "updated-name", displayName: "Updated Name" };
+			const updated = { ...mockTeam, ...updateData };
+			mockClient.put.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: updated }),
+			});
+
+			const result = await updateTeam("team-123", updateData);
+
+			expect(mockClient.put).toHaveBeenCalledWith(
+				"/teams/team-123",
+				updateData,
+			);
+			expect(result).toEqual(updated);
+		});
+	});
+
+	describe("deleteTeam", () => {
+		it("should delete team", async () => {
+			mockClient.delete.mockResolvedValueOnce({});
+
+			await deleteTeam("team-123");
+
+			expect(mockClient.delete).toHaveBeenCalledWith("/teams/team-123");
+		});
+	});
+
+	describe("members", () => {
+		const mockMember = {
+			id: "user-123",
+			name: "john",
+			displayName: "John Doe",
+			role: "member",
+		};
+
+		describe("fetchTeamMembers", () => {
+			it("should fetch members", async () => {
+				mockClient.get.mockResolvedValueOnce({
+					json: () => Promise.resolve({ data: [mockMember] }),
+				});
+
+				const result = await fetchTeamMembers("team-123");
+
+				expect(mockClient.get).toHaveBeenCalledWith("/teams/team-123/members");
+				expect(result).toEqual([mockMember]);
+			});
+		});
+
+		describe("addTeamMember", () => {
+			it("should add member", async () => {
+				mockClient.post.mockResolvedValueOnce({
+					json: () => Promise.resolve({ data: mockMember }),
+				});
+
+				const result = await addTeamMember("team-123", "user-123");
+
+				expect(mockClient.post).toHaveBeenCalledWith(
+					"/teams/team-123/members",
+					{ userId: "user-123" },
+				);
+				expect(result).toEqual(mockMember);
+			});
+		});
+
+		describe("updateTeamMember", () => {
+			it("should update member", async () => {
+				const updatedMember = { ...mockMember, role: "leader" };
+				mockClient.patch.mockResolvedValueOnce({
+					json: () => Promise.resolve({ data: updatedMember }),
+				});
+
+				const result = await updateTeamMember("team-123", "user-123", {
+					role: "leader",
+				});
+
+				expect(mockClient.patch).toHaveBeenCalledWith(
+					"/teams/team-123/members/user-123",
+					{ role: "leader" },
+				);
+				expect(result).toEqual(updatedMember);
+			});
+		});
+
+		describe("removeTeamMember", () => {
+			it("should remove member", async () => {
+				mockClient.delete.mockResolvedValueOnce({});
+
+				await removeTeamMember("team-123", "user-123");
+
+				expect(mockClient.delete).toHaveBeenCalledWith(
+					"/teams/team-123/members/user-123",
+				);
+			});
 		});
 	});
 });
