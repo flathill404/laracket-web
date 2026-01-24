@@ -17,6 +17,7 @@ const mockClient = client as unknown as {
 const mockTeam = {
 	id: "team-123",
 	name: "Test Team",
+	displayName: "Test Team",
 };
 
 const mockTicket = {
