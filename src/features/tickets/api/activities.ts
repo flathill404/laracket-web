@@ -1,7 +1,6 @@
 import { client } from "@/lib/client";
 import { activitiesSchema } from "../types/schemas";
 
-// Re-export types
 export type { Activity } from "../types";
 
 // API Functions

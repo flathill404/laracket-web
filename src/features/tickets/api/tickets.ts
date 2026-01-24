@@ -2,7 +2,6 @@ import { client } from "@/lib/client";
 import type { Ticket, TicketStatus } from "../types";
 import { ticketSchema, ticketsSchema } from "../types/schemas";
 
-// Re-export types
 export type {
 	Assignee,
 	PaginatedTicketsResponse,

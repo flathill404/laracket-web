@@ -25,5 +25,4 @@ export interface TicketTableMeta {
 	onDeleteTicket?: (ticketId: string) => void;
 }
 
-// Re-export schemas
 export * from "./schemas";

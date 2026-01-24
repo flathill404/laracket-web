@@ -4,5 +4,4 @@ import type { projectMemberSchema, projectSchema } from "./schemas";
 export type Project = z.infer<typeof projectSchema>;
 export type ProjectMember = z.infer<typeof projectMemberSchema>;
 
-// Re-export all schemas
 export * from "./schemas";
