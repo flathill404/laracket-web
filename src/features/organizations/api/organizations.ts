@@ -3,10 +3,13 @@ import type { Project } from "@/features/projects/types";
 import { projectSchema } from "@/features/projects/types/schemas";
 import type { Team } from "@/features/teams/types";
 import { teamSchema } from "@/features/teams/types/schemas";
-import type { Assignee } from "@/features/tickets/types";
-import { ticketUserSchema as assigneeSchema } from "@/features/tickets/types/schemas";
 import { client } from "@/lib/client";
-import { organizationSchema, organizationsSchema } from "../types/schemas";
+import {
+	organizationMemberSchema,
+	organizationMembersSchema,
+	organizationSchema,
+	organizationsSchema,
+} from "../types/schemas";
 
 export type { Organization } from "../types";
 
@@ -44,14 +47,48 @@ export const updateOrganization = async (
 	return organizationSchema.parse(json.data);
 };
 
-const organizationMembersSchema = z.array(assigneeSchema);
+export const deleteOrganization = async (organizationId: string) => {
+	await client.delete(`/organizations/${organizationId}`);
+};
 
-export const fetchOrganizationMembers = async (
-	organizationId: string,
-): Promise<Assignee[]> => {
+/* Members */
+
+export const fetchOrganizationMembers = async (organizationId: string) => {
 	const response = await client.get(`/organizations/${organizationId}/members`);
 	const json = await response.json();
 	return organizationMembersSchema.parse(json.data);
+};
+
+export const addOrganizationMember = async (
+	organizationId: string,
+	userId: string,
+) => {
+	const response = await client.post(
+		`/organizations/${organizationId}/members`,
+		{ userId },
+	);
+	const json = await response.json();
+	return organizationMemberSchema.parse(json.data);
+};
+
+export const updateOrganizationMember = async (
+	organizationId: string,
+	userId: string,
+	data: { role: "owner" | "admin" | "member" },
+) => {
+	const response = await client.patch(
+		`/organizations/${organizationId}/members/${userId}`,
+		data,
+	);
+	const json = await response.json();
+	return organizationMemberSchema.parse(json.data);
+};
+
+export const removeOrganizationMember = async (
+	organizationId: string,
+	userId: string,
+) => {
+	await client.delete(`/organizations/${organizationId}/members/${userId}`);
 };
 
 const organizationProjectsSchema = z.array(projectSchema);
@@ -66,6 +103,18 @@ export const fetchOrganizationProjects = async (
 	return organizationProjectsSchema.parse(json.data);
 };
 
+export const createOrganizationProject = async (
+	organizationId: string,
+	data: { name: string; description: string },
+) => {
+	const response = await client.post(
+		`/organizations/${organizationId}/projects`,
+		data,
+	);
+	const json = await response.json();
+	return projectSchema.parse(json.data);
+};
+
 const organizationTeamsSchema = z.array(teamSchema);
 
 export const fetchOrganizationTeams = async (
@@ -74,4 +123,16 @@ export const fetchOrganizationTeams = async (
 	const response = await client.get(`/organizations/${organizationId}/teams`);
 	const json = await response.json();
 	return organizationTeamsSchema.parse(json.data);
+};
+
+export const createOrganizationTeam = async (
+	organizationId: string,
+	data: { name: string; displayName: string },
+) => {
+	const response = await client.post(
+		`/organizations/${organizationId}/teams`,
+		data,
+	);
+	const json = await response.json();
+	return teamSchema.parse(json.data);
 };
