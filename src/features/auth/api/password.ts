@@ -1,19 +1,16 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
 import type {
-	confirmPasswordInputSchema,
-	forgotPasswordInputSchema,
-	resetPasswordInputSchema,
-	updatePasswordInputSchema,
+	ConfirmPasswordInput,
+	ForgotPasswordInput,
+	ResetPasswordInput,
+	UpdatePasswordInput,
 } from "../types";
 
 /**
  * Confirms the user's password.
  * @param input - The password to confirm.
  */
-export const confirmPassword = async (
-	input: z.infer<typeof confirmPasswordInputSchema>,
-) => {
+export const confirmPassword = async (input: ConfirmPasswordInput) => {
 	await client.post("/user/confirm-password", input);
 };
 
@@ -21,9 +18,7 @@ export const confirmPassword = async (
  * Updates the user's password.
  * @param input - The current and new password.
  */
-export const updatePassword = async (
-	input: z.infer<typeof updatePasswordInputSchema>,
-) => {
+export const updatePassword = async (input: UpdatePasswordInput) => {
 	await client.put("/user/password", input);
 };
 
@@ -31,9 +26,7 @@ export const updatePassword = async (
  * Sends a password reset link to the user.
  * @param input - The email address.
  */
-export const forgotPassword = async (
-	input: z.infer<typeof forgotPasswordInputSchema>,
-) => {
+export const forgotPassword = async (input: ForgotPasswordInput) => {
 	await client.post("/forgot-password", input);
 };
 
@@ -41,8 +34,6 @@ export const forgotPassword = async (
  * Resets the user's password.
  * @param input - The new password and token.
  */
-export const resetPassword = async (
-	input: z.infer<typeof resetPasswordInputSchema>,
-) => {
+export const resetPassword = async (input: ResetPasswordInput) => {
 	await client.post("/reset-password", input);
 };

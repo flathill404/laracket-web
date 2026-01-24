@@ -1,13 +1,12 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
-import type { updateProfileInformationInputSchema } from "../types";
+import type { UpdateProfileInformationInput } from "../types";
 
 /**
  * Updates the user's profile information.
  * @param input - The name and email.
  */
 export const updateProfileInformation = async (
-	input: z.infer<typeof updateProfileInformationInputSchema>,
+	input: UpdateProfileInformationInput,
 ) => {
 	await client.put("/user/profile-information", input);
 };

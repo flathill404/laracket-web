@@ -1,8 +1,7 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
 import {
-	type confirmTwoFactorInputSchema,
-	type twoFactorChallengeInputSchema,
+	type ConfirmTwoFactorInput,
+	type TwoFactorChallengeInput,
 	twoFactorQrCodeSchema,
 	twoFactorRecoveryCodesSchema,
 } from "../types";
@@ -45,9 +44,7 @@ export const fetchTwoFactorRecoveryCodes = async () => {
  * Confirms two-factor authentication with a code.
  * @param input - The confirmation code.
  */
-export const confirmTwoFactor = async (
-	input: z.infer<typeof confirmTwoFactorInputSchema>,
-) => {
+export const confirmTwoFactor = async (input: ConfirmTwoFactorInput) => {
 	await client.post("/user/confirmed-two-factor-authentication", input);
 };
 
@@ -55,8 +52,6 @@ export const confirmTwoFactor = async (
  * Completes the two-factor authentication challenge during login.
  * @param input - The 2FA code or recovery code.
  */
-export const twoFactorChallenge = async (
-	input: z.infer<typeof twoFactorChallengeInputSchema>,
-) => {
+export const twoFactorChallenge = async (input: TwoFactorChallengeInput) => {
 	await client.post("/two-factor-challenge", input);
 };

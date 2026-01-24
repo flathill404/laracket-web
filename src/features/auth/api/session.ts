@@ -1,6 +1,5 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
-import { type loginInputSchema, loginOutputSchema, userSchema } from "../types";
+import { type LoginInput, loginOutputSchema, userSchema } from "../types";
 
 /**
  * Fetches the currently authenticated user.
@@ -17,7 +16,7 @@ export const fetchUser = async () => {
  * @param input - The login credentials.
  * @returns The login response containing 2FA status.
  */
-export const login = async (input: z.infer<typeof loginInputSchema>) => {
+export const login = async (input: LoginInput) => {
 	await client.get("/csrf-cookie");
 
 	const response = await client.post("/login", input);
