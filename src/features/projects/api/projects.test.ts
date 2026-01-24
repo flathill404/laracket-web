@@ -1,10 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { projectSchema } from "../types/schemas";
 import {
+	addProjectMember,
+	addProjectTeam,
+	deleteProject,
 	fetchProject,
 	fetchProjectMembers,
 	fetchProjects,
 	fetchProjectTickets,
+	removeProjectMember,
+	removeProjectTeam,
 	updateProject,
 } from "./projects";
 
@@ -13,6 +17,8 @@ vi.mock("@/lib/client", () => ({
 	client: {
 		get: vi.fn(),
 		put: vi.fn(),
+		post: vi.fn(),
+		delete: vi.fn(),
 	},
 }));
 
@@ -21,6 +27,8 @@ import { client } from "@/lib/client";
 const mockClient = client as unknown as {
 	get: ReturnType<typeof vi.fn>;
 	put: ReturnType<typeof vi.fn>;
+	post: ReturnType<typeof vi.fn>;
+	delete: ReturnType<typeof vi.fn>;
 };
 
 const mockProject = {
@@ -224,6 +232,73 @@ describe("projects API", () => {
 				"/projects/project-123/members",
 			);
 			expect(result).toEqual([mockMember]);
+		});
+	});
+
+	describe("deleteProject", () => {
+		it("should delete project", async () => {
+			mockClient.delete.mockResolvedValueOnce({});
+
+			await deleteProject("project-123");
+
+			expect(mockClient.delete).toHaveBeenCalledWith("/projects/project-123");
+		});
+	});
+
+	describe("members", () => {
+		describe("addProjectMember", () => {
+			it("should add member", async () => {
+				mockClient.post.mockResolvedValueOnce({
+					json: () => Promise.resolve({ data: mockMember }),
+				});
+
+				const result = await addProjectMember("project-123", "user-123");
+
+				expect(mockClient.post).toHaveBeenCalledWith(
+					"/projects/project-123/members",
+					{ userId: "user-123" },
+				);
+				expect(result).toEqual(mockMember);
+			});
+		});
+
+		describe("removeProjectMember", () => {
+			it("should remove member", async () => {
+				mockClient.delete.mockResolvedValueOnce({});
+
+				await removeProjectMember("project-123", "user-123");
+
+				expect(mockClient.delete).toHaveBeenCalledWith(
+					"/projects/project-123/members/user-123",
+				);
+			});
+		});
+	});
+
+	describe("teams", () => {
+		describe("addProjectTeam", () => {
+			it("should add team", async () => {
+				mockClient.post.mockResolvedValueOnce({});
+
+				await addProjectTeam("project-123", "team-123");
+
+				expect(mockClient.post).toHaveBeenCalledWith(
+					"/projects/project-123/teams",
+					{ teamId: "team-123" },
+				);
+			});
+		});
+
+		describe("removeProjectTeam", () => {
+			it("should remove team", async () => {
+				mockClient.delete.mockResolvedValueOnce({});
+
+				await removeProjectTeam("project-123", "team-123");
+
+				expect(mockClient.delete).toHaveBeenCalledWith(
+					"/projects/project-123/teams/team-123",
+				);
+			});
 		});
 	});
 });
