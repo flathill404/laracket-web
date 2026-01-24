@@ -34,9 +34,9 @@ import { TicketUserSelector } from "@/features/tickets/components/ticket-user-se
 import { useAppForm } from "@/hooks/use-app-form";
 import { useArrayField } from "@/hooks/use-array-field";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
 import { queryKeys } from "@/lib/query-keys";
-import { cn } from "@/utils";
 
 const createTicketSchema = z.object({
 	title: z.string().min(1, "Subject is required"),

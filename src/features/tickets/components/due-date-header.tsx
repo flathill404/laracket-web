@@ -1,7 +1,7 @@
 import type { Column } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/utils";
+import { cn } from "@/lib";
 import type { Ticket } from "./types";
 
 export function DueDateHeader({ column }: { column: Column<Ticket> }) {

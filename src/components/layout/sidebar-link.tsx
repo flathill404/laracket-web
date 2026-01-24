@@ -1,6 +1,6 @@
 import { Link, type LinkProps } from "@tanstack/react-router";
 import type { ElementType, ReactNode } from "react";
-import { cn } from "@/utils";
+import { cn } from "@/lib";
 
 type SidebarLinkProps = Omit<LinkProps, "children" | "className"> & {
 	icon?: ElementType;

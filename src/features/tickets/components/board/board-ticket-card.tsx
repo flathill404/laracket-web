@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { UserAvatarStack } from "@/components/common/user-avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Ticket } from "@/features/tickets/components/columns";
+import { cn } from "@/lib";
 import { formatDateLocale, isOverdue } from "@/lib/date";
-import { cn } from "@/utils";
 
 interface BoardTicketCardProps {
 	ticket: Ticket;

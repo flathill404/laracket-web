@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/utils";
+import { cn } from "@/lib";
 
 const AVATAR_VARIANTS = {
 	xs: { size: "h-5 w-5", text: "text-[8px]" },

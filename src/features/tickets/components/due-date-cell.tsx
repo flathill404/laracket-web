@@ -1,5 +1,5 @@
+import { cn } from "@/lib";
 import { formatDateLocale, isOverdue } from "@/lib/date";
-import { cn } from "@/utils";
 
 export function DueDateCell({
 	dueDate,

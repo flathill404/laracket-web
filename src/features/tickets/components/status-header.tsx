@@ -13,7 +13,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/utils";
+import { cn } from "@/lib";
 import { ALL_STATUSES, STATUS_LABELS } from "../constants";
 import { getStatusColor } from "../utils";
 

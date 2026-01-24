@@ -8,7 +8,7 @@ import {
 	type TicketStatus,
 } from "@/features/tickets/constants";
 import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
-import { cn } from "@/utils";
+import { cn } from "@/lib";
 import { BoardTicketCard } from "./board-ticket-card";
 
 interface BoardColumnProps {
