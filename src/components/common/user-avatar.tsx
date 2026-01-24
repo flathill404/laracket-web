@@ -2,25 +2,17 @@ import type { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/utils";
 
-const AVATAR_SIZES = {
-	xs: "h-5 w-5",
-	sm: "h-6 w-6",
-	md: "h-8 w-8",
-	lg: "h-10 w-10",
-	xl: "h-20 w-20",
+const AVATAR_VARIANTS = {
+	xs: { size: "h-5 w-5", text: "text-[8px]" },
+	sm: { size: "h-6 w-6", text: "text-[10px]" },
+	md: { size: "h-8 w-8", text: "text-xs" },
+	lg: { size: "h-10 w-10", text: "text-sm" },
+	xl: { size: "h-20 w-20", text: "text-xl" },
 } as const;
 
-const FALLBACK_TEXT_SIZES = {
-	xs: "text-[8px]",
-	sm: "text-[10px]",
-	md: "text-xs",
-	lg: "text-sm",
-	xl: "text-xl",
-} as const;
+export type AvatarSize = keyof typeof AVATAR_VARIANTS;
 
-type AvatarSize = keyof typeof AVATAR_SIZES;
-
-interface UserLike {
+export interface UserLike {
 	id?: string;
 	name?: string | null;
 	displayName?: string | null;
@@ -39,12 +31,15 @@ function getInitials(user: UserLike): string {
 }
 
 export function UserAvatar({ user, size = "md", className }: UserAvatarProps) {
+	const { size: sizeClass, text: textClass } = AVATAR_VARIANTS[size];
+
 	return (
-		<Avatar className={cn(AVATAR_SIZES[size], className)}>
-			<AvatarImage src={user.avatarUrl ?? undefined} />
-			<AvatarFallback className={FALLBACK_TEXT_SIZES[size]}>
-				{getInitials(user)}
-			</AvatarFallback>
+		<Avatar className={cn(sizeClass, className)}>
+			<AvatarImage
+				src={user.avatarUrl ?? undefined}
+				alt={user.displayName ?? user.name ?? "User Avatar"}
+			/>
+			<AvatarFallback className={textClass}>{getInitials(user)}</AvatarFallback>
 		</Avatar>
 	);
 }
@@ -104,6 +99,7 @@ export function UserAvatarStack({
 
 	const visibleUsers = users.slice(0, max);
 	const remainingCount = users.length - max;
+	const { size: sizeClass, text: textClass } = AVATAR_VARIANTS[size];
 
 	return (
 		<div className={cn("flex items-center -space-x-2", className)}>
@@ -119,8 +115,8 @@ export function UserAvatarStack({
 				<div
 					className={cn(
 						"flex items-center justify-center rounded-full bg-muted font-medium ring-2 ring-background",
-						AVATAR_SIZES[size],
-						FALLBACK_TEXT_SIZES[size],
+						sizeClass,
+						textClass,
 					)}
 				>
 					+{remainingCount}

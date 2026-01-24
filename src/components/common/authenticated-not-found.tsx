@@ -1,30 +1,38 @@
 import { Link } from "@tanstack/react-router";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "@/components/ui/empty";
 
 export function AuthenticatedNotFound() {
 	return (
-		<div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-			<div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted/30">
-				<AlertCircle className="h-10 w-10 text-muted-foreground" />
-			</div>
-
-			<div className="space-y-2">
-				<h1 className="font-bold text-2xl tracking-tight">Page not found</h1>
-				<p className="max-w-sm text-muted-foreground">
+		<Empty>
+			<EmptyHeader>
+				<EmptyMedia variant="icon">
+					<AlertCircle />
+				</EmptyMedia>
+				<EmptyTitle>Page not found</EmptyTitle>
+				<EmptyDescription>
 					Sorry, we couldn't find the page you're looking for. It might have
 					been moved or doesn't exist.
-				</p>
-			</div>
-
-			<div className="flex gap-4">
-				<Button asChild variant="default">
-					<Link to="/dashboard">Go to Dashboard</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link to="..">Go Back</Link>
-				</Button>
-			</div>
-		</div>
+				</EmptyDescription>
+			</EmptyHeader>
+			<EmptyContent>
+				<div className="flex gap-4">
+					<Button asChild variant="default">
+						<Link to="/dashboard">Go to Dashboard</Link>
+					</Button>
+					<Button asChild variant="outline">
+						<Link to="..">Go Back</Link>
+					</Button>
+				</div>
+			</EmptyContent>
+		</Empty>
 	);
 }
