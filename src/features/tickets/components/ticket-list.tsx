@@ -19,7 +19,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-import type { PaginatedTicketsResponse } from "@/features/tickets/api/tickets";
+import type { PaginatedTicketsResponse } from "@/features/tickets/types";
 import { columns, type Ticket } from "./columns";
 
 // Base props shared between both modes

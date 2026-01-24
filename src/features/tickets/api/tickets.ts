@@ -2,15 +2,6 @@ import { client } from "@/lib/client";
 import type { Ticket, TicketStatus } from "../types";
 import { ticketSchema, ticketsSchema } from "../types/schemas";
 
-export type {
-	Assignee,
-	PaginatedTicketsResponse,
-	Reviewer,
-	TicketStatus as TicketStatusType,
-	TicketUser,
-} from "../types";
-
-// API Functions
 export const fetchTicket = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}`);
 	const json = await response.json();

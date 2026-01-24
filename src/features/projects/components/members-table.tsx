@@ -15,7 +15,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import type { Assignee } from "@/features/tickets/api/tickets";
+import type { Assignee } from "@/features/tickets/types";
 import { columns } from "./members-columns";
 
 interface MembersTableProps {

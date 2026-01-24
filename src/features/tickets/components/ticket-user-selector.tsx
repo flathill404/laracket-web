@@ -17,7 +17,7 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
-import type { TicketUser } from "../api/tickets";
+import type { TicketUser } from "../types";
 
 interface TicketUserSelectorProps {
 	ticketId: string;

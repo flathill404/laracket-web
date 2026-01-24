@@ -10,7 +10,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Assignee } from "@/features/tickets/api/tickets";
+import type { Assignee } from "@/features/tickets/types";
 
 export const columns: ColumnDef<Assignee>[] = [
 	{

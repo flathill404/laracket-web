@@ -6,7 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { TicketStatusType } from "../api/tickets";
+import type { TicketStatus } from "../types";
 import {
 	getAllStatuses,
 	getStatusBadgeVariant,
@@ -15,8 +15,8 @@ import {
 } from "../utils/status";
 
 interface TicketStatusSelectProps {
-	value: TicketStatusType;
-	onValueChange: (value: TicketStatusType) => void;
+	value: TicketStatus;
+	onValueChange: (value: TicketStatus) => void;
 	className?: string;
 }
 
