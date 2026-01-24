@@ -9,13 +9,20 @@ export const Route = createFileRoute("/_authenticated/settings")({
 
 function Settings() {
 	return (
-		<div className="w-full flex-1 overflow-y-auto">
-			<div className="mx-auto flex max-w-4xl flex-col gap-8 p-8">
-				<h1 className="font-semibold text-2xl tracking-tight">Settings</h1>
-				<div className="flex flex-col gap-8">
-					<ProfileForm />
-					<PasswordForm />
-					<TwoFactorForm />
+		<div className="flex h-full flex-col bg-background">
+			<div className="flex-1 overflow-auto p-6">
+				<div className="mx-auto max-w-4xl space-y-8">
+					<div>
+						<h1 className="font-semibold text-2xl tracking-tight">Settings</h1>
+						<p className="text-muted-foreground text-sm">
+							Manage your account settings and preferences.
+						</p>
+					</div>
+					<div className="grid gap-8">
+						<ProfileForm />
+						<PasswordForm />
+						<TwoFactorForm />
+					</div>
 				</div>
 			</div>
 		</div>

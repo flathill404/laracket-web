@@ -7,8 +7,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { FieldGroup } from "@/components/ui/field";
 import { updatePassword } from "@/features/auth/api";
-import { formContext, useAppForm } from "@/hooks/use-app-form";
+import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 
 const passwordSchema = z
@@ -58,15 +59,15 @@ export function PasswordForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<formContext.Provider value={form}>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							form.handleSubmit();
-						}}
-						className="space-y-4"
-					>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						form.handleSubmit();
+					}}
+					className="space-y-4"
+				>
+					<FieldGroup>
 						<form.AppField
 							name="currentPassword"
 							children={(field) => (
@@ -97,11 +98,13 @@ export function PasswordForm() {
 								/>
 							)}
 						/>
-						<div className="flex justify-end">
+					</FieldGroup>
+					<div className="flex justify-end">
+						<form.AppForm>
 							<form.SubscribeButton label="Save" />
-						</div>
-					</form>
-				</formContext.Provider>
+						</form.AppForm>
+					</div>
+				</form>
 			</CardContent>
 		</Card>
 	);

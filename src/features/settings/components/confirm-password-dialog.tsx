@@ -29,15 +29,15 @@ export function ConfirmPasswordDialog({
 }: ConfirmPasswordDialogProps) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent>
+			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle>Confirm Password</DialogTitle>
 					<DialogDescription>
 						For your security, please confirm your password to continue.
 					</DialogDescription>
 				</DialogHeader>
-				<div className="space-y-4 py-2">
-					<div className="space-y-2">
+				<div className="grid gap-4 py-4">
+					<div className="grid gap-2">
 						<Label htmlFor="password">Password</Label>
 						<Input
 							type="password"

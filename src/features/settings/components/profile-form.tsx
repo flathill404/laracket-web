@@ -22,14 +22,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { FieldLabel } from "@/components/ui/field";
+import { FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
 	deleteAvatar,
 	updateAvatar,
 	updateProfileInformation,
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/use-auth";
-import { formContext, useAppForm } from "@/hooks/use-app-form";
+import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { queryKeys } from "@/lib/query-keys";
 import { ImageCropDialog } from "./image-crop-dialog";
@@ -200,25 +200,25 @@ export function ProfileForm() {
 					</div>
 				</div>
 
-				<formContext.Provider value={form}>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							e.stopPropagation();
-							form.handleSubmit();
-						}}
-						className="space-y-4"
-					>
-						<div className="space-y-2">
-							<FieldLabel>Name</FieldLabel>
-							<div className="rounded-md border bg-muted p-2 text-muted-foreground text-sm">
-								{user?.name || "No name"}
-							</div>
-							<p className="text-[0.8rem] text-muted-foreground">
-								Username cannot be changed.
-							</p>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						form.handleSubmit();
+					}}
+					className="space-y-4"
+				>
+					<div className="space-y-2">
+						<FieldLabel>Name</FieldLabel>
+						<div className="rounded-md border bg-muted p-2 text-muted-foreground text-sm">
+							{user?.name || "No name"}
 						</div>
+						<p className="text-[0.8rem] text-muted-foreground">
+							Username cannot be changed.
+						</p>
+					</div>
 
+					<FieldGroup>
 						<form.AppField
 							name="displayName"
 							children={(field) => (
@@ -238,11 +238,13 @@ export function ProfileForm() {
 								/>
 							)}
 						/>
-						<div className="flex justify-end">
+					</FieldGroup>
+					<div className="flex justify-end">
+						<form.AppForm>
 							<form.SubscribeButton label="Save" />
-						</div>
-					</form>
-				</formContext.Provider>
+						</form.AppForm>
+					</div>
+				</form>
 
 				<ImageCropDialog
 					isOpen={cropDialogOpen}

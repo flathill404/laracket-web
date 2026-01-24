@@ -124,29 +124,31 @@ export function ImageCropDialog({
 						Adjust the image to fit the avatar area.
 					</DialogDescription>
 				</DialogHeader>
-				<div className="relative h-64 w-full">
-					{imageSrc && (
-						<Cropper
-							image={imageSrc}
-							crop={crop}
-							zoom={zoom}
-							aspect={1}
-							cropShape="round"
-							onCropChange={onCropChange}
-							onZoomChange={onZoomChange}
-							onCropComplete={onCropCompleteHandler}
+				<div className="grid gap-4 py-4">
+					<div className="relative h-64 w-full overflow-hidden rounded-md border">
+						{imageSrc && (
+							<Cropper
+								image={imageSrc}
+								crop={crop}
+								zoom={zoom}
+								aspect={1}
+								cropShape="round"
+								onCropChange={onCropChange}
+								onZoomChange={onZoomChange}
+								onCropComplete={onCropCompleteHandler}
+							/>
+						)}
+					</div>
+					<div className="flex items-center gap-4">
+						<span className="w-12 text-muted-foreground text-sm">Zoom</span>
+						<Slider
+							value={[zoom]}
+							min={1}
+							max={3}
+							step={0.1}
+							onValueChange={(val) => setZoom(val[0])}
 						/>
-					)}
-				</div>
-				<div className="flex items-center gap-4 py-2">
-					<span className="w-12 text-muted-foreground text-sm">Zoom</span>
-					<Slider
-						value={[zoom]}
-						min={1}
-						max={3}
-						step={0.1}
-						onValueChange={(val) => setZoom(val[0])}
-					/>
+					</div>
 				</div>
 				<DialogFooter>
 					<Button variant="outline" onClick={onClose}>
