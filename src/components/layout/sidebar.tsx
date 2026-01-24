@@ -25,6 +25,7 @@ import {
 import type { Project } from "@/features/projects/api/projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Team } from "@/features/teams/api/teams";
+import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 
 interface SidebarProps {
 	projects: Project[];
@@ -33,6 +34,7 @@ interface SidebarProps {
 
 export function Sidebar({ projects, teams }: SidebarProps) {
 	const [createProjectOpen, setCreateProjectOpen] = useState(false);
+	const [createTeamOpen, setCreateTeamOpen] = useState(false);
 
 	return (
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
@@ -109,12 +111,36 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 						</AccordionItem>
 
 						<AccordionItem value="teams" className="border-b-0">
-							<AccordionTrigger className="py-2 text-muted-foreground hover:text-primary hover:no-underline">
-								<div className="flex items-center gap-3 px-3">
-									<Users className="h-4 w-4" />
-									Teams
-								</div>
-							</AccordionTrigger>
+							<div className="group flex items-center justify-between pr-2">
+								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
+									<div className="flex items-center gap-3 px-3">
+										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+										<Users className="h-4 w-4" />
+										Teams
+									</div>
+								</AccordionTrigger>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<button
+												type="button"
+												onClick={(e) => {
+													e.stopPropagation();
+													setCreateTeamOpen(true);
+												}}
+												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
+											>
+												<Plus className="h-4 w-4 text-muted-foreground" />
+											</button>
+										</TooltipTrigger>
+										<TooltipContent>Create Team</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							</div>
+							<CreateTeamDialog
+								open={createTeamOpen}
+								onOpenChange={setCreateTeamOpen}
+							/>
 							<AccordionContent className="pb-0">
 								<div className="flex flex-col gap-1 pl-9">
 									{teams.map((team) => (
@@ -124,7 +150,7 @@ export function Sidebar({ projects, teams }: SidebarProps) {
 											params={{ teamId: team.id }}
 											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
 										>
-											{team.name}
+											{team.displayName}
 										</Link>
 									))}
 								</div>

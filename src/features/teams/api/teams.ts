@@ -5,7 +5,7 @@ import { client } from "@/lib/client";
 export const teamSchema = z.object({
 	id: z.string(),
 	name: z.string(),
-	// Add other fields as needed
+	displayName: z.string(),
 });
 
 export type Team = z.infer<typeof teamSchema>;
@@ -33,4 +33,13 @@ export const fetchTeamTickets = async (teamId: string) => {
 	const response = await client.get(`/teams/${teamId}/tickets`);
 	const json = await response.json();
 	return ticketsSchema.parse(json.data);
+};
+
+export const createTeam = async (data: {
+	name: string;
+	displayName: string;
+}) => {
+	const response = await client.post("/teams", data);
+	const json = await response.json();
+	return teamSchema.parse(json.data);
 };
