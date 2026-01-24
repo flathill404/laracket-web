@@ -1,4 +1,3 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
 import { activitiesSchema, activitySchema } from "../types/schemas";
 
@@ -6,7 +5,7 @@ import { activitiesSchema, activitySchema } from "../types/schemas";
 export { activitiesSchema, activitySchema };
 
 // Re-export types
-export type Activity = z.infer<typeof activitySchema>;
+export type { Activity } from "../types";
 
 // API Functions
 export const fetchTicketActivities = async (ticketId: string) => {

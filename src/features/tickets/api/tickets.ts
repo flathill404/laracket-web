@@ -1,5 +1,5 @@
-import type { z } from "zod";
 import { client } from "@/lib/client";
+import type { Ticket, TicketStatus } from "../types";
 import {
 	assigneeSchema,
 	paginatedTicketsSchema,
@@ -9,7 +9,6 @@ import {
 	ticketsSchema,
 	ticketUserSchema,
 } from "../types/schemas";
-import type { TicketStatus } from "../utils/constants";
 
 // Re-export schemas for backwards compatibility
 export {
@@ -23,11 +22,13 @@ export {
 };
 
 // Re-export types
-export type TicketStatusType = TicketStatus;
-export type PaginatedTicketsResponse = z.infer<typeof paginatedTicketsSchema>;
-export type TicketUser = z.infer<typeof ticketUserSchema>;
-export type Assignee = TicketUser;
-export type Reviewer = TicketUser;
+export type {
+	Assignee,
+	PaginatedTicketsResponse,
+	Reviewer,
+	TicketStatus as TicketStatusType,
+	TicketUser,
+} from "../types";
 
 // API Functions
 export const fetchTicket = async (ticketId: string) => {
@@ -45,7 +46,7 @@ export const fetchUserTickets = async (userId: string) => {
 export const createTicket = async (data: {
 	title: string;
 	description?: string;
-	status?: TicketStatusType;
+	status?: TicketStatus;
 	assigneeIds?: string[];
 	reviewerIds?: string[];
 	dueDate?: string;
@@ -55,10 +56,7 @@ export const createTicket = async (data: {
 	return ticketSchema.parse(json.data);
 };
 
-export const updateTicket = async (
-	ticketId: string,
-	data: Partial<z.infer<typeof ticketSchema>>,
-) => {
+export const updateTicket = async (ticketId: string, data: Partial<Ticket>) => {
 	const response = await client.put(`/tickets/${ticketId}`, data);
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
@@ -66,7 +64,7 @@ export const updateTicket = async (
 
 export const updateTicketStatus = async (
 	ticketId: string,
-	status: z.infer<typeof ticketStatusSchema>,
+	status: TicketStatus,
 ) => {
 	await client.patch(`/tickets/${ticketId}/status`, {
 		status,
