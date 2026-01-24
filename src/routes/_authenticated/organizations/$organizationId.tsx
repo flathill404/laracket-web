@@ -105,9 +105,7 @@ function OrganizationLayout() {
 				{/* Members Actions */}
 				{currentTab === "members" && (
 					<div className="flex items-center gap-2">
-						<Button
-							onClick={() => toast.info("Invite Member is coming soon")}
-						>
+						<Button onClick={() => toast.info("Invite Member is coming soon")}>
 							<Plus className="mr-2 h-4 w-4" />
 							Invite Member
 						</Button>
@@ -117,9 +115,7 @@ function OrganizationLayout() {
 				{/* Projects Actions */}
 				{currentTab === "projects" && (
 					<div className="flex items-center gap-2">
-						<Button
-							onClick={() => toast.info("Create Project is coming soon")}
-						>
+						<Button onClick={() => toast.info("Create Project is coming soon")}>
 							<Plus className="mr-2 h-4 w-4" />
 							New Project
 						</Button>

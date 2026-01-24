@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-	type Project,
-	projectSchema,
-} from "@/features/projects/api/projects";
+import { type Project, projectSchema } from "@/features/projects/api/projects";
 import { type Team, teamSchema } from "@/features/teams/api/teams";
 import { type Assignee, assigneeSchema } from "@/features/tickets/api/tickets";
 import { client } from "@/lib/client";
@@ -57,9 +54,7 @@ const organizationMembersSchema = z.array(assigneeSchema);
 export const fetchOrganizationMembers = async (
 	organizationId: string,
 ): Promise<Assignee[]> => {
-	const response = await client.get(
-		`/organizations/${organizationId}/members`,
-	);
+	const response = await client.get(`/organizations/${organizationId}/members`);
 	const json = await response.json();
 	return organizationMembersSchema.parse(json.data);
 };

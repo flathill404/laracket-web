@@ -4,8 +4,8 @@ import {
 	fetchOrganization,
 	fetchOrganizationMembers,
 	fetchOrganizationProjects,
-	fetchOrganizationTeams,
 	fetchOrganizations,
+	fetchOrganizationTeams,
 } from "../api/organizations";
 
 export const organizationsQueryOptions = (userId: string) =>
