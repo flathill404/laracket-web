@@ -101,18 +101,21 @@ describe("projects API", () => {
 	});
 
 	describe("updateProject", () => {
-		it("should update project name", async () => {
-			const updated = { ...mockProject, name: "updated-name" };
+		it("should update project", async () => {
+			const updateData = { name: "updated-name", description: "updated desc" };
+			const updated = { ...mockProject, ...updateData };
 			mockClient.put.mockResolvedValueOnce({
 				json: () => Promise.resolve({ data: updated }),
 			});
 
-			const result = await updateProject("project-123", "updated-name");
+			const result = await updateProject("project-123", updateData);
 
-			expect(mockClient.put).toHaveBeenCalledWith("/projects/project-123", {
-				name: "updated-name",
-			});
+			expect(mockClient.put).toHaveBeenCalledWith(
+				"/projects/project-123",
+				updateData,
+			);
 			expect(result.name).toBe("updated-name");
+			expect(result.description).toBe("updated desc");
 		});
 	});
 
