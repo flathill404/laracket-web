@@ -4,15 +4,12 @@ import { useNavigate } from "@tanstack/react-router";
 import {
 	forgotPassword,
 	login,
-	loginInputSchema,
 	logout,
 	register,
 	resetPassword,
 	twoFactorChallenge,
 } from "@/features/auth/api";
 import { userQueryOptions } from "../utils/queries";
-
-export const loginSchema = loginInputSchema;
 
 export const useAuth = () => {
 	const queryClient = useQueryClient();

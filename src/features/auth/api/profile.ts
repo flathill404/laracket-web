@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import { client } from "@/lib/client";
-import type { updateProfileInformationInputSchema } from "./schemas";
+import type { updateProfileInformationInputSchema } from "../types";
 
 /**
  * Updates the user's profile information.

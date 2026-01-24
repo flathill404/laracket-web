@@ -1,10 +1,6 @@
 import type { z } from "zod";
 import { client } from "@/lib/client";
-import {
-	type loginInputSchema,
-	loginOutputSchema,
-	userSchema,
-} from "./schemas";
+import { type loginInputSchema, loginOutputSchema, userSchema } from "../types";
 
 /**
  * Fetches the currently authenticated user.

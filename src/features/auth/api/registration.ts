@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import { client } from "@/lib/client";
-import type { registerInputSchema } from "./schemas";
+import type { registerInputSchema } from "../types";
 
 /**
  * Registers a new user.

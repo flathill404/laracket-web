@@ -5,7 +5,7 @@ import type {
 	forgotPasswordInputSchema,
 	resetPasswordInputSchema,
 	updatePasswordInputSchema,
-} from "./schemas";
+} from "../types";
 
 /**
  * Confirms the user's password.

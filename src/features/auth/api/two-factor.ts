@@ -5,7 +5,7 @@ import {
 	type twoFactorChallengeInputSchema,
 	twoFactorQrCodeSchema,
 	twoFactorRecoveryCodesSchema,
-} from "./schemas";
+} from "../types";
 
 /**
  * Enables two-factor authentication for the user.
