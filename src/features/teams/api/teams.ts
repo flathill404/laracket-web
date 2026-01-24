@@ -7,8 +7,6 @@ import {
 	teamsSchema,
 } from "../types/schemas";
 
-export type { Team } from "../types";
-
 /**
  * Fetches the list of teams for a specific user.
  * @param userId - The ID of the user.

@@ -6,7 +6,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import type { Team } from "@/features/teams/api/teams";
+import type { Team } from "@/features/teams/types";
 
 interface TeamsListProps {
 	teams: Team[];

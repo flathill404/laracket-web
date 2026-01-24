@@ -6,7 +6,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import type { Project } from "@/features/projects/api/projects";
+import type { Project } from "@/features/projects/types";
 
 interface ProjectsListProps {
 	projects: Project[];

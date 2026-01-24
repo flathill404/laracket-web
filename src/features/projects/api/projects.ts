@@ -7,8 +7,6 @@ import {
 	projectsSchema,
 } from "../types/schemas";
 
-export type { Project } from "../types";
-
 /**
  * Fetches the list of projects for a specific user.
  * @param userId - The ID of the user.

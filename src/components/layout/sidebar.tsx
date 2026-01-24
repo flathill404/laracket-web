@@ -11,10 +11,10 @@ import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { CreateOrganizationDialog } from "@/features/organizations/components/create-organization-dialog";
 import type { Organization } from "@/features/organizations/types";
-import type { Project } from "@/features/projects/api/projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
-import type { Team } from "@/features/teams/api/teams";
+import type { Project } from "@/features/projects/types";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
+import type { Team } from "@/features/teams/types";
 import { SidebarLink } from "./sidebar-link";
 import { SidebarSection } from "./sidebar-section";
 
