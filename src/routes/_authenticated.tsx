@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_authenticated")({
 		const promises = [
 			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
 			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
-			context.queryClient.ensureQueryData(organizationsQueryOptions(user.id)),
+			context.queryClient.ensureQueryData(organizationsQueryOptions()),
 		];
 		await Promise.all(promises);
 	},
@@ -50,9 +50,7 @@ function AuthLayout() {
 
 	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
-	const { data: organizations } = useSuspenseQuery(
-		organizationsQueryOptions(userId),
-	);
+	const { data: organizations } = useSuspenseQuery(organizationsQueryOptions());
 
 	// We can safely assume user is not null here because of beforeLoad check
 	// But typescript might complain if type includes null (and useAuth returns user | undefined)

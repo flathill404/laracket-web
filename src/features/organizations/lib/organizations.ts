@@ -8,12 +8,10 @@ import {
 	fetchOrganizationTeams,
 } from "../api/organizations";
 
-export const organizationsQueryOptions = (userId: string) =>
+export const organizationsQueryOptions = () =>
 	queryOptions({
-		queryKey: queryKeys.organizations.list(userId),
-		queryFn: async () => {
-			return await fetchOrganizations(userId);
-		},
+		queryKey: queryKeys.organizations.list(),
+		queryFn: fetchOrganizations,
 	});
 
 export const organizationQueryOptions = (organizationId: string) =>

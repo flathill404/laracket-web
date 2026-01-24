@@ -15,12 +15,11 @@ export type Organization = z.infer<typeof organizationSchema>;
 const organizationsSchema = z.array(organizationSchema);
 
 /**
- * Fetches the list of organizations for a specific user.
- * @param userId - The ID of the user.
+ * Fetches the list of organizations for the logged-in user.
  * @returns An array of organizations.
  */
-export const fetchOrganizations = async (userId: string) => {
-	const response = await client.get(`/users/${userId}/organizations`);
+export const fetchOrganizations = async () => {
+	const response = await client.get("/organizations");
 	const json = await response.json();
 	return organizationsSchema.parse(json.data);
 };
