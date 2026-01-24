@@ -25,4 +25,18 @@ export interface TicketTableMeta {
 	onDeleteTicket?: (ticketId: string) => void;
 }
 
+// Input Types
+export type CreateTicketInput = z.infer<typeof schemas.createTicketInputSchema>;
+export type UpdateTicketInput = z.infer<typeof schemas.updateTicketInputSchema>;
+export type UpdateTicketStatusInput = z.infer<
+	typeof schemas.updateTicketStatusInputSchema
+>;
+export type TicketAssigneeInput = z.infer<
+	typeof schemas.ticketAssigneeInputSchema
+>;
+export type TicketReviewerInput = z.infer<
+	typeof schemas.ticketReviewerInputSchema
+>;
+export type TicketOrderInput = z.infer<typeof schemas.ticketOrderInputSchema>;
+
 export * from "./schemas";

@@ -252,7 +252,9 @@ describe("projects API", () => {
 					json: () => Promise.resolve({ data: mockMember }),
 				});
 
-				const result = await addProjectMember("project-123", "user-123");
+				const result = await addProjectMember("project-123", {
+					userId: "user-123",
+				});
 
 				expect(mockClient.post).toHaveBeenCalledWith(
 					"/projects/project-123/members",
@@ -280,7 +282,7 @@ describe("projects API", () => {
 			it("should add team", async () => {
 				mockClient.post.mockResolvedValueOnce({});
 
-				await addProjectTeam("project-123", "team-123");
+				await addProjectTeam("project-123", { teamId: "team-123" });
 
 				expect(mockClient.post).toHaveBeenCalledWith(
 					"/projects/project-123/teams",

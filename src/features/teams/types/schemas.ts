@@ -17,3 +17,20 @@ export const teamMemberSchema = z.object({
 });
 
 export const teamMembersSchema = z.array(teamMemberSchema);
+
+/* Inputs */
+
+export const createTeamInputSchema = z.object({
+	name: z.string().min(1),
+	displayName: z.string().min(1),
+});
+
+export const updateTeamInputSchema = createTeamInputSchema;
+
+export const teamMemberInputSchema = z.object({
+	userId: z.string(),
+});
+
+export const updateTeamMemberInputSchema = z.object({
+	role: z.enum(["leader", "member"]),
+});

@@ -187,7 +187,7 @@ describe("teams API", () => {
 					json: () => Promise.resolve({ data: mockMember }),
 				});
 
-				const result = await addTeamMember("team-123", "user-123");
+				const result = await addTeamMember("team-123", { userId: "user-123" });
 
 				expect(mockClient.post).toHaveBeenCalledWith(
 					"/teams/team-123/members",

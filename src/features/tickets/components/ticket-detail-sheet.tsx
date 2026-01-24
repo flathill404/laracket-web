@@ -106,7 +106,7 @@ export function TicketDetailSheet({
 	const { mutate: mutateStatus, updateCache } = useTicketMutation(
 		ticketId,
 		ticket.projectId,
-		(status: TicketStatus) => updateTicketStatus(ticketId, status),
+		(status: TicketStatus) => updateTicketStatus(ticketId, { status }),
 		(old, status) => ({
 			...old,
 			status,
@@ -116,7 +116,7 @@ export function TicketDetailSheet({
 	const { mutate: addAssignee } = useTicketMutation(
 		ticketId,
 		ticket.projectId,
-		(user: TicketUser) => addTicketAssignee(ticketId, user.id),
+		(user: TicketUser) => addTicketAssignee(ticketId, { userId: user.id }),
 		(old, user) => ({
 			...old,
 			assignees: [...old.assignees, user],
@@ -136,7 +136,7 @@ export function TicketDetailSheet({
 	const { mutate: addReviewer } = useTicketMutation(
 		ticketId,
 		ticket.projectId,
-		(user: TicketUser) => addTicketReviewer(ticketId, user.id),
+		(user: TicketUser) => addTicketReviewer(ticketId, { userId: user.id }),
 		(old, user) => ({
 			...old,
 			reviewers: [...old.reviewers, user],

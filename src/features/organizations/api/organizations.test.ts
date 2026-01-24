@@ -178,7 +178,9 @@ describe("organizations API", () => {
 					json: () => Promise.resolve({ data: mockMember }),
 				});
 
-				const result = await addOrganizationMember("org-123", "user-123");
+				const result = await addOrganizationMember("org-123", {
+					userId: "user-123",
+				});
 
 				expect(mockClient.post).toHaveBeenCalledWith(
 					"/organizations/org-123/members",

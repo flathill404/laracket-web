@@ -1,5 +1,12 @@
 import { client } from "@/lib/client";
-import type { Ticket, TicketStatus } from "../types";
+import type {
+	CreateTicketInput,
+	TicketAssigneeInput,
+	TicketOrderInput,
+	TicketReviewerInput,
+	UpdateTicketInput,
+	UpdateTicketStatusInput,
+} from "../types";
 import { ticketSchema, ticketsSchema } from "../types/schemas";
 
 export const fetchTicket = async (ticketId: string) => {
@@ -14,38 +21,33 @@ export const fetchUserTickets = async (userId: string) => {
 	return ticketsSchema.parse(json.data);
 };
 
-export const createTicket = async (data: {
-	title: string;
-	description?: string;
-	status?: TicketStatus;
-	assigneeIds?: string[];
-	reviewerIds?: string[];
-	dueDate?: string;
-}) => {
-	const response = await client.post("/tickets", data);
+export const createTicket = async (input: CreateTicketInput) => {
+	const response = await client.post("/tickets", input);
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
 };
 
-export const updateTicket = async (ticketId: string, data: Partial<Ticket>) => {
-	const response = await client.put(`/tickets/${ticketId}`, data);
+export const updateTicket = async (
+	ticketId: string,
+	input: UpdateTicketInput,
+) => {
+	const response = await client.put(`/tickets/${ticketId}`, input);
 	const json = await response.json();
 	return ticketSchema.parse(json.data);
 };
 
 export const updateTicketStatus = async (
 	ticketId: string,
-	status: TicketStatus,
+	input: UpdateTicketStatusInput,
 ) => {
-	await client.patch(`/tickets/${ticketId}/status`, {
-		status,
-	});
+	await client.patch(`/tickets/${ticketId}/status`, input);
 };
 
-export const addTicketAssignee = async (ticketId: string, userId: string) => {
-	await client.post(`/tickets/${ticketId}/assignees`, {
-		userId,
-	});
+export const addTicketAssignee = async (
+	ticketId: string,
+	input: TicketAssigneeInput,
+) => {
+	await client.post(`/tickets/${ticketId}/assignees`, input);
 };
 
 export const removeTicketAssignee = async (
@@ -55,10 +57,11 @@ export const removeTicketAssignee = async (
 	await client.delete(`/tickets/${ticketId}/assignees/${userId}`);
 };
 
-export const addTicketReviewer = async (ticketId: string, userId: string) => {
-	await client.post(`/tickets/${ticketId}/reviewers`, {
-		userId,
-	});
+export const addTicketReviewer = async (
+	ticketId: string,
+	input: TicketReviewerInput,
+) => {
+	await client.post(`/tickets/${ticketId}/reviewers`, input);
 };
 
 export const removeTicketReviewer = async (
@@ -78,11 +81,12 @@ export const searchTickets = async (query: string) => {
 		`/tickets/search?${searchParams.toString()}`,
 	);
 	const json = await response.json();
-	// Assuming search returns a list of tickets, similar to fetchUserTickets but maybe different structure.
-	// Based on typical pattern, it likely returns `data` array.
 	return ticketsSchema.parse(json.data);
 };
 
-export const updateTicketOrder = async (ticketId: string, order: number) => {
-	await client.patch(`/tickets/${ticketId}/order`, { order });
+export const updateTicketOrder = async (
+	ticketId: string,
+	input: TicketOrderInput,
+) => {
+	await client.patch(`/tickets/${ticketId}/order`, input);
 };

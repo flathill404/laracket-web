@@ -84,3 +84,33 @@ export const commentSchema = z.object({
 });
 
 export const commentsSchema = z.array(commentSchema);
+
+/* Inputs */
+
+export const createTicketInputSchema = z.object({
+	title: z.string().min(1),
+	description: z.string().optional(),
+	status: ticketStatusSchema.optional(),
+	priority: z.string().optional(),
+	assigneeIds: z.array(z.string()).optional(),
+	reviewerIds: z.array(z.string()).optional(),
+	dueDate: z.string().nullish(),
+});
+
+export const updateTicketInputSchema = createTicketInputSchema.partial();
+
+export const updateTicketStatusInputSchema = z.object({
+	status: ticketStatusSchema,
+});
+
+export const ticketAssigneeInputSchema = z.object({
+	userId: z.string(),
+});
+
+export const ticketReviewerInputSchema = z.object({
+	userId: z.string(),
+});
+
+export const ticketOrderInputSchema = z.object({
+	order: z.number(),
+});

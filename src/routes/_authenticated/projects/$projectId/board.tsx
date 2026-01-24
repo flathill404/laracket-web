@@ -27,7 +27,7 @@ function ProjectBoard() {
 		}: {
 			ticketId: string;
 			status: TicketStatus;
-		}) => updateTicketStatus(ticketId, status),
+		}) => updateTicketStatus(ticketId, { status }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["projects", projectId] });
 			toast.success("Ticket status updated");

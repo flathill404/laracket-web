@@ -206,7 +206,7 @@ describe("tickets API", () => {
 		it("should update ticket status", async () => {
 			mockClient.patch.mockResolvedValueOnce({});
 
-			await updateTicketStatus("ticket-123", "in_progress");
+			await updateTicketStatus("ticket-123", { status: "in_progress" });
 
 			expect(mockClient.patch).toHaveBeenCalledWith(
 				"/tickets/ticket-123/status",
@@ -221,7 +221,7 @@ describe("tickets API", () => {
 		it("should add ticket assignee", async () => {
 			mockClient.post.mockResolvedValueOnce({});
 
-			await addTicketAssignee("ticket-123", "user-456");
+			await addTicketAssignee("ticket-123", { userId: "user-456" });
 
 			expect(mockClient.post).toHaveBeenCalledWith(
 				"/tickets/ticket-123/assignees",
@@ -246,7 +246,7 @@ describe("tickets API", () => {
 		it("should add ticket reviewer", async () => {
 			mockClient.post.mockResolvedValueOnce({});
 
-			await addTicketReviewer("ticket-123", "user-789");
+			await addTicketReviewer("ticket-123", { userId: "user-789" });
 
 			expect(mockClient.post).toHaveBeenCalledWith(
 				"/tickets/ticket-123/reviewers",
@@ -294,7 +294,7 @@ describe("tickets API", () => {
 		it("should update ticket order", async () => {
 			mockClient.patch.mockResolvedValueOnce({});
 
-			await updateTicketOrder("ticket-123", 10);
+			await updateTicketOrder("ticket-123", { order: 10 });
 
 			expect(mockClient.patch).toHaveBeenCalledWith(
 				"/tickets/ticket-123/order",

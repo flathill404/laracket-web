@@ -15,3 +15,20 @@ export const projectsSchema = z.array(projectSchema);
 
 export const projectMemberSchema = ticketUserSchema;
 export const projectMembersSchema = z.array(projectMemberSchema);
+
+/* Inputs */
+
+export const createProjectInputSchema = z.object({
+	name: z.string().min(1),
+	description: z.string(),
+});
+
+export const updateProjectInputSchema = createProjectInputSchema;
+
+export const projectMemberInputSchema = z.object({
+	userId: z.string(),
+});
+
+export const projectTeamInputSchema = z.object({
+	teamId: z.string(),
+});

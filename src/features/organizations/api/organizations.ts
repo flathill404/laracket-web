@@ -4,6 +4,14 @@ import { projectSchema } from "@/features/projects/types/schemas";
 import type { Team } from "@/features/teams/types";
 import { teamSchema } from "@/features/teams/types/schemas";
 import { client } from "@/lib/client";
+import type {
+	CreateOrganizationInput,
+	CreateOrganizationProjectInput,
+	CreateOrganizationTeamInput,
+	OrganizationMemberInput,
+	UpdateOrganizationInput,
+	UpdateOrganizationMemberInput,
+} from "../types";
 import {
 	organizationMemberSchema,
 	organizationMembersSchema,
@@ -27,20 +35,17 @@ export const fetchOrganization = async (organizationId: string) => {
 	return organizationSchema.parse(json.data);
 };
 
-export const createOrganization = async (data: {
-	name: string;
-	displayName: string;
-}) => {
-	const response = await client.post("/organizations", data);
+export const createOrganization = async (input: CreateOrganizationInput) => {
+	const response = await client.post("/organizations", input);
 	const json = await response.json();
 	return organizationSchema.parse(json.data);
 };
 
 export const updateOrganization = async (
 	organizationId: string,
-	data: { name: string; displayName: string },
+	input: UpdateOrganizationInput,
 ) => {
-	const response = await client.put(`/organizations/${organizationId}`, data);
+	const response = await client.put(`/organizations/${organizationId}`, input);
 	const json = await response.json();
 	return organizationSchema.parse(json.data);
 };
@@ -59,11 +64,11 @@ export const fetchOrganizationMembers = async (organizationId: string) => {
 
 export const addOrganizationMember = async (
 	organizationId: string,
-	userId: string,
+	input: OrganizationMemberInput,
 ) => {
 	const response = await client.post(
 		`/organizations/${organizationId}/members`,
-		{ userId },
+		input,
 	);
 	const json = await response.json();
 	return organizationMemberSchema.parse(json.data);
@@ -72,11 +77,11 @@ export const addOrganizationMember = async (
 export const updateOrganizationMember = async (
 	organizationId: string,
 	userId: string,
-	data: { role: "owner" | "admin" | "member" },
+	input: UpdateOrganizationMemberInput,
 ) => {
 	const response = await client.patch(
 		`/organizations/${organizationId}/members/${userId}`,
-		data,
+		input,
 	);
 	const json = await response.json();
 	return organizationMemberSchema.parse(json.data);
@@ -103,11 +108,11 @@ export const fetchOrganizationProjects = async (
 
 export const createOrganizationProject = async (
 	organizationId: string,
-	data: { name: string; description: string },
+	input: CreateOrganizationProjectInput,
 ) => {
 	const response = await client.post(
 		`/organizations/${organizationId}/projects`,
-		data,
+		input,
 	);
 	const json = await response.json();
 	return projectSchema.parse(json.data);
@@ -125,11 +130,11 @@ export const fetchOrganizationTeams = async (
 
 export const createOrganizationTeam = async (
 	organizationId: string,
-	data: { name: string; displayName: string },
+	input: CreateOrganizationTeamInput,
 ) => {
 	const response = await client.post(
 		`/organizations/${organizationId}/teams`,
-		data,
+		input,
 	);
 	const json = await response.json();
 	return teamSchema.parse(json.data);

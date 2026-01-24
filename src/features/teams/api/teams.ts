@@ -1,5 +1,16 @@
 import { ticketsSchema } from "@/features/tickets/types/schemas";
 import { client } from "@/lib/client";
+/**
+ * Fetches the list of teams for a specific user.
+ * @param userId - The ID of the user.
+ * @returns An array of teams.
+ */
+import type {
+	CreateTeamInput,
+	TeamMemberInput,
+	UpdateTeamInput,
+	UpdateTeamMemberInput,
+} from "../types";
 import {
 	teamMemberSchema,
 	teamMembersSchema,
@@ -30,20 +41,14 @@ export const fetchTeamTickets = async (teamId: string) => {
 	return ticketsSchema.parse(json.data);
 };
 
-export const createTeam = async (data: {
-	name: string;
-	displayName: string;
-}) => {
-	const response = await client.post("/teams", data);
+export const createTeam = async (input: CreateTeamInput) => {
+	const response = await client.post("/teams", input);
 	const json = await response.json();
 	return teamSchema.parse(json.data);
 };
 
-export const updateTeam = async (
-	teamId: string,
-	data: { name: string; displayName: string },
-) => {
-	const response = await client.put(`/teams/${teamId}`, data);
+export const updateTeam = async (teamId: string, input: UpdateTeamInput) => {
+	const response = await client.put(`/teams/${teamId}`, input);
 	const json = await response.json();
 	return teamSchema.parse(json.data);
 };
@@ -60,8 +65,8 @@ export const fetchTeamMembers = async (teamId: string) => {
 	return teamMembersSchema.parse(json.data);
 };
 
-export const addTeamMember = async (teamId: string, userId: string) => {
-	const response = await client.post(`/teams/${teamId}/members`, { userId });
+export const addTeamMember = async (teamId: string, input: TeamMemberInput) => {
+	const response = await client.post(`/teams/${teamId}/members`, input);
 	const json = await response.json();
 	return teamMemberSchema.parse(json.data);
 };
@@ -69,11 +74,11 @@ export const addTeamMember = async (teamId: string, userId: string) => {
 export const updateTeamMember = async (
 	teamId: string,
 	userId: string,
-	data: { role: "leader" | "member" },
+	input: UpdateTeamMemberInput,
 ) => {
 	const response = await client.patch(
 		`/teams/${teamId}/members/${userId}`,
-		data,
+		input,
 	);
 	const json = await response.json();
 	return teamMemberSchema.parse(json.data);
