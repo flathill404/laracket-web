@@ -2,10 +2,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-	type Organization,
-	updateOrganization,
-} from "@/features/organizations/api/organizations";
+import { updateOrganization } from "@/features/organizations/api/organizations";
+import type { Organization } from "@/features/organizations/types";
 import { organizationQueryOptions } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";

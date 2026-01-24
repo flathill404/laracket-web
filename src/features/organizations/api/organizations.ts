@@ -11,8 +11,6 @@ import {
 	organizationsSchema,
 } from "../types/schemas";
 
-export type { Organization } from "../types";
-
 /**
  * Fetches the list of organizations for the logged-in user.
  * @returns An array of organizations.

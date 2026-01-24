@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
-import type { Organization } from "@/features/organizations/api/organizations";
 import { CreateOrganizationDialog } from "@/features/organizations/components/create-organization-dialog";
+import type { Organization } from "@/features/organizations/types";
 import type { Project } from "@/features/projects/api/projects";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Team } from "@/features/teams/api/teams";
