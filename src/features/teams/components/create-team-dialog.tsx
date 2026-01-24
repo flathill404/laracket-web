@@ -13,8 +13,8 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { queryKeys } from "@/lib/query-keys";
 import { createTeam } from "../api/teams";
@@ -96,52 +96,48 @@ export function CreateTeamDialog({
 						e.stopPropagation();
 						form.handleSubmit();
 					}}
-					className="grid gap-4 py-4"
+					className="flex flex-col gap-4 py-4"
 				>
-					<div className="grid gap-2">
-						<Label htmlFor="name">Name</Label>
-						<form.Field
-							name="name"
-							children={(field) => (
-								<>
-									<Input
-										id="name"
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										placeholder="e.g. engineering-team"
-									/>
-									{field.state.meta.errors ? (
-										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
-										</p>
-									) : null}
-								</>
-							)}
-						/>
-					</div>
-					<div className="grid gap-2">
-						<Label htmlFor="displayName">Display Name</Label>
-						<form.Field
-							name="displayName"
-							children={(field) => (
-								<>
-									<Input
-										id="displayName"
-										value={field.state.value}
-										onBlur={field.handleBlur}
-										onChange={(e) => field.handleChange(e.target.value)}
-										placeholder="e.g. Engineering Team"
-									/>
-									{field.state.meta.errors ? (
-										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
-										</p>
-									) : null}
-								</>
-							)}
-						/>
-					</div>
+					<form.Field
+						name="name"
+						children={(field) => (
+							<Field data-invalid={!!field.state.meta.errors?.length}>
+								<FieldLabel htmlFor={field.name}>Name</FieldLabel>
+								<Input
+									id={field.name}
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+									placeholder="e.g. engineering-team"
+								/>
+								<FieldError
+									errors={field.state.meta.errors?.map((e) => ({
+										message: String(e),
+									}))}
+								/>
+							</Field>
+						)}
+					/>
+					<form.Field
+						name="displayName"
+						children={(field) => (
+							<Field data-invalid={!!field.state.meta.errors?.length}>
+								<FieldLabel htmlFor={field.name}>Display Name</FieldLabel>
+								<Input
+									id={field.name}
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+									placeholder="e.g. Engineering Team"
+								/>
+								<FieldError
+									errors={field.state.meta.errors?.map((e) => ({
+										message: String(e),
+									}))}
+								/>
+							</Field>
+						)}
+					/>
 					<DialogFooter>
 						<Button type="submit" disabled={mutation.isPending}>
 							{mutation.isPending && (
