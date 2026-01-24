@@ -10,6 +10,7 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
+import type { ElementType } from "react";
 import { useState } from "react";
 import {
 	Accordion,
@@ -34,6 +35,58 @@ interface SidebarProps {
 	projects: Project[];
 	teams: Team[];
 	organizations: Organization[];
+}
+
+interface SidebarSectionProps {
+	value: string;
+	icon: ElementType;
+	title: string;
+	onAddClick: () => void;
+	addTooltip: string;
+	children: React.ReactNode;
+}
+
+function SidebarSection({
+	value,
+	icon: Icon,
+	title,
+	onAddClick,
+	addTooltip,
+	children,
+}: SidebarSectionProps) {
+	return (
+		<AccordionItem value={value} className="border-b-0">
+			<div className="group flex items-center justify-between pr-2">
+				<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
+					<div className="flex items-center gap-3 px-3">
+						<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+						<Icon className="h-4 w-4" />
+						{title}
+					</div>
+				</AccordionTrigger>
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<button
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									onAddClick();
+								}}
+								className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
+							>
+								<Plus className="h-4 w-4 text-muted-foreground" />
+							</button>
+						</TooltipTrigger>
+						<TooltipContent>{addTooltip}</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+			</div>
+			<AccordionContent className="pb-0">
+				<div className="flex flex-col gap-1 pl-9">{children}</div>
+			</AccordionContent>
+		</AccordionItem>
+	);
 }
 
 export function Sidebar({ projects, teams, organizations }: SidebarProps) {
@@ -68,146 +121,74 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 					</Link>
 
 					<Accordion type="multiple" className="w-full">
-						<AccordionItem value="projects" className="border-b-0">
-							<div className="group flex items-center justify-between pr-2">
-								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
-									<div className="flex items-center gap-3 px-3">
-										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
-										<Folder className="h-4 w-4" />
-										Projects
-									</div>
-								</AccordionTrigger>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<button
-												type="button"
-												onClick={(e) => {
-													e.stopPropagation();
-													setCreateProjectOpen(true);
-												}}
-												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
-											>
-												<Plus className="h-4 w-4 text-muted-foreground" />
-											</button>
-										</TooltipTrigger>
-										<TooltipContent>Create Project</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
-							<CreateProjectDialog
-								open={createProjectOpen}
-								onOpenChange={setCreateProjectOpen}
-							/>
-							<AccordionContent className="pb-0">
-								<div className="flex flex-col gap-1 pl-9">
-									{projects.map((project) => (
-										<Link
-											key={project.id}
-											to="/projects/$projectId/tickets"
-											params={{ projectId: project.id }}
-											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
-										>
-											{project.name}
-										</Link>
-									))}
-								</div>
-							</AccordionContent>
-						</AccordionItem>
+						<SidebarSection
+							value="projects"
+							icon={Folder}
+							title="Projects"
+							onAddClick={() => setCreateProjectOpen(true)}
+							addTooltip="Create Project"
+						>
+							{projects.map((project) => (
+								<Link
+									key={project.id}
+									to="/projects/$projectId/tickets"
+									params={{ projectId: project.id }}
+									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
+								>
+									{project.name}
+								</Link>
+							))}
+						</SidebarSection>
+						<CreateProjectDialog
+							open={createProjectOpen}
+							onOpenChange={setCreateProjectOpen}
+						/>
 
-						<AccordionItem value="teams" className="border-b-0">
-							<div className="group flex items-center justify-between pr-2">
-								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
-									<div className="flex items-center gap-3 px-3">
-										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
-										<Users className="h-4 w-4" />
-										Teams
-									</div>
-								</AccordionTrigger>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<button
-												type="button"
-												onClick={(e) => {
-													e.stopPropagation();
-													setCreateTeamOpen(true);
-												}}
-												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
-											>
-												<Plus className="h-4 w-4 text-muted-foreground" />
-											</button>
-										</TooltipTrigger>
-										<TooltipContent>Create Team</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
-							<CreateTeamDialog
-								open={createTeamOpen}
-								onOpenChange={setCreateTeamOpen}
-							/>
-							<AccordionContent className="pb-0">
-								<div className="flex flex-col gap-1 pl-9">
-									{teams.map((team) => (
-										<Link
-											key={team.id}
-											to="/teams/$teamId/tickets"
-											params={{ teamId: team.id }}
-											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
-										>
-											{team.displayName}
-										</Link>
-									))}
-								</div>
-							</AccordionContent>
-						</AccordionItem>
+						<SidebarSection
+							value="teams"
+							icon={Users}
+							title="Teams"
+							onAddClick={() => setCreateTeamOpen(true)}
+							addTooltip="Create Team"
+						>
+							{teams.map((team) => (
+								<Link
+									key={team.id}
+									to="/teams/$teamId/tickets"
+									params={{ teamId: team.id }}
+									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
+								>
+									{team.displayName}
+								</Link>
+							))}
+						</SidebarSection>
+						<CreateTeamDialog
+							open={createTeamOpen}
+							onOpenChange={setCreateTeamOpen}
+						/>
 
-						<AccordionItem value="organizations" className="border-b-0">
-							<div className="group flex items-center justify-between pr-2">
-								<AccordionTrigger className="w-full py-2 text-muted-foreground hover:text-primary hover:no-underline [&>svg:last-child]:hidden [&[data-state=open]_.custom-chevron]:rotate-90">
-									<div className="flex items-center gap-3 px-3">
-										<ChevronRight className="custom-chevron h-4 w-4 shrink-0 transition-transform duration-200" />
-										<Building2 className="h-4 w-4" />
-										Organizations
-									</div>
-								</AccordionTrigger>
-								<TooltipProvider>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<button
-												type="button"
-												onClick={(e) => {
-													e.stopPropagation();
-													setCreateOrganizationOpen(true);
-												}}
-												className="invisible rounded-sm p-1 hover:bg-muted group-hover:visible"
-											>
-												<Plus className="h-4 w-4 text-muted-foreground" />
-											</button>
-										</TooltipTrigger>
-										<TooltipContent>Create Organization</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
-							<CreateOrganizationDialog
-								open={createOrganizationOpen}
-								onOpenChange={setCreateOrganizationOpen}
-							/>
-							<AccordionContent className="pb-0">
-								<div className="flex flex-col gap-1 pl-9">
-									{organizations.map((organization) => (
-										<Link
-											key={organization.id}
-											to="/organizations/$organizationId/overview"
-											params={{ organizationId: organization.id }}
-											className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
-										>
-											{organization.displayName}
-										</Link>
-									))}
-								</div>
-							</AccordionContent>
-						</AccordionItem>
+						<SidebarSection
+							value="organizations"
+							icon={Building2}
+							title="Organizations"
+							onAddClick={() => setCreateOrganizationOpen(true)}
+							addTooltip="Create Organization"
+						>
+							{organizations.map((organization) => (
+								<Link
+									key={organization.id}
+									to="/organizations/$organizationId/overview"
+									params={{ organizationId: organization.id }}
+									className="rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary [&.active]:font-semibold [&.active]:text-primary"
+								>
+									{organization.displayName}
+								</Link>
+							))}
+						</SidebarSection>
+						<CreateOrganizationDialog
+							open={createOrganizationOpen}
+							onOpenChange={setCreateOrganizationOpen}
+						/>
 					</Accordion>
 				</nav>
 			</div>
