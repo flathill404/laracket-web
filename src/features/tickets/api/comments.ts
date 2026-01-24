@@ -1,7 +1,6 @@
 import { client } from "@/lib/client";
 import { commentSchema, commentsSchema } from "../types/schemas";
 
-// API Functions
 export const fetchTicketComments = async (ticketId: string) => {
 	const response = await client.get(`/tickets/${ticketId}/comments`);
 	const json = await response.json();

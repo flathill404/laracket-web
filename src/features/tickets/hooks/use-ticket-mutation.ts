@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { projectTicketsQueryKey, ticketQueryOptions } from "../api/queries";
+import { queryKeys } from "@/lib/query-keys";
+import { ticketQueryOptions } from "../api/queries";
 import type { Ticket } from "../types";
 
 export const useTicketMutation = <TVariables>(
@@ -18,7 +19,7 @@ export const useTicketMutation = <TVariables>(
 				(old: Ticket | undefined) => (old ? cacheUpdater(old) : old),
 			);
 			queryClient.invalidateQueries({
-				queryKey: projectTicketsQueryKey(projectId),
+				queryKey: queryKeys.projects.tickets(projectId),
 			});
 			queryClient.invalidateQueries({
 				queryKey: ticketQueryOptions(ticketId).queryKey,

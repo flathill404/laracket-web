@@ -1,11 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/query-keys";
 import { fetchTicketActivities } from "./activities";
-import {
-	projectTicketsQueryKey,
-	ticketActivitiesQueryOptions,
-	ticketQueryOptions,
-} from "./queries";
+import { ticketActivitiesQueryOptions, ticketQueryOptions } from "./queries";
 import { fetchTicket } from "./tickets";
 
 vi.mock("./activities", () => ({
@@ -33,12 +29,5 @@ describe("tickets queries", () => {
 		// @ts-expect-error
 		options.queryFn();
 		expect(fetchTicketActivities).toHaveBeenCalledWith(ticketId);
-	});
-
-	it("projectTicketsQueryKey returns correct key", () => {
-		const projectId = "proj-1";
-		expect(projectTicketsQueryKey(projectId)).toEqual(
-			queryKeys.projects.tickets(projectId),
-		);
 	});
 });

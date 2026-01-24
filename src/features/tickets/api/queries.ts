@@ -14,7 +14,3 @@ export const ticketActivitiesQueryOptions = (ticketId: string) =>
 		queryKey: queryKeys.tickets.activities(ticketId),
 		queryFn: () => fetchTicketActivities(ticketId),
 	});
-
-/** @deprecated Use queryKeys.projects.tickets(projectId) instead */
-export const projectTicketsQueryKey = (projectId: string) =>
-	queryKeys.projects.tickets(projectId);
