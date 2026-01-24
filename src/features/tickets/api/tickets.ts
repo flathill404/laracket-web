@@ -77,3 +77,22 @@ export const removeTicketReviewer = async (
 ) => {
 	await client.delete(`/tickets/${ticketId}/reviewers/${userId}`);
 };
+
+export const deleteTicket = async (ticketId: string) => {
+	await client.delete(`/tickets/${ticketId}`);
+};
+
+export const searchTickets = async (query: string) => {
+	const searchParams = new URLSearchParams({ query });
+	const response = await client.get(
+		`/tickets/search?${searchParams.toString()}`,
+	);
+	const json = await response.json();
+	// Assuming search returns a list of tickets, similar to fetchUserTickets but maybe different structure.
+	// Based on typical pattern, it likely returns `data` array.
+	return ticketsSchema.parse(json.data);
+};
+
+export const updateTicketOrder = async (ticketId: string, order: number) => {
+	await client.patch(`/tickets/${ticketId}/order`, { order });
+};

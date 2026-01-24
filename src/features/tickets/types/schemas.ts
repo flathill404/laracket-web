@@ -73,3 +73,14 @@ export const activitySchema = z.object({
 });
 
 export const activitiesSchema = z.array(activitySchema);
+
+// Comment Schemas
+export const commentSchema = z.object({
+	id: z.string(),
+	content: z.string(),
+	createdAt: z.iso.datetime(),
+	updatedAt: z.iso.datetime(),
+	user: ticketUserSchema,
+});
+
+export const commentsSchema = z.array(commentSchema);

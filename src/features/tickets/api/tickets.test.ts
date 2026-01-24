@@ -9,11 +9,14 @@ import {
 	addTicketAssignee,
 	addTicketReviewer,
 	createTicket,
+	deleteTicket,
 	fetchTicket,
 	fetchUserTickets,
 	removeTicketAssignee,
 	removeTicketReviewer,
+	searchTickets,
 	updateTicket,
+	updateTicketOrder,
 	updateTicketStatus,
 } from "./tickets";
 
@@ -260,6 +263,42 @@ describe("tickets API", () => {
 
 			expect(mockClient.delete).toHaveBeenCalledWith(
 				"/tickets/ticket-123/reviewers/user-789",
+			);
+		});
+	});
+
+	describe("deleteTicket", () => {
+		it("should delete a ticket", async () => {
+			mockClient.delete.mockResolvedValueOnce({});
+
+			await deleteTicket("ticket-123");
+
+			expect(mockClient.delete).toHaveBeenCalledWith("/tickets/ticket-123");
+		});
+	});
+
+	describe("searchTickets", () => {
+		it("should search tickets", async () => {
+			mockClient.get.mockResolvedValueOnce({
+				json: () => Promise.resolve({ data: [mockTicket] }),
+			});
+
+			const result = await searchTickets("test");
+
+			expect(mockClient.get).toHaveBeenCalledWith("/tickets/search?query=test");
+			expect(result).toEqual([mockTicket]);
+		});
+	});
+
+	describe("updateTicketOrder", () => {
+		it("should update ticket order", async () => {
+			mockClient.patch.mockResolvedValueOnce({});
+
+			await updateTicketOrder("ticket-123", 10);
+
+			expect(mockClient.patch).toHaveBeenCalledWith(
+				"/tickets/ticket-123/order",
+				{ order: 10 },
 			);
 		});
 	});

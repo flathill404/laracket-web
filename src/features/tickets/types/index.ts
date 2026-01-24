@@ -15,6 +15,9 @@ export type PaginatedTicketsResponse = z.infer<
 export type Activity = z.infer<typeof schemas.activitySchema>;
 export type ActivityUser = z.infer<typeof schemas.ticketUserSchema>; // Reusing ticketUserSchema as per schemas.ts
 
+// Comment Types
+export type Comment = z.infer<typeof schemas.commentSchema>;
+
 // Table Meta
 export interface TicketTableMeta {
 	selectedStatuses: string[];
