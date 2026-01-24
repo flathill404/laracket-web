@@ -24,13 +24,11 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
-import {
-	createTicket,
-	type TicketStatusType,
-	ticketStatusSchema,
-} from "@/features/tickets/api/tickets";
+import { createTicket } from "@/features/tickets/api/tickets";
 import { TicketStatusSelect } from "@/features/tickets/components/ticket-status-select";
 import { TicketUserSelector } from "@/features/tickets/components/ticket-user-selector";
+import type { TicketStatus } from "@/features/tickets/types";
+import { ticketStatusSchema } from "@/features/tickets/types/schemas";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useArrayField } from "@/hooks/use-array-field";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
@@ -69,7 +67,7 @@ export function CreateTicketDrawer({
 		defaultValues: {
 			title: "",
 			description: "",
-			status: "open" as TicketStatusType,
+			status: "open" as TicketStatus,
 			assigneeIds: [] as string[],
 			reviewerIds: [] as string[],
 			dueDate: null as Date | null,

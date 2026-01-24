@@ -1,25 +1,6 @@
 import { client } from "@/lib/client";
 import type { Ticket, TicketStatus } from "../types";
-import {
-	assigneeSchema,
-	paginatedTicketsSchema,
-	reviewerSchema,
-	ticketSchema,
-	ticketStatusSchema,
-	ticketsSchema,
-	ticketUserSchema,
-} from "../types/schemas";
-
-// Re-export schemas for backwards compatibility
-export {
-	assigneeSchema,
-	paginatedTicketsSchema,
-	reviewerSchema,
-	ticketSchema,
-	ticketStatusSchema,
-	ticketsSchema,
-	ticketUserSchema,
-};
+import { ticketSchema, ticketsSchema } from "../types/schemas";
 
 // Re-export types
 export type {

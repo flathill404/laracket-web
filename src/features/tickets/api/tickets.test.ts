@@ -1,16 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+	paginatedTicketsSchema,
+	ticketSchema,
+	ticketStatusSchema,
+	ticketsSchema,
+} from "../types/schemas";
+import {
 	addTicketAssignee,
 	addTicketReviewer,
 	createTicket,
 	fetchTicket,
 	fetchUserTickets,
-	paginatedTicketsSchema,
 	removeTicketAssignee,
 	removeTicketReviewer,
-	ticketSchema,
-	ticketStatusSchema,
-	ticketsSchema,
 	updateTicket,
 	updateTicketStatus,
 } from "./tickets";

@@ -1,13 +1,14 @@
 import { z } from "zod";
-import { type Project, projectSchema } from "@/features/projects/api/projects";
-import { type Team, teamSchema } from "@/features/teams/api/teams";
-import { type Assignee, assigneeSchema } from "@/features/tickets/api/tickets";
+import type { Project } from "@/features/projects/types";
+import { projectSchema } from "@/features/projects/types/schemas";
+import type { Team } from "@/features/teams/types";
+import { teamSchema } from "@/features/teams/types/schemas";
+import type { Assignee } from "@/features/tickets/types";
+import { ticketUserSchema as assigneeSchema } from "@/features/tickets/types/schemas";
 import { client } from "@/lib/client";
 import { organizationSchema, organizationsSchema } from "../types/schemas";
 
 export type { Organization } from "../types";
-// Re-export schema and type for backwards compatibility
-export { organizationSchema } from "../types/schemas";
 
 /**
  * Fetches the list of organizations for the logged-in user.

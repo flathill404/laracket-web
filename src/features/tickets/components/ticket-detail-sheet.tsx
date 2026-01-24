@@ -42,12 +42,11 @@ import {
 	addTicketReviewer,
 	removeTicketAssignee,
 	removeTicketReviewer,
-	type TicketStatusType,
-	type TicketUser,
 	updateTicket,
 	updateTicketStatus,
 } from "../api/tickets";
 import { useTicketMutation } from "../hooks/use-ticket-mutation";
+import type { TicketStatus, TicketUser } from "../types";
 import { ActivityTimeline } from "./activity-timeline";
 import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
@@ -107,7 +106,7 @@ export function TicketDetailSheet({
 	const { mutate: mutateStatus, updateCache } = useTicketMutation(
 		ticketId,
 		ticket.projectId,
-		(status: TicketStatusType) => updateTicketStatus(ticketId, status),
+		(status: TicketStatus) => updateTicketStatus(ticketId, status),
 		(old, status) => ({
 			...old,
 			status,
@@ -201,9 +200,7 @@ export function TicketDetailSheet({
 						<div className="flex items-center gap-2">
 							<TicketStatusSelect
 								value={ticket.status}
-								onValueChange={(value) =>
-									mutateStatus(value as TicketStatusType)
-								}
+								onValueChange={(value) => mutateStatus(value as TicketStatus)}
 							/>
 							<Button variant="ghost" size="icon">
 								<MoreHorizontal className="h-4 w-4" />

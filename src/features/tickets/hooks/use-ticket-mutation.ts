@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import type { z } from "zod";
 import { projectTicketsQueryKey, ticketQueryOptions } from "../api/queries";
-import type { ticketSchema } from "../api/tickets";
-
-type Ticket = z.infer<typeof ticketSchema>;
+import type { Ticket } from "../types";
 
 export const useTicketMutation = <TVariables>(
 	ticketId: string,

@@ -73,9 +73,3 @@ export const activitySchema = z.object({
 });
 
 export const activitiesSchema = z.array(activitySchema);
-
-// Re-exports for backwards compatibility
-export {
-	ticketUserSchema as assigneeSchema,
-	ticketUserSchema as reviewerSchema,
-};

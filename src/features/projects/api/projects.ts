@@ -1,15 +1,13 @@
 import { z } from "zod";
+import type { Assignee } from "@/features/tickets/types";
 import {
-	type Assignee,
-	assigneeSchema,
+	ticketUserSchema as assigneeSchema,
 	paginatedTicketsSchema,
-} from "@/features/tickets/api/tickets";
+} from "@/features/tickets/types/schemas";
 import { client } from "@/lib/client";
 import { projectSchema, projectsSchema } from "../types/schemas";
 
 export type { Project } from "../types";
-// Re-export schema and type for backwards compatibility
-export { projectSchema } from "../types/schemas";
 
 /**
  * Fetches the list of projects for a specific user.

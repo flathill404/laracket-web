@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-	activitiesSchema,
-	activitySchema,
-	fetchTicketActivities,
-} from "./activities";
+import { activitiesSchema, activitySchema } from "../types/schemas";
+import { fetchTicketActivities } from "./activities";
 
 // Mock the client module
 vi.mock("@/lib/client", () => ({

@@ -1,8 +1,5 @@
 import { client } from "@/lib/client";
-import { activitiesSchema, activitySchema } from "../types/schemas";
-
-// Re-export schemas for backwards compatibility
-export { activitiesSchema, activitySchema };
+import { activitiesSchema } from "../types/schemas";
 
 // Re-export types
 export type { Activity } from "../types";

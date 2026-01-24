@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchTeam, fetchTeams, fetchTeamTickets, teamSchema } from "./teams";
+import { teamSchema } from "../types/schemas";
+import { fetchTeam, fetchTeams, fetchTeamTickets } from "./teams";
 
 // Mock the client module
 vi.mock("@/lib/client", () => ({

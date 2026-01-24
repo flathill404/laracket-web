@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { projectSchema } from "../types/schemas";
 import {
 	fetchProject,
 	fetchProjectMembers,
 	fetchProjects,
 	fetchProjectTickets,
-	projectSchema,
 	updateProject,
 } from "./projects";
 
