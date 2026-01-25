@@ -31,3 +31,15 @@ class ResizeObserverMock {
 }
 
 window.ResizeObserver = ResizeObserverMock;
+
+// Mock Zod to handle potentially missing named export 'z' in test environment
+vi.mock("zod", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("zod")>();
+	if (!("z" in actual)) {
+		return {
+			...actual,
+			z: actual,
+		};
+	}
+	return actual;
+});

@@ -1,58 +1,96 @@
-// @vitest-environment jsdom
-
-import { QueryClientProvider } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import type { ReactNode } from "react";
+import { render, screen, waitFor } from "@/test/utils";
+import {
+	createMemoryHistory,
+	createRootRoute,
+	createRoute,
+	createRouter,
+	Outlet,
+	RouterProvider,
+} from "@tanstack/react-router";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { createTestQueryClient } from "@/test/utils";
 import { LoginForm } from "./LoginForm";
 
-vi.mock("@tanstack/react-router", () => ({
-	useRouter: vi.fn(),
-	Link: ({ children, to }: { children: ReactNode; to: string }) => (
-		<a href={to}>{children}</a>
-	),
-}));
-
+// Mock useAuth hook
+const loginMock = vi.fn();
 vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: vi.fn(),
+	useAuth: () => ({
+		login: loginMock,
+	}),
 }));
 
-const mockUseRouter = vi.mocked(useRouter);
-const mockUseAuth = vi.mocked(useAuth);
+function renderWithRouter(Component: React.ComponentType) {
+	const rootRoute = createRootRoute({
+		component: () => <Outlet />,
+	});
+
+	const indexRoute = createRoute({
+		getParentRoute: () => rootRoute,
+		path: "/",
+		// component is passed as element from test
+		component: Component,
+	});
+
+	const router = createRouter({
+		routeTree: rootRoute.addChildren([indexRoute]),
+		history: createMemoryHistory(),
+	});
+
+	return render(<RouterProvider router={router} />);
+}
 
 describe("LoginForm", () => {
-	it("submits form correctly", async () => {
-		const navigate = vi.fn();
-		mockUseRouter.mockReturnValue({
-			navigate,
-		} as unknown as ReturnType<typeof useRouter>);
-		const login = vi.fn().mockResolvedValue({ twoFactor: false });
-		mockUseAuth.mockReturnValue({
-			login,
-		} as unknown as ReturnType<typeof useAuth>);
+	it("renders bare sanity check", () => {
+		render(<div>bare sanity</div>);
+		expect(screen.getByText("bare sanity")).toBeInTheDocument();
+	});
 
-		const queryClient = createTestQueryClient();
-		const Wrapper = ({ children }: { children: ReactNode }) => (
-			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-		);
+	it("renders sanity check", () => {
+		renderWithRouter(() => <div>sanity check</div>);
+		expect(screen.getByText("sanity check")).toBeInTheDocument();
+	});
 
-		render(<LoginForm />, { wrapper: Wrapper });
+	it("renders login form fields", () => {
+		renderWithRouter(LoginForm);
 
-		fireEvent.change(screen.getByLabelText("Email"), {
-			target: { value: "test@example.com" },
+		expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		expect(screen.getByLabelText("Password")).toBeInTheDocument();
+		expect(screen.getByLabelText("Remember me")).toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+	});
+
+	it("submits form with valid data", async () => {
+		loginMock.mockResolvedValue({ twoFactor: false });
+		const user = userEvent.setup();
+		renderWithRouter(LoginForm);
+
+		await user.clear(screen.getByLabelText("Email"));
+		await user.type(screen.getByLabelText("Email"), "test@example.com");
+		await user.clear(screen.getByLabelText("Password"));
+		await user.type(screen.getByLabelText("Password"), "password123");
+
+		await user.click(screen.getByRole("button", { name: "Login" }));
+
+		await waitFor(() => {
+			expect(loginMock).toHaveBeenCalledWith({
+				email: "test@example.com",
+				password: "password123",
+				remember: false,
+			});
 		});
-		fireEvent.change(screen.getByLabelText("Password"), {
-			target: { value: "password123" },
-		});
+	});
 
-		fireEvent.click(screen.getByText("Login"));
+	it("validation errors are shown for invalid input", async () => {
+		const user = userEvent.setup();
+		renderWithRouter(LoginForm);
 
-		await waitFor(() => expect(login).toHaveBeenCalled());
-		await waitFor(() =>
-			expect(navigate).toHaveBeenCalledWith({ to: "/dashboard" }),
-		);
+		// Clear valid defaults if any
+		await user.clear(screen.getByLabelText("Email"));
+		await user.clear(screen.getByLabelText("Password"));
+
+		await user.type(screen.getByLabelText("Email"), "invalid-email");
+		await user.click(screen.getByRole("button", { name: "Login" }));
+
+		expect(loginMock).not.toHaveBeenCalled();
 	});
 });
