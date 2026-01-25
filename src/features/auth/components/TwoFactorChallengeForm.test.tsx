@@ -24,7 +24,7 @@ vi.mock("sonner", () => ({
 	},
 }));
 
-function renderWithRouter(Component: React.ComponentType) {
+async function renderWithRouter(Component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -43,13 +43,14 @@ function renderWithRouter(Component: React.ComponentType) {
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
 describe("TwoFactorChallengeForm", () => {
-	// Skipped due to JSDOM/Router rendering issue (useAppForm)
-	it.skip("renders otp input", () => {
-		renderWithRouter(TwoFactorChallengeForm);
+	it("renders otp input", async () => {
+		await renderWithRouter(TwoFactorChallengeForm);
 
 		// Otp inputs might be rendered as multiple inputs or one hidden input depending on implementation.
 		// Shadcn InputOTP usually renders multiple slots.
@@ -57,13 +58,24 @@ describe("TwoFactorChallengeForm", () => {
 		// It's tricky to query OTP specifically without role.
 
 		// Check for button at least
-		expect(screen.getByRole("button", { name: "Verify" })).toBeInTheDocument();
+		await waitFor(() => {
+			expect(
+				screen.getByRole("button", { name: "Verify" }),
+			).toBeInTheDocument();
+		});
 	});
 
+	// Skipping due to InputOTP using document.elementFromPoint which is not available in JSDOM
 	it.skip("submits valid code", async () => {
 		twoFactorChallengeMock.mockResolvedValue({});
 		const user = userEvent.setup();
-		renderWithRouter(TwoFactorChallengeForm);
+		await renderWithRouter(TwoFactorChallengeForm);
+
+		await waitFor(() => {
+			expect(
+				screen.getByRole("button", { name: "Verify" }),
+			).toBeInTheDocument();
+		});
 
 		// InputOTP specific logic for typing
 		// Usually typing into the container or first input works.

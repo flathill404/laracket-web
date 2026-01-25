@@ -26,7 +26,7 @@ vi.mock("sonner", () => ({
 	},
 }));
 
-function renderWithRouter(Component: React.ComponentType) {
+async function renderWithRouter(Component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -45,15 +45,18 @@ function renderWithRouter(Component: React.ComponentType) {
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
 describe("RegisterForm", () => {
-	// Skipping tests due to JSDOM rendering issue with TanStack Router/Form (same as LoginForm)
-	it.skip("renders register form fields", () => {
-		renderWithRouter(RegisterForm);
+	it("renders register form fields", async () => {
+		await renderWithRouter(RegisterForm);
 
-		expect(screen.getByLabelText("Username")).toBeInTheDocument();
+		await waitFor(() => {
+			expect(screen.getByLabelText("Username")).toBeInTheDocument();
+		});
 		expect(screen.getByLabelText("Display Name")).toBeInTheDocument();
 		expect(screen.getByLabelText("Email")).toBeInTheDocument();
 		expect(screen.getByLabelText("Password")).toBeInTheDocument();
@@ -63,10 +66,14 @@ describe("RegisterForm", () => {
 		).toBeInTheDocument();
 	});
 
-	it.skip("submits form with valid data", async () => {
+	it("submits form with valid data", async () => {
 		registerMock.mockResolvedValue({});
 		const user = userEvent.setup();
-		renderWithRouter(RegisterForm);
+		await renderWithRouter(RegisterForm);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Username")).toBeInTheDocument();
+		});
 
 		await user.type(screen.getByLabelText("Username"), "jdoe");
 		await user.type(screen.getByLabelText("Display Name"), "John Doe");
@@ -87,9 +94,13 @@ describe("RegisterForm", () => {
 		});
 	});
 
-	it.skip("shows validation error when passwords do not match", async () => {
+	it("shows validation error when passwords do not match", async () => {
 		const user = userEvent.setup();
-		renderWithRouter(RegisterForm);
+		await renderWithRouter(RegisterForm);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Password")).toBeInTheDocument();
+		});
 
 		await user.type(screen.getByLabelText("Password"), "password123");
 		await user.type(screen.getByLabelText("Confirm Password"), "mismatch");

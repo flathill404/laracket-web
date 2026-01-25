@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@/test/utils";
+import { render, screen, waitFor } from "@/test/utils";
 import { VerifyEmail } from "./VerifyEmail";
 
 // Mock useAuth
@@ -52,7 +52,7 @@ vi.mock("@/hooks/use-mutation-with-toast", () => ({
 // To properly mock multiple calls to useMutationWithToast, we need better control.
 // Let's just verify rendering mostly.
 
-function renderWithRouter(Component: React.ComponentType) {
+async function renderWithRouter(Component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -70,13 +70,21 @@ function renderWithRouter(Component: React.ComponentType) {
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
 describe("VerifyEmail", () => {
-	it.skip("renders email verification message", () => {
-		renderWithRouter(VerifyEmail);
-		expect(screen.getByText(/Verify your email/i)).toBeInTheDocument();
+	it("renders email verification message", async () => {
+		await renderWithRouter(VerifyEmail);
+
+		await waitFor(() => {
+			// Use getAllByText since text appears in both title and description
+			expect(screen.getAllByText(/Verify your email/i).length).toBeGreaterThan(
+				0,
+			);
+		});
 		expect(screen.getByText(/test@example.com/i)).toBeInTheDocument();
 		expect(
 			screen.getByRole("button", { name: /Resend Verification Email/i }),
@@ -86,16 +94,22 @@ describe("VerifyEmail", () => {
 		).toBeInTheDocument();
 	});
 
-	it.skip("allows switching to edit email mode", async () => {
+	it("allows switching to edit email mode", async () => {
 		const user = userEvent.setup();
-		renderWithRouter(VerifyEmail);
+		await renderWithRouter(VerifyEmail);
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Edit/i })).toBeInTheDocument();
+		});
 
 		const editButton = screen.getByRole("button", { name: /Edit/i });
 		await user.click(editButton);
 
-		expect(
-			screen.getByPlaceholderText(/Enter new email address/i),
-		).toBeInTheDocument();
+		await waitFor(() => {
+			expect(
+				screen.getByPlaceholderText(/Enter new email address/i),
+			).toBeInTheDocument();
+		});
 		expect(
 			screen.getByRole("button", { name: /Update Email/i }),
 		).toBeInTheDocument();

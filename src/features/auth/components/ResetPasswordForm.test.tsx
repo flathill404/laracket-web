@@ -24,7 +24,7 @@ vi.mock("sonner", () => ({
 	},
 }));
 
-function renderWithRouter<T extends object>(
+async function renderWithRouter<T extends object>(
 	Component: React.ComponentType<T>,
 	props = {} as T,
 ) {
@@ -46,6 +46,8 @@ function renderWithRouter<T extends object>(
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
@@ -55,20 +57,26 @@ describe("ResetPasswordForm", () => {
 		token: "token123",
 	};
 
-	it.skip("renders password inputs", () => {
-		renderWithRouter(ResetPasswordForm, defaultProps);
+	it("renders password inputs", async () => {
+		await renderWithRouter(ResetPasswordForm, defaultProps);
 
-		expect(screen.getByLabelText("Password")).toBeInTheDocument();
+		await waitFor(() => {
+			expect(screen.getByLabelText("Password")).toBeInTheDocument();
+		});
 		expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
 		expect(
 			screen.getByRole("button", { name: "Reset Password" }),
 		).toBeInTheDocument();
 	});
 
-	it.skip("submits valid password reset", async () => {
+	it("submits valid password reset", async () => {
 		resetPasswordMock.mockResolvedValue({});
 		const user = userEvent.setup();
-		renderWithRouter(ResetPasswordForm, defaultProps);
+		await renderWithRouter(ResetPasswordForm, defaultProps);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Password")).toBeInTheDocument();
+		});
 
 		await user.type(screen.getByLabelText("Password"), "newpassword123");
 		await user.type(

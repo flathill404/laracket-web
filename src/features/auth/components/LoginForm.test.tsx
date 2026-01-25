@@ -56,20 +56,26 @@ describe("LoginForm", () => {
 		});
 	});
 
-	// Skipping tests due to JSDOM rendering issue with TanStack Router/Form
-	it.skip("renders login form fields", () => {
-		renderWithRouter(LoginForm);
+	// Now that router.load() is in place, these tests should work
+	it("renders login form fields", async () => {
+		await renderWithRouter(LoginForm);
 
-		expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		await waitFor(() => {
+			expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		});
 		expect(screen.getByLabelText("Password")).toBeInTheDocument();
 		expect(screen.getByLabelText("Remember me")).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
 	});
 
-	it.skip("submits form with valid data", async () => {
+	it("submits form with valid data", async () => {
 		loginMock.mockResolvedValue({ twoFactor: false });
 		const user = userEvent.setup();
-		renderWithRouter(LoginForm);
+		await renderWithRouter(LoginForm);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		});
 
 		await user.clear(screen.getByLabelText("Email"));
 		await user.type(screen.getByLabelText("Email"), "test@example.com");
@@ -87,9 +93,13 @@ describe("LoginForm", () => {
 		});
 	});
 
-	it.skip("validation errors are shown for invalid input", async () => {
+	it("validation errors are shown for invalid input", async () => {
 		const user = userEvent.setup();
-		renderWithRouter(LoginForm);
+		await renderWithRouter(LoginForm);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		});
 
 		// Clear valid defaults if any
 		await user.clear(screen.getByLabelText("Email"));

@@ -26,7 +26,7 @@ vi.mock("sonner", () => ({
 	},
 }));
 
-function renderWithRouter(Component: React.ComponentType) {
+async function renderWithRouter(Component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -45,24 +45,31 @@ function renderWithRouter(Component: React.ComponentType) {
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
 describe("ForgotPasswordForm", () => {
-	// Skipped due to JSDOM/Router rendering issue
-	it.skip("renders email input", () => {
-		renderWithRouter(ForgotPasswordForm);
+	it("renders email input", async () => {
+		await renderWithRouter(ForgotPasswordForm);
 
-		expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		await waitFor(() => {
+			expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		});
 		expect(
 			screen.getByRole("button", { name: /Reset Link/i }),
 		).toBeInTheDocument();
 	});
 
-	it.skip("submits valid email", async () => {
+	it("submits valid email", async () => {
 		forgotPasswordMock.mockResolvedValue({});
 		const user = userEvent.setup();
-		renderWithRouter(ForgotPasswordForm);
+		await renderWithRouter(ForgotPasswordForm);
+
+		await waitFor(() => {
+			expect(screen.getByLabelText("Email")).toBeInTheDocument();
+		});
 
 		await user.type(screen.getByLabelText("Email"), "test@example.com");
 		await user.click(screen.getByRole("button", { name: /Reset Link/i }));
