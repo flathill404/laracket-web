@@ -1,6 +1,6 @@
-import { renderHook, waitFor } from "@/test/utils";
 import { toast } from "sonner";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { renderHook, waitFor } from "@/test/utils";
 import { useMutationWithToast } from "./use-mutation-with-toast";
 
 // Mock sonner

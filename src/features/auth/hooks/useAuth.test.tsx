@@ -1,7 +1,7 @@
-import { renderHook, waitFor } from "@/test/utils";
-import { useAuth } from "./useAuth";
 import { describe, expect, it, vi } from "vitest";
 import * as authApi from "@/features/auth/api";
+import { renderHook, waitFor } from "@/test/utils";
+import { useAuth } from "./useAuth";
 
 // Mock API
 vi.mock("@/features/auth/api");

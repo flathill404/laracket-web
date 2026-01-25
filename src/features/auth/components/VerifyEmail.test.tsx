@@ -1,4 +1,3 @@
-import { render, screen, waitFor } from "@/test/utils";
 import {
 	createMemoryHistory,
 	createRootRoute,
@@ -9,8 +8,9 @@ import {
 } from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { VerifyEmail } from "./VerifyEmail";
 import { queryKeys } from "@/lib/query-keys";
+import { render, screen, waitFor } from "@/test/utils";
+import { VerifyEmail } from "./VerifyEmail";
 
 // Mock useAuth
 const logoutMock = vi.fn();

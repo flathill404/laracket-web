@@ -1,4 +1,3 @@
-import { render, screen } from "@/test/utils";
 import {
 	createMemoryHistory,
 	createRootRoute,
@@ -8,6 +7,7 @@ import {
 	RouterProvider,
 } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
+import { render, screen } from "@/test/utils";
 import { DefaultNotFound } from "./default-not-found";
 
 function renderWithRouter(component: React.ComponentType) {

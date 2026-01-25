@@ -1,4 +1,3 @@
-import { render, screen, waitFor } from "@/test/utils";
 import {
 	createMemoryHistory,
 	createRootRoute,
@@ -9,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { render, screen, waitFor } from "@/test/utils";
 import { RegisterForm } from "./RegisterForm";
 
 // Mock useAuth hook
