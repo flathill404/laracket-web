@@ -9,8 +9,8 @@ vi.mock("@/features/auth/api");
 // Mock useNavigate from router
 const navigateMock = vi.fn();
 vi.mock("@tanstack/react-router", async (importOriginal) => {
-	const actual =
-		await importOriginal<typeof import("@tanstack/react-router")>();
+	// biome-ignore lint/suspicious/noExplicitAny: actual module can have any type for mocking
+	const actual = (await importOriginal()) as any;
 	return {
 		...actual,
 		useNavigate: () => navigateMock,
@@ -26,11 +26,7 @@ describe("useAuth", () => {
 			displayName: "Test",
 			avatarUrl: null,
 			emailVerifiedAt: "2023-01-01",
-			// Add other required fields if any (User interface)
-			currentTeamId: null,
-			hasPassword: true,
-			twoFactorConfirmedAt: null,
-			twoFactorEnabled: false,
+			twoFactorStatus: "enabled",
 		});
 
 		const { result } = renderHook(() => useAuth());

@@ -8,8 +8,7 @@ import {
 } from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { queryKeys } from "@/lib/query-keys";
-import { render, screen, waitFor } from "@/test/utils";
+import { render, screen } from "@/test/utils";
 import { VerifyEmail } from "./VerifyEmail";
 
 // Mock useAuth
@@ -27,11 +26,11 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
 }));
 
 // Mock useMutationWithToast
-const resendEmailMock = vi.fn();
-const updateEmailMock = vi.fn();
+// Mocks for useMutationWithToast (removed if not used)
 
 vi.mock("@/hooks/use-mutation-with-toast", () => ({
-	useMutationWithToast: ({ mutationFn }: any) => {
+	// biome-ignore lint/suspicious/noExplicitAny: mock needs flexible options
+	useMutationWithToast: (_options: any) => {
 		// Note: In real app, we check mutationFn identity or name, but here we just return generic mocks
 		// Ideally we should distinguish between resend and update.
 		// We can infer from arguments or return different mocks if needed.

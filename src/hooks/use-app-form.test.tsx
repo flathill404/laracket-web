@@ -9,7 +9,7 @@ import { useAppForm } from "./use-app-form";
 // which import from @/components/ui/*.
 // Assuming shadcn components work in test env (they should).
 
-function TestForm({ onSubmit }: { onSubmit: (values: any) => void }) {
+function TestForm({ onSubmit }: { onSubmit: (values: unknown) => void }) {
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
@@ -31,18 +31,21 @@ function TestForm({ onSubmit }: { onSubmit: (values: any) => void }) {
 		>
 			<form.Field
 				name="name"
+				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
 				children={(field: any) => (
 					<field.InputField label="Name" placeholder="Enter name" />
 				)}
 			/>
 			<form.Field
 				name="description"
+				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
 				children={(field: any) => (
 					<field.TextareaField label="Description" placeholder="Enter desc" />
 				)}
 			/>
 			<form.Field
 				name="agree"
+				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
 				children={(field: any) => (
 					<field.CheckboxField label="Agree to terms" />
 				)}
@@ -115,6 +118,7 @@ describe("useAppForm", () => {
 				>
 					<form.Field
 						name="name"
+						// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
 						children={(field: any) => <field.InputField label="Name" />}
 					/>
 					<form.SubscribeButton label="Submit" />

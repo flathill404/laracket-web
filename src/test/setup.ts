@@ -34,7 +34,8 @@ window.ResizeObserver = ResizeObserverMock;
 
 // Mock Zod to handle potentially missing named export 'z' in test environment
 vi.mock("zod", async (importOriginal) => {
-	const actual = await importOriginal<typeof import("zod")>();
+	// biome-ignore lint/suspicious/noExplicitAny: actual module can have any type for mocking
+	const actual = (await importOriginal()) as any;
 	if (!("z" in actual)) {
 		return {
 			...actual,

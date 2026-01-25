@@ -24,7 +24,10 @@ vi.mock("sonner", () => ({
 	},
 }));
 
-function renderWithRouter(Component: React.ComponentType<any>, props = {}) {
+function renderWithRouter<T extends object>(
+	Component: React.ComponentType<T>,
+	props = {} as T,
+) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
