@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import * as api from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { createTestQueryClient } from "@/test/utils";
-import { useTwoFactor } from "./use-two-factor";
+import { useTwoFactor } from "./useTwoFactor";
 
 vi.mock("@/features/auth/hooks/useAuth", () => ({
 	useAuth: vi.fn(),

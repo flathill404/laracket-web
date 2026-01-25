@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PasswordForm } from "@/features/settings/components/password-form";
-import { ProfileForm } from "@/features/settings/components/profile-form";
-import { TwoFactorForm } from "@/features/settings/components/two-factor-form";
+import { PasswordForm } from "@/features/settings/components/PasswordForm";
+import { ProfileForm } from "@/features/settings/components/ProfileForm";
+import { TwoFactorForm } from "@/features/settings/components/TwoFactorForm";
 
 export const Route = createFileRoute("/_authenticated/settings")({
 	component: Settings,

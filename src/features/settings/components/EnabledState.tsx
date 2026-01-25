@@ -7,7 +7,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { RecoveryCodesDisplay } from "./recovery-codes-display";
+import { RecoveryCodesDisplay } from "./RecoveryCodesDisplay";
 
 interface EnabledStateProps {
 	recoveryCodes: string[] | undefined;

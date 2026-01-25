@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { QrCodeSetup } from "./qr-code-setup";
+import { QrCodeSetup } from "./QrCodeSetup";
 
 interface DisabledStateProps {
 	isPending: boolean;

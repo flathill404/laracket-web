@@ -5,10 +5,10 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { useTwoFactor } from "../hooks/use-two-factor";
-import { ConfirmPasswordDialog } from "./confirm-password-dialog";
-import { DisabledState } from "./disabled-state";
-import { EnabledState } from "./enabled-state";
+import { useTwoFactor } from "../hooks/useTwoFactor";
+import { ConfirmPasswordDialog } from "./ConfirmPasswordDialog";
+import { DisabledState } from "./DisabledState";
+import { EnabledState } from "./EnabledState";
 
 export function TwoFactorForm() {
 	const {

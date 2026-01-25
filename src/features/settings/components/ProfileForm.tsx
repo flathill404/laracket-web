@@ -32,7 +32,7 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { queryKeys } from "@/lib/query-keys";
-import { ImageCropDialog } from "./image-crop-dialog";
+import { ImageCropDialog } from "./ImageCropDialog";
 
 export function ProfileForm() {
 	const { user } = useAuth();

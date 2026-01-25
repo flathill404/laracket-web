@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { RecoveryCodesDisplay } from "./recovery-codes-display";
+import { RecoveryCodesDisplay } from "./RecoveryCodesDisplay";
 
 const mockRecoveryCodes = [
 	"ABCD-1234",
