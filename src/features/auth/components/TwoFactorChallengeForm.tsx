@@ -15,7 +15,7 @@ import {
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useAppForm } from "@/hooks/use-app-form";
 
 const twoFactorFormSchema = z.object({

@@ -12,7 +12,7 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
 import { TicketList } from "@/features/tickets/components/ticket-list";

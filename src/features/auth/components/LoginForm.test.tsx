@@ -5,9 +5,9 @@ import { useRouter } from "@tanstack/react-router";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { createTestQueryClient } from "@/test/utils";
-import { LoginForm } from "./login-form";
+import { LoginForm } from "./LoginForm";
 
 vi.mock("@tanstack/react-router", () => ({
 	useRouter: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock("@tanstack/react-router", () => ({
 	),
 }));
 
-vi.mock("@/features/auth/hooks/use-auth", () => ({
+vi.mock("@/features/auth/hooks/useAuth", () => ({
 	useAuth: vi.fn(),
 }));
 

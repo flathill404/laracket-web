@@ -3,7 +3,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AuthenticatedNotFound } from "@/components/common/authenticated-not-found";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { projectQueries } from "@/features/projects/utils/queries";

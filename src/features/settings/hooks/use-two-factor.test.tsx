@@ -4,11 +4,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import * as api from "@/features/auth/api";
-import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { createTestQueryClient } from "@/test/utils";
 import { useTwoFactor } from "./use-two-factor";
 
-vi.mock("@/features/auth/hooks/use-auth", () => ({
+vi.mock("@/features/auth/hooks/useAuth", () => ({
 	useAuth: vi.fn(),
 }));
 
