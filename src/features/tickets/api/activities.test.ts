@@ -1,19 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { getMockClient } from "@/test/utils";
 import { activitiesSchema, activitySchema } from "../types/schemas";
 import { fetchTicketActivities } from "./activities";
 
-// Mock the client module
-vi.mock("@/lib/client", () => ({
-	client: {
-		get: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
-import { client } from "@/lib/client";
-
-const mockClient = client as unknown as {
-	get: ReturnType<typeof vi.fn>;
-};
+const mockClient = getMockClient();
 
 const mockActivity = {
 	id: 1,

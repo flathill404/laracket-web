@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { getMockClient } from "@/test/utils";
 import {
 	confirmPassword,
 	forgotPassword,
@@ -6,20 +7,9 @@ import {
 	updatePassword,
 } from "./password";
 
-// Mock the client module
-vi.mock("@/lib/client", () => ({
-	client: {
-		post: vi.fn(),
-		put: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
-import { client } from "@/lib/client";
-
-const mockClient = client as unknown as {
-	post: ReturnType<typeof vi.fn>;
-	put: ReturnType<typeof vi.fn>;
-};
+const mockClient = getMockClient();
 
 describe("password API", () => {
 	beforeEach(() => {

@@ -1,20 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { register, sendVerificationEmail } from "./registration";
 
-// Mock the client module
-vi.mock("@/lib/client", () => ({
-	client: {
-		get: vi.fn(),
-		post: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
-import { client } from "@/lib/client";
+import { getMockClient } from "@/test/utils";
 
-const mockClient = client as unknown as {
-	get: ReturnType<typeof vi.fn>;
-	post: ReturnType<typeof vi.fn>;
-};
+const mockClient = getMockClient();
 
 describe("registration API", () => {
 	beforeEach(() => {
@@ -48,9 +39,11 @@ describe("registration API", () => {
 			const callOrder: string[] = [];
 			mockClient.get.mockImplementation(async () => {
 				callOrder.push("get");
+				return {};
 			});
 			mockClient.post.mockImplementation(async () => {
 				callOrder.push("post");
+				return {};
 			});
 
 			await register({

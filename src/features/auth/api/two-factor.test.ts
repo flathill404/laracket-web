@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { getMockClient } from "@/test/utils";
 import {
 	confirmTwoFactor,
 	disableTwoFactor,
@@ -8,22 +9,9 @@ import {
 	twoFactorChallenge,
 } from "./two-factor";
 
-// Mock the client module
-vi.mock("@/lib/client", () => ({
-	client: {
-		get: vi.fn(),
-		post: vi.fn(),
-		delete: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
-import { client } from "@/lib/client";
-
-const mockClient = client as unknown as {
-	get: ReturnType<typeof vi.fn>;
-	post: ReturnType<typeof vi.fn>;
-	delete: ReturnType<typeof vi.fn>;
-};
+const mockClient = getMockClient();
 
 describe("two-factor API", () => {
 	beforeEach(() => {
