@@ -1,0 +1,60 @@
+import { render, screen } from "@/test/utils";
+import {
+	createMemoryHistory,
+	createRootRoute,
+	createRoute,
+	createRouter,
+	Outlet,
+	RouterProvider,
+} from "@tanstack/react-router";
+import { describe, expect, it } from "vitest";
+import { AuthenticatedNotFound } from "./authenticated-not-found";
+
+// Helper to wrap component with Router for Link support
+function renderWithRouter(component: React.ComponentType) {
+	const rootRoute = createRootRoute({
+		component: () => <Outlet />,
+	});
+
+	const indexRoute = createRoute({
+		getParentRoute: () => rootRoute,
+		path: "/",
+		component: () => {
+			const Component = component;
+			return <Component />;
+		},
+	});
+
+	const dashboardRoute = createRoute({
+		getParentRoute: () => rootRoute,
+		path: "/dashboard",
+		component: () => <div>Dashboard</div>,
+	});
+
+	const router = createRouter({
+		routeTree: rootRoute.addChildren([indexRoute, dashboardRoute]),
+		history: createMemoryHistory(),
+	});
+
+	return render(<RouterProvider router={router} />);
+}
+
+describe("AuthenticatedNotFound", () => {
+	it("renders not found message", () => {
+		renderWithRouter(AuthenticatedNotFound);
+
+		expect(screen.getByText("Page not found")).toBeInTheDocument();
+		expect(
+			screen.getByText(/Sorry, we couldn't find the page/),
+		).toBeInTheDocument();
+	});
+
+	it("renders navigation buttons", () => {
+		renderWithRouter(AuthenticatedNotFound);
+
+		expect(
+			screen.getByRole("link", { name: /Go to Dashboard/i }),
+		).toBeInTheDocument();
+		expect(screen.getByRole("link", { name: /Go Back/i })).toBeInTheDocument();
+	});
+});
