@@ -7,7 +7,7 @@ import { useAuth } from "@/features/auth/hooks/use-auth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { projectQueries } from "@/features/projects/utils/queries";
-import { teamsQueryOptions } from "@/features/teams/utils/queries";
+import { teamQueries } from "@/features/teams/utils/queries";
 
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: async ({ context, location }) => {
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_authenticated")({
 		// Load projects, teams, and organizations for sidebar
 		const promises = [
 			context.queryClient.ensureQueryData(projectQueries.list(user.id)),
-			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
+			context.queryClient.ensureQueryData(teamQueries.list(user.id)),
 			context.queryClient.ensureQueryData(organizationQueries.list()),
 		];
 		await Promise.all(promises);
@@ -49,7 +49,7 @@ function AuthLayout() {
 	const isVerified = !!user?.emailVerifiedAt; // Derived state
 
 	const { data: projects } = useSuspenseQuery(projectQueries.list(userId));
-	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
+	const { data: teams } = useSuspenseQuery(teamQueries.list(userId));
 	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
 
 	// We can safely assume user is not null here because of beforeLoad check

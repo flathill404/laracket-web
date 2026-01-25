@@ -21,6 +21,7 @@ export const queryKeys = {
 		all: () => ["teams"] as const,
 		list: (userId: string) => ["teams", userId] as const,
 		detail: (teamId: string) => ["teams", teamId] as const,
+		members: (teamId: string) => ["teams", teamId, "members"] as const,
 		tickets: (teamId: string) => ["teams", teamId, "tickets"] as const,
 	},
 
