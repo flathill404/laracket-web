@@ -1,65 +1,37 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
-import {
-	createOrganization,
-	deleteOrganization,
-	fetchOrganization,
-	updateOrganization,
-} from "../api/organizations";
+import { deleteOrganization, updateOrganization } from "../api/organizations";
 import type { UpdateOrganizationInput } from "../types";
+import { organizationQueries } from "../utils/queries";
 
 export const useOrganization = (id: string) => {
 	const queryClient = useQueryClient();
 
-	const { data: organization, isLoading } = useQuery({
-		queryKey: queryKeys.organizations.detail(id),
-		queryFn: () => fetchOrganization(id),
-	});
+	const query = useQuery(organizationQueries.detail(id));
 
-	const createOrganizationMutation = useMutation({
-		mutationFn: createOrganization,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.detail(id),
-			});
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.list(),
-			});
-		},
-	});
-
-	const updateOrganizationMutation = useMutation({
+	const updateMutation = useMutation({
 		mutationFn: (input: UpdateOrganizationInput) =>
 			updateOrganization(id, input),
 		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.detail(id),
-			});
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.list(),
-			});
+			await queryClient.invalidateQueries(organizationQueries.detail(id));
+			await queryClient.invalidateQueries(organizationQueries.list());
 		},
 	});
 
-	const deleteOrganizationMutation = useMutation({
+	const deleteMutation = useMutation({
 		mutationFn: () => deleteOrganization(id),
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.detail(id),
-			});
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.list(),
-			});
+		onSuccess: () => {
+			return Promise.all([
+				queryClient.removeQueries(organizationQueries.detail(id)),
+				queryClient.invalidateQueries(organizationQueries.list()),
+			]);
 		},
 	});
 
 	return {
-		organization,
-		isLoading,
+		...query,
 		actions: {
-			create: createOrganizationMutation,
-			update: updateOrganizationMutation,
-			delete: deleteOrganizationMutation,
+			update: updateMutation,
+			delete: deleteMutation,
 		},
 	};
 };

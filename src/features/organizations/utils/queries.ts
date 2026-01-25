@@ -8,32 +8,38 @@ import {
 	fetchOrganizationTeams,
 } from "../api/organizations";
 
-export const organizationsQueryOptions = () =>
-	queryOptions({
-		queryKey: queryKeys.organizations.list(),
-		queryFn: fetchOrganizations,
-	});
+export const organizationQueries = {
+	list: () =>
+		queryOptions({
+			queryKey: queryKeys.organizations.list(),
+			queryFn: fetchOrganizations,
+		}),
 
-export const organizationQueryOptions = (organizationId: string) =>
-	queryOptions({
-		queryKey: queryKeys.organizations.detail(organizationId),
-		queryFn: () => fetchOrganization(organizationId),
-	});
+	detail: (id: string) =>
+		queryOptions({
+			queryKey: queryKeys.organizations.detail(id),
+			queryFn: () => fetchOrganization(id),
+			enabled: !!id,
+		}),
 
-export const organizationMembersQueryOptions = (organizationId: string) =>
-	queryOptions({
-		queryKey: queryKeys.organizations.members(organizationId),
-		queryFn: () => fetchOrganizationMembers(organizationId),
-	});
+	members: (id: string) =>
+		queryOptions({
+			queryKey: queryKeys.organizations.members(id),
+			queryFn: () => fetchOrganizationMembers(id),
+			enabled: !!id,
+		}),
 
-export const organizationProjectsQueryOptions = (organizationId: string) =>
-	queryOptions({
-		queryKey: queryKeys.organizations.projects(organizationId),
-		queryFn: () => fetchOrganizationProjects(organizationId),
-	});
+	projects: (id: string) =>
+		queryOptions({
+			queryKey: queryKeys.organizations.projects(id),
+			queryFn: () => fetchOrganizationProjects(id),
+			enabled: !!id,
+		}),
 
-export const organizationTeamsQueryOptions = (organizationId: string) =>
-	queryOptions({
-		queryKey: queryKeys.organizations.teams(organizationId),
-		queryFn: () => fetchOrganizationTeams(organizationId),
-	});
+	teams: (id: string) =>
+		queryOptions({
+			queryKey: queryKeys.organizations.teams(id),
+			queryFn: () => fetchOrganizationTeams(id),
+			enabled: !!id,
+		}),
+};

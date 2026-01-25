@@ -1,43 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
-import {
-	createOrganization,
-	deleteOrganization,
-	fetchOrganizations,
-} from "../api/organizations";
+import { createOrganization, deleteOrganization } from "../api/organizations";
+import { organizationQueries } from "../utils";
 
 export const useOrganizations = () => {
 	const queryClient = useQueryClient();
 
-	const { data: organizations, isLoading } = useQuery({
-		queryKey: queryKeys.organizations.list(),
-		queryFn: fetchOrganizations,
-	});
+	const query = useQuery(organizationQueries.list());
 
-	const createOrganizationMutation = useMutation({
+	const createMutation = useMutation({
 		mutationFn: createOrganization,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.list(),
-			});
+		onSuccess: () => {
+			queryClient.invalidateQueries(organizationQueries.list());
 		},
 	});
 
-	const deleteOrganizationMutation = useMutation({
+	const deleteMutaion = useMutation({
 		mutationFn: (id: string) => deleteOrganization(id),
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({
-				queryKey: queryKeys.organizations.list(),
-			});
+		onSuccess: (_, id) => {
+			return Promise.all([
+				queryClient.removeQueries(organizationQueries.detail(id)),
+				queryClient.invalidateQueries(organizationQueries.list()),
+			]);
 		},
 	});
 
 	return {
-		organizations,
-		isLoading,
+		...query,
 		actions: {
-			create: createOrganizationMutation,
-			delete: deleteOrganizationMutation,
+			create: createMutation,
+			delete: deleteMutaion,
 		},
 	};
 };

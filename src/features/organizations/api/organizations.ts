@@ -19,10 +19,6 @@ import {
 	organizationsSchema,
 } from "../types/schemas";
 
-/**
- * Fetches the list of organizations for the logged-in user.
- * @returns An array of organizations.
- */
 export const fetchOrganizations = async () => {
 	const response = await client.get("/organizations");
 	const json = await response.json();
@@ -53,8 +49,6 @@ export const updateOrganization = async (
 export const deleteOrganization = async (organizationId: string) => {
 	await client.delete(`/organizations/${organizationId}`);
 };
-
-/* Members */
 
 export const fetchOrganizationMembers = async (organizationId: string) => {
 	const response = await client.get(`/organizations/${organizationId}/members`);
