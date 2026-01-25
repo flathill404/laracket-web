@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
-import { UserAvatarWithName } from "@/components/common/user-avatar";
+import { UserAvatarWithName } from "@/components/common/user-avatar-with-name";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

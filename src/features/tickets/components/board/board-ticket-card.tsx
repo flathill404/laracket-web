@@ -1,6 +1,6 @@
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { useEffect, useRef, useState } from "react";
-import { UserAvatarStack } from "@/components/common/user-avatar";
+import { UserAvatarStack } from "@/components/common/user-avatar-stack";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Ticket } from "@/features/tickets/components/columns";
 import { cn } from "@/lib";

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { UserAvatar, UserAvatarStack } from "./user-avatar";
+import { UserAvatar } from "./user-avatar";
 
 vi.mock("@/components/ui/avatar", () => ({
 	Avatar: ({
@@ -33,23 +33,5 @@ describe("UserAvatar", () => {
 		);
 		const img = screen.getByRole("img");
 		expect(img).toHaveAttribute("src", "http://example.com/avatar.jpg");
-	});
-});
-
-describe("UserAvatarStack", () => {
-	it("renders max avatars and remainder", () => {
-		const users = [
-			{ id: "1", name: "A" },
-			{ id: "2", name: "B" },
-			{ id: "3", name: "C" },
-			{ id: "4", name: "D" },
-		];
-		render(<UserAvatarStack users={users} max={2} />);
-
-		// Should show A, B and +2
-		expect(screen.getByText("A")).toBeInTheDocument();
-		expect(screen.getByText("B")).toBeInTheDocument();
-		expect(screen.getByText("+2")).toBeInTheDocument();
-		expect(screen.queryByText("C")).not.toBeInTheDocument();
 	});
 });
