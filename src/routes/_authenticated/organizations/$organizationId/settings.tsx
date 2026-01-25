@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { OrganizationSettingsForm } from "@/features/organizations/components/organization-settings-form";
+import { OrganizationSettingsForm } from "@/features/organizations/components/OrganizationSettingsForm";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(

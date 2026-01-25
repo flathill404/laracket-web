@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
-import { CreateOrganizationDialog } from "@/features/organizations/components/create-organization-dialog";
+import { CreateOrganizationDialog } from "@/features/organizations/components/CreateOrganizationDialog";
 import type { Organization } from "@/features/organizations/types";
 import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
 import type { Project } from "@/features/projects/types";

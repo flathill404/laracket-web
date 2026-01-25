@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ProjectsList } from "@/features/organizations/components/projects-list";
+import { ProjectsList } from "@/features/organizations/components/ProjectsList";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
