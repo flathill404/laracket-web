@@ -25,6 +25,18 @@ bun run format         # Biome format only
 - **UI**: shadcn/ui (new-york style) with Tailwind CSS v4
 - **Validation**: Zod v4
 
+### File Naming Conventions (Strict)
+Follow these naming rules based on file responsibility:
+
+| Category | Extension | Case Style | Example | Note |
+| :--- | :--- | :--- | :--- | :--- |
+| **Routes** | `.tsx` | **Flat Routes** (kebab-case) | `posts.index.tsx`, `_auth.login.tsx` | Follow TanStack Router flat-file spec. Use `.` for nesting, `$` for params. |
+| **UI Lib (shadcn)** | `.tsx` | **kebab-case** | `components/ui/button.tsx` | **DO NOT RENAME**. Keep shadcn CLI defaults. |
+| **Feature Components** | `.tsx` | **PascalCase** | `features/auth/components/LoginForm.tsx` | Custom components must use PascalCase. |
+| **Custom Hooks** | `.ts` | **camelCase** | `useAuth.ts` | Must start with `use`. |
+| **Utilities/Helpers** | `.ts` | **camelCase** | `dateFormatter.ts` | Match filename to primary export function. |
+| **Types/Classes** | `.ts` | **PascalCase** | `User.ts`, `ApiError.ts` | Match filename to Type/Class name. |
+
 ### Feature-Based Structure (Best Practice)
 Each domain feature in `src/features/` MUST follow this unified pattern to ensure scalability and maintainability:
 
@@ -33,8 +45,8 @@ features/<feature>/
   api/          # API communication & Query logic
     ├── queries.ts    # Fetch functions & Query Options (get)
     └── mutations.ts  # Modification functions (create, update, delete)
-  components/   # Feature-specific UI components
-  hooks/        # Feature-specific hooks
+  components/   # Feature-specific UI components (PascalCase)
+  hooks/        # Feature-specific hooks (camelCase)
   types/        # TypeScript definitions
     ├── index.ts      # Interfaces and Types
     └── schemas.ts    # Zod schemas
