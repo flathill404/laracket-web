@@ -13,7 +13,6 @@ import {
 	projectsSchema,
 } from "../types/schemas";
 
-
 export const fetchProjects = async (userId: string) => {
 	const response = await client.get(`/users/${userId}/projects`);
 	const json = await response.json();
@@ -90,7 +89,6 @@ export const removeProjectMember = async (
 ) => {
 	await client.delete(`/projects/${projectId}/members/${userId}`);
 };
-
 
 export const addProjectTeam = async (
 	projectId: string,

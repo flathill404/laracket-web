@@ -59,9 +59,7 @@ export function CreateTicketDrawer({
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
 
-	const { data: members = [] } = useQuery(
-		projectQueries.members(projectId),
-	);
+	const { data: members = [] } = useQuery(projectQueries.members(projectId));
 
 	const form = useAppForm({
 		defaultValues: {

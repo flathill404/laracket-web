@@ -33,20 +33,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/use-app-form";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
-import {
-	ticketActivitiesQueryOptions,
-	ticketQueryOptions,
-} from "../api/queries";
-import {
-	addTicketAssignee,
-	addTicketReviewer,
-	removeTicketAssignee,
-	removeTicketReviewer,
-	updateTicket,
-	updateTicketStatus,
-} from "../api/tickets";
-import { useTicketMutation } from "../hooks/use-ticket-mutation";
-import type { TicketStatus, TicketUser } from "../types";
+import { useTicket } from "../hooks/use-ticket";
+import type { TicketStatus } from "../types";
+import { ticketQueries } from "../utils/queries";
 import { ActivityTimeline } from "./activity-timeline";
 import { TicketStatusSelect } from "./ticket-status-select";
 import { TicketUserSelector } from "./ticket-user-selector";
@@ -62,10 +51,12 @@ export function TicketDetailSheet({
 	open,
 	onOpenChange,
 }: TicketDetailSheetProps) {
-	const { data: ticket } = useSuspenseQuery(ticketQueryOptions(ticketId));
+	const { data: ticket } = useSuspenseQuery(ticketQueries.detail(ticketId));
 	const { data: activities } = useSuspenseQuery(
-		ticketActivitiesQueryOptions(ticketId),
+		ticketQueries.activities(ticketId),
 	);
+
+	const { updateCache, actions } = useTicket(ticketId, ticket.projectId);
 
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
@@ -77,11 +68,17 @@ export function TicketDetailSheet({
 		onSubmit: async ({ value }) => {
 			const trimmedTitle = value.title.trim();
 			if (trimmedTitle && trimmedTitle !== ticket.title) {
-				await updateTicket(ticketId, { title: trimmedTitle });
-				updateCache((old) => ({
-					...old,
-					title: trimmedTitle,
-				}));
+				actions.update.mutate(
+					{ title: trimmedTitle },
+					{
+						onSuccess: () => {
+							updateCache((old) => ({
+								...old,
+								title: trimmedTitle,
+							}));
+						},
+					},
+				);
 			}
 			setIsEditingTitle(false);
 			titleInputRef.current?.blur();
@@ -102,56 +99,6 @@ export function TicketDetailSheet({
 			titleInputRef.current?.blur();
 		}
 	};
-
-	const { mutate: mutateStatus, updateCache } = useTicketMutation(
-		ticketId,
-		ticket.projectId,
-		(status: TicketStatus) => updateTicketStatus(ticketId, { status }),
-		(old, status) => ({
-			...old,
-			status,
-		}),
-	);
-
-	const { mutate: addAssignee } = useTicketMutation(
-		ticketId,
-		ticket.projectId,
-		(user: TicketUser) => addTicketAssignee(ticketId, { userId: user.id }),
-		(old, user) => ({
-			...old,
-			assignees: [...old.assignees, user],
-		}),
-	);
-
-	const { mutate: removeAssignee } = useTicketMutation(
-		ticketId,
-		ticket.projectId,
-		(userId: string) => removeTicketAssignee(ticketId, userId),
-		(old, userId) => ({
-			...old,
-			assignees: old.assignees.filter((a) => a.id !== userId),
-		}),
-	);
-
-	const { mutate: addReviewer } = useTicketMutation(
-		ticketId,
-		ticket.projectId,
-		(user: TicketUser) => addTicketReviewer(ticketId, { userId: user.id }),
-		(old, user) => ({
-			...old,
-			reviewers: [...old.reviewers, user],
-		}),
-	);
-
-	const { mutate: removeReviewer } = useTicketMutation(
-		ticketId,
-		ticket.projectId,
-		(userId: string) => removeTicketReviewer(ticketId, userId),
-		(old, userId) => ({
-			...old,
-			reviewers: old.reviewers.filter((r) => r.id !== userId),
-		}),
-	);
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
@@ -200,7 +147,9 @@ export function TicketDetailSheet({
 						<div className="flex items-center gap-2">
 							<TicketStatusSelect
 								value={ticket.status}
-								onValueChange={(value) => mutateStatus(value as TicketStatus)}
+								onValueChange={(value) =>
+									actions.updateStatus.mutate(value as TicketStatus)
+								}
 							/>
 							<Button variant="ghost" size="icon">
 								<MoreHorizontal className="h-4 w-4" />
@@ -327,8 +276,8 @@ export function TicketDetailSheet({
 										addButtonLabel="+ Add Assignee"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(userId) => addAssignee(userId)}
-										onRemove={(userId) => removeAssignee(userId)}
+										onAdd={(user) => actions.addAssignee.mutate(user)}
+										onRemove={(userId) => actions.removeAssignee.mutate(userId)}
 									/>
 
 									{/* Due Date */}
@@ -362,13 +311,8 @@ export function TicketDetailSheet({
 															: undefined
 													}
 													onSelect={(date) =>
-														updateTicket(ticket.id, {
+														actions.update.mutate({
 															dueDate: date ? date.toISOString() : null,
-														}).then(() => {
-															updateCache((old) => ({
-																...old,
-																dueDate: date ? date.toISOString() : null,
-															}));
 														})
 													}
 													initialFocus
@@ -386,8 +330,8 @@ export function TicketDetailSheet({
 										addButtonLabel="+ Add Reviewer"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(userId) => addReviewer(userId)}
-										onRemove={(userId) => removeReviewer(userId)}
+										onAdd={(user) => actions.addReviewer.mutate(user)}
+										onRemove={(userId) => actions.removeReviewer.mutate(userId)}
 									/>
 								</div>
 							</div>

@@ -45,9 +45,7 @@ export function TicketUserSelector({
 }: TicketUserSelectorProps) {
 	const [open, setOpen] = useState(false);
 
-	const { data: members = [] } = useQuery(
-		projectQueries.members(projectId),
-	);
+	const { data: members = [] } = useQuery(projectQueries.members(projectId));
 
 	const userIds = new Set(users.map((u) => u.id));
 	const availableMembers = members.filter((m) => !userIds.has(m.id));

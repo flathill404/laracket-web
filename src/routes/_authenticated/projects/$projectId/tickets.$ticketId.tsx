@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ticketQueryOptions } from "@/features/tickets/api/queries";
 import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
+import { ticketQueries } from "@/features/tickets/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/tickets/$ticketId",
 )({
 	loader: ({ context: { queryClient }, params: { ticketId } }) => {
-		return queryClient.ensureQueryData(ticketQueryOptions(ticketId));
+		return queryClient.ensureQueryData(ticketQueries.detail(ticketId));
 	},
 	component: TicketDetailRoute,
 });
