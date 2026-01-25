@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { type RenderOptions, render } from "@testing-library/react";
+import { type RenderOptions, render, renderHook } from "@testing-library/react";
 import type { ReactElement, ReactNode } from "react";
 
 function createTestQueryClient() {
@@ -31,5 +31,14 @@ const customRender = (
 	options?: Omit<RenderOptions, "wrapper">,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
+const customRenderHook = <Result, Props>(
+	render: (initialProps: Props) => Result,
+	options?: Omit<RenderOptions, "wrapper">,
+) => renderHook(render, { wrapper: AllTheProviders, ...options });
+
 export * from "@testing-library/react";
-export { customRender as render, createTestQueryClient };
+export {
+	customRender as render,
+	customRenderHook as renderHook,
+	createTestQueryClient,
+};
