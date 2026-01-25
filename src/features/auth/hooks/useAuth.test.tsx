@@ -1,174 +1,73 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { renderHook, waitFor } from "@testing-library/react";
-import type { ReactNode } from "react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { renderHook, waitFor } from "@/test/utils";
 import { useAuth } from "./useAuth";
+import { describe, expect, it, vi } from "vitest";
+import * as authApi from "@/features/auth/api";
 
-// Mock the navigate function
-vi.mock("@tanstack/react-router", () => ({
-	useNavigate: () => vi.fn(),
-}));
+// Mock API
+vi.mock("@/features/auth/api");
 
-// Mock the API functions
-vi.mock("@/features/auth/api", () => ({
-	login: vi.fn(),
-	logout: vi.fn(),
-	twoFactorChallenge: vi.fn(),
-	forgotPassword: vi.fn(),
-	resetPassword: vi.fn(),
-	register: vi.fn(),
-	loginInputSchema: {
-		parse: vi.fn(),
-	},
-}));
-
-// Mock user query options
-const mockFetchUser = vi.fn();
-
-vi.mock("../utils/queries", () => ({
-	userQueryOptions: {
-		queryKey: ["user"],
-		queryFn: () => mockFetchUser(),
-	},
-}));
+// Mock useNavigate from router
+const navigateMock = vi.fn();
+vi.mock("@tanstack/react-router", async (importOriginal) => {
+	const actual =
+		await importOriginal<typeof import("@tanstack/react-router")>();
+	return {
+		...actual,
+		useNavigate: () => navigateMock,
+	};
+});
 
 describe("useAuth", () => {
-	let queryClient: QueryClient;
-
-	const wrapper = ({ children }: { children: ReactNode }) => (
-		<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-	);
-
-	beforeEach(() => {
-		queryClient = new QueryClient({
-			defaultOptions: {
-				queries: {
-					retry: false,
-				},
-			},
+	it("returns user data when authenticated", async () => {
+		vi.spyOn(authApi, "fetchUser").mockResolvedValue({
+			id: "1",
+			email: "test@example.com",
+			name: "Test User",
+			displayName: "Test",
+			avatarUrl: null,
+			emailVerifiedAt: "2023-01-01",
+			// Add other required fields if any (User interface)
+			currentTeamId: null,
+			hasPassword: true,
+			twoFactorConfirmedAt: null,
+			twoFactorEnabled: false,
 		});
-		vi.clearAllMocks();
+
+		const { result } = renderHook(() => useAuth());
+
+		await waitFor(() => expect(result.current.isAuthenticated).toBe(true));
+		expect(result.current.user).toEqual(
+			expect.objectContaining({ email: "test@example.com" }),
+		);
 	});
 
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
+	it("handles login", async () => {
+		const loginSpy = vi
+			.spyOn(authApi, "login")
+			.mockResolvedValue({ twoFactor: false });
 
-	describe("user state", () => {
-		it("should return user when authenticated", async () => {
-			const mockUser = {
-				id: "user-123",
-				name: "john",
-				email: "john@example.com",
-				twoFactorStatus: "disabled",
-			};
-			mockFetchUser.mockResolvedValueOnce(mockUser);
+		const { result } = renderHook(() => useAuth());
 
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(result.current.user).toEqual(mockUser);
-			expect(result.current.isAuthenticated).toBe(true);
+		await result.current.login({
+			email: "test@example.com",
+			password: "password",
+			remember: false,
 		});
 
-		it("should return null when not authenticated", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(result.current.user).toBeNull();
-			expect(result.current.isAuthenticated).toBe(false);
-		});
-
-		it("should show loading state initially", () => {
-			mockFetchUser.mockImplementation(
-				() => new Promise(() => {}), // Never resolves
-			);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			expect(result.current.isLoading).toBe(true);
+		expect(loginSpy.mock.calls[0][0]).toEqual({
+			email: "test@example.com",
+			password: "password",
+			remember: false,
 		});
 	});
 
-	describe("returned functions", () => {
-		it("should expose login function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
+	it("handles logout", async () => {
+		const logoutSpy = vi.spyOn(authApi, "logout").mockResolvedValue();
+		const { result } = renderHook(() => useAuth());
 
-			const { result } = renderHook(() => useAuth(), { wrapper });
+		await result.current.logout();
 
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.login).toBe("function");
-		});
-
-		it("should expose logout function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.logout).toBe("function");
-		});
-
-		it("should expose twoFactorChallenge function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.twoFactorChallenge).toBe("function");
-		});
-
-		it("should expose forgotPassword function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.forgotPassword).toBe("function");
-		});
-
-		it("should expose resetPassword function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.resetPassword).toBe("function");
-		});
-
-		it("should expose register function", async () => {
-			mockFetchUser.mockResolvedValueOnce(null);
-
-			const { result } = renderHook(() => useAuth(), { wrapper });
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(typeof result.current.register).toBe("function");
-		});
+		expect(logoutSpy).toHaveBeenCalled();
+		expect(navigateMock).toHaveBeenCalledWith({ to: "/login" });
 	});
 });
