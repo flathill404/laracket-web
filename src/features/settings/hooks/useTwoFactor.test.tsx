@@ -29,6 +29,8 @@ describe("useTwoFactor", () => {
 		mockUseAuth.mockReturnValue({
 			user: { twoFactorStatus: "pending" },
 		} as unknown as ReturnType<typeof useAuth>);
+		mockApi.fetchTwoFactorQrCode.mockResolvedValue({ svg: "<svg />" });
+
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -77,6 +79,9 @@ describe("useTwoFactor", () => {
 		mockUseAuth.mockReturnValue({
 			user: { twoFactorStatus: "disabled" },
 		} as unknown as ReturnType<typeof useAuth>);
+		mockApi.fetchTwoFactorRecoveryCodes.mockResolvedValue(["abc", "def"]);
+		mockApi.fetchTwoFactorQrCode.mockResolvedValue({ svg: "<svg />" });
+
 		const queryClient = createTestQueryClient();
 		const wrapper = ({ children }: { children: React.ReactNode }) => (
 			<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
