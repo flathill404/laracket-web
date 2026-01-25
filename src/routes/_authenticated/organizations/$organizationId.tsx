@@ -15,14 +15,14 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { organizationQueryOptions } from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId",
 )({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			organizationQueryOptions(params.organizationId),
+			organizationQueries.detail(params.organizationId),
 		);
 	},
 	component: OrganizationLayout,
@@ -32,7 +32,7 @@ function OrganizationLayout() {
 	const params = Route.useParams();
 	const location = useLocation();
 	const { data: organization } = useSuspenseQuery(
-		organizationQueryOptions(params.organizationId),
+		organizationQueries.detail(params.organizationId),
 	);
 
 	const navItems = [

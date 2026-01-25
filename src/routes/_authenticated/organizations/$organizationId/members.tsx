@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { organizationMembersQueryOptions } from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 import { MembersTable } from "@/features/projects/components/members-table";
 
 export const Route = createFileRoute(
@@ -8,7 +8,7 @@ export const Route = createFileRoute(
 )({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			organizationMembersQueryOptions(params.organizationId),
+			organizationQueries.members(params.organizationId),
 		);
 	},
 	component: OrganizationMembers,
@@ -17,7 +17,7 @@ export const Route = createFileRoute(
 function OrganizationMembers() {
 	const params = Route.useParams();
 	const { data: members } = useSuspenseQuery(
-		organizationMembersQueryOptions(params.organizationId),
+		organizationQueries.members(params.organizationId),
 	);
 
 	return (

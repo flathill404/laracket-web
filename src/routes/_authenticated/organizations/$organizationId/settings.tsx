@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { OrganizationSettingsForm } from "@/features/organizations/components/organization-settings-form";
-import { organizationQueryOptions } from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId/settings",
 )({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			organizationQueryOptions(params.organizationId),
+			organizationQueries.detail(params.organizationId),
 		);
 	},
 	component: OrganizationSettings,
@@ -17,7 +17,7 @@ export const Route = createFileRoute(
 function OrganizationSettings() {
 	const params = Route.useParams();
 	const { data: organization } = useSuspenseQuery(
-		organizationQueryOptions(params.organizationId),
+		organizationQueries.detail(params.organizationId),
 	);
 
 	return (

@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
-import { organizationsQueryOptions } from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 import { projectsQueryOptions } from "@/features/projects/utils/queries";
 import { teamsQueryOptions } from "@/features/teams/utils/queries";
 
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_authenticated")({
 		const promises = [
 			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
 			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
-			context.queryClient.ensureQueryData(organizationsQueryOptions()),
+			context.queryClient.ensureQueryData(organizationQueries.list()),
 		];
 		await Promise.all(promises);
 	},
@@ -50,7 +50,7 @@ function AuthLayout() {
 
 	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
-	const { data: organizations } = useSuspenseQuery(organizationsQueryOptions());
+	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
 
 	// We can safely assume user is not null here because of beforeLoad check
 	// But typescript might complain if type includes null (and useAuth returns user | undefined)

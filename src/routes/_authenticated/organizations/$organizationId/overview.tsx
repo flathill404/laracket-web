@@ -2,12 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, Folder, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	organizationMembersQueryOptions,
-	organizationProjectsQueryOptions,
-	organizationQueryOptions,
-	organizationTeamsQueryOptions,
-} from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId/overview",
@@ -15,16 +10,16 @@ export const Route = createFileRoute(
 	loader: async ({ context, params }) => {
 		await Promise.all([
 			context.queryClient.ensureQueryData(
-				organizationQueryOptions(params.organizationId),
+				organizationQueries.detail(params.organizationId),
 			),
 			context.queryClient.ensureQueryData(
-				organizationMembersQueryOptions(params.organizationId),
+				organizationQueries.members(params.organizationId),
 			),
 			context.queryClient.ensureQueryData(
-				organizationProjectsQueryOptions(params.organizationId),
+				organizationQueries.projects(params.organizationId),
 			),
 			context.queryClient.ensureQueryData(
-				organizationTeamsQueryOptions(params.organizationId),
+				organizationQueries.teams(params.organizationId),
 			),
 		]);
 	},
@@ -34,16 +29,16 @@ export const Route = createFileRoute(
 function OrganizationOverview() {
 	const params = Route.useParams();
 	const { data: organization } = useSuspenseQuery(
-		organizationQueryOptions(params.organizationId),
+		organizationQueries.detail(params.organizationId),
 	);
 	const { data: members } = useSuspenseQuery(
-		organizationMembersQueryOptions(params.organizationId),
+		organizationQueries.members(params.organizationId),
 	);
 	const { data: projects } = useSuspenseQuery(
-		organizationProjectsQueryOptions(params.organizationId),
+		organizationQueries.projects(params.organizationId),
 	);
 	const { data: teams } = useSuspenseQuery(
-		organizationTeamsQueryOptions(params.organizationId),
+		organizationQueries.teams(params.organizationId),
 	);
 
 	return (

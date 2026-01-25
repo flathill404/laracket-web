@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { updateOrganization } from "@/features/organizations/api/organizations";
 import type { Organization } from "@/features/organizations/types";
-import { organizationQueryOptions } from "@/features/organizations/utils/queries";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 
@@ -39,7 +39,7 @@ export function OrganizationSettingsForm({
 		errorMessage: "Failed to update organization",
 		onSuccess: (updatedOrganization) => {
 			queryClient.setQueryData(
-				organizationQueryOptions(organization.id).queryKey,
+				organizationQueries.detail(organization.id).queryKey,
 				updatedOrganization,
 			);
 		},

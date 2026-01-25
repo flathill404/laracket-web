@@ -19,9 +19,7 @@ export const useOrganizationMembers = (id: string) => {
 		mutationFn: (input: OrganizationMemberInput) =>
 			addOrganizationMember(id, input),
 		onSuccess: () => {
-			queryClient.invalidateQueries(
-				organizationQueries.members(id),
-			);
+			queryClient.invalidateQueries(organizationQueries.members(id));
 		},
 	});
 
@@ -34,19 +32,14 @@ export const useOrganizationMembers = (id: string) => {
 			input: UpdateOrganizationMemberInput;
 		}) => updateOrganizationMember(id, userId, input),
 		onSuccess: () => {
-			queryClient.invalidateQueries(
-				organizationQueries.members(id),
-			);
+			queryClient.invalidateQueries(organizationQueries.members(id));
 		},
 	});
 
 	const removeMutation = useMutation({
-		mutationFn: (userId: string) =>
-			removeOrganizationMember(id, userId),
+		mutationFn: (userId: string) => removeOrganizationMember(id, userId),
 		onSuccess: () => {
-			queryClient.invalidateQueries(
-				organizationQueries.members(id),
-			);
+			queryClient.invalidateQueries(organizationQueries.members(id));
 		},
 	});
 
