@@ -25,6 +25,22 @@ bun run format         # Biome format only
 - **UI**: shadcn/ui (new-york style) with Tailwind CSS v4
 - **Validation**: Zod v4
 
+### Testing Guidelines (Strict)
+
+#### Coverage Rules
+- **Excluded (No Unit Tests Required):**
+  - `src/components/ui/*`: shadcn/ui components are treated as trusted third-party code.
+  - `src/routes/*`: Route definitions and integration layers are excluded from **Unit Tests** (rely on E2E/Integration if needed).
+
+- **Mandatory:**
+  - **ALL other `.ts` and `.tsx` files** (Features, Custom Components, Hooks, Utils) MUST have unit tests.
+
+#### Test Design Philosophy
+- **Testability is Quality**: If a function or component is difficult to test, consider it a **design flaw**. Refactor the code to be testable (e.g., dependency injection, smaller functions) rather than writing complex, fragile tests.
+- **Keep it DRY & Simple**: Avoid repetitive boilerplate in test files.
+  - Extract common mocks, renderers, and utilities to `src/test/utils.tsx`.
+  - Tests should be readable documentation of the code's behavior.
+
 ### File Naming Conventions (Strict)
 Follow these naming rules based on file responsibility:
 
