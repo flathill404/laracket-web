@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { CreateOrganizationDialog } from "@/features/organizations/components/CreateOrganizationDialog";
 import type { Organization } from "@/features/organizations/types";
-import { CreateProjectDialog } from "@/features/projects/components/create-project-dialog";
+import { CreateProjectDialog } from "@/features/projects/components/CreateProjectDialog";
 import type { Project } from "@/features/projects/types";
 import { CreateTeamDialog } from "@/features/teams/components/create-team-dialog";
 import type { Team } from "@/features/teams/types";

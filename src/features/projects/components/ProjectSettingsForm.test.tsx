@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { createTestQueryClient } from "@/test/utils";
-import { ProjectSettingsForm } from "./project-settings-form";
+import { ProjectSettingsForm } from "./ProjectSettingsForm";
 
 vi.mock("@/hooks/use-mutation-with-toast", () => ({
 	useMutationWithToast: vi.fn(),
