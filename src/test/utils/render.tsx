@@ -25,4 +25,3 @@ const customRenderHook = <Result, Props>(
 ) => renderHook(render, { wrapper: AllTheProviders, ...options });
 
 export { customRender as render, customRenderHook as renderHook };
-export { screen, waitFor } from "@testing-library/react";

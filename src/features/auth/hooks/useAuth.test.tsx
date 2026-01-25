@@ -1,7 +1,8 @@
+import { waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import * as authApi from "@/features/auth/api";
-import { renderHook, waitFor } from "@/test/utils";
-import { useAuth } from "./useAuth";
+import * as authApi from "@/features/auth/api"; // Kept: original import
+import { renderHook } from "@/test/utils"; // Corrected: renderHook is from "@/test/utils"
+import { useAuth } from "./useAuth"; // Kept: original import
 
 // Mock API
 vi.mock("@/features/auth/api");

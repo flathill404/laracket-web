@@ -1,7 +1,8 @@
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentType } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithRouter as baseRenderWithRouter, screen, waitFor } from "@/test/utils";
+import { renderWithRouter as baseRenderWithRouter } from "@/test/utils";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
 const resetPasswordMock = vi.fn();

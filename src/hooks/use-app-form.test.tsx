@@ -1,13 +1,8 @@
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@/test/utils";
+import { render } from "@/test/utils";
 import { useAppForm } from "./use-app-form";
-
-// Mocks for ui components if needed, but since we are testing integration with useAppForm,
-// we might want to render them. However, if they are complex, shallow render might be better.
-// But useAppForm uses concrete implementations of InputField, CheckboxField etc.
-// which import from @/components/ui/*.
-// Assuming shadcn components work in test env (they should).
 
 function TestForm({ onSubmit }: { onSubmit: (values: unknown) => void }) {
 	const form = useAppForm({
@@ -91,10 +86,6 @@ describe("useAppForm", () => {
 	});
 
 	it.skip("displays validation errors", async () => {
-		// To test validation, we need to pass validators to useAppForm
-		// But useAppForm in the test helper above didn't have validators.
-		// Let's create a form with validators.
-
 		const handleSubmit = vi.fn();
 		const user = userEvent.setup();
 
@@ -132,13 +123,6 @@ describe("useAppForm", () => {
 
 		const submitBtn = screen.getByRole("button", { name: "Submit" });
 		await user.click(submitBtn);
-
-		// TanStack form validation is async or immediate depending on config.
-		// Standard validation usually happens on change or submit.
-		// The error message should appear.
-
-		// Note: The provided use-app-form.tsx InputField implementation
-		// conditionally renders <FieldError /> based on field.state.meta.errors
 
 		await waitFor(() => {
 			expect(screen.getByText("Name is required")).toBeInTheDocument();

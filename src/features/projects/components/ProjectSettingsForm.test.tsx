@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";

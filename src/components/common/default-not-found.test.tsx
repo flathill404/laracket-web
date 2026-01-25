@@ -1,6 +1,7 @@
+import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import { renderWithRouter, screen, waitFor } from "@/test/utils";
+import { renderWithRouter } from "@/test/utils";
 import { DefaultNotFound } from "./default-not-found";
 
 describe("DefaultNotFound", () => {
