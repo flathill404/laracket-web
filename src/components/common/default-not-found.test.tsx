@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { renderWithRouter } from "@/test/renderWithRouter";
-import { screen, waitFor } from "@/test/utils";
+
+import { renderWithRouter, screen, waitFor } from "@/test/utils";
 import { DefaultNotFound } from "./default-not-found";
 
 describe("DefaultNotFound", () => {

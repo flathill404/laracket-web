@@ -7,7 +7,7 @@ import {
 	type RouteComponent,
 	RouterProvider,
 } from "@tanstack/react-router";
-import { render, waitFor } from "./utils";
+import { render, waitFor } from "@testing-library/react";
 
 interface RouteConfig {
 	path: string;

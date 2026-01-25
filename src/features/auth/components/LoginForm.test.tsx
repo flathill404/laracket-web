@@ -1,7 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithRouter } from "@/test/renderWithRouter";
-import { render, screen, waitFor } from "@/test/utils";
+import { render, renderWithRouter, screen, waitFor } from "@/test/utils";
 import { LoginForm } from "./LoginForm";
 
 // Mock useAuth hook

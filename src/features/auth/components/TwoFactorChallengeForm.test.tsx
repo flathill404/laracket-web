@@ -1,7 +1,7 @@
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { renderWithRouter } from "@/test/renderWithRouter";
-import { screen, waitFor } from "@/test/utils";
+
+import { renderWithRouter, screen, waitFor } from "@/test/utils";
 import { TwoFactorChallengeForm } from "./TwoFactorChallengeForm";
 
 const twoFactorChallengeMock = vi.fn();
