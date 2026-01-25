@@ -19,7 +19,7 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
 	}),
 }));
 
-function renderWithRouter(Component: React.ComponentType) {
+async function renderWithRouter(Component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -38,6 +38,8 @@ function renderWithRouter(Component: React.ComponentType) {
 		}),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
@@ -47,9 +49,11 @@ describe("LoginForm", () => {
 		expect(screen.getByText("bare sanity")).toBeInTheDocument();
 	});
 
-	it("renders sanity check", () => {
-		renderWithRouter(() => <div>sanity check</div>);
-		expect(screen.getByText("sanity check")).toBeInTheDocument();
+	it("renders sanity check", async () => {
+		await renderWithRouter(() => <div>sanity check</div>);
+		await waitFor(() => {
+			expect(screen.getByText("sanity check")).toBeInTheDocument();
+		});
 	});
 
 	// Skipping tests due to JSDOM rendering issue with TanStack Router/Form

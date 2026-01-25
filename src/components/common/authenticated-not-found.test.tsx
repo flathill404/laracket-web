@@ -7,11 +7,11 @@ import {
 	RouterProvider,
 } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@/test/utils";
+import { render, screen, waitFor } from "@/test/utils";
 import { AuthenticatedNotFound } from "./authenticated-not-found";
 
 // Helper to wrap component with Router for Link support
-function renderWithRouter(component: React.ComponentType) {
+async function renderWithRouter(component: React.ComponentType) {
 	const rootRoute = createRootRoute({
 		component: () => <Outlet />,
 	});
@@ -36,25 +36,31 @@ function renderWithRouter(component: React.ComponentType) {
 		history: createMemoryHistory(),
 	});
 
+	await router.load();
+
 	return render(<RouterProvider router={router} />);
 }
 
 describe("AuthenticatedNotFound", () => {
-	it("renders not found message", () => {
-		renderWithRouter(AuthenticatedNotFound);
+	it("renders not found message", async () => {
+		await renderWithRouter(AuthenticatedNotFound);
 
-		expect(screen.getByText("Page not found")).toBeInTheDocument();
+		await waitFor(() => {
+			expect(screen.getByText("Page not found")).toBeInTheDocument();
+		});
 		expect(
 			screen.getByText(/Sorry, we couldn't find the page/),
 		).toBeInTheDocument();
 	});
 
-	it("renders navigation buttons", () => {
-		renderWithRouter(AuthenticatedNotFound);
+	it("renders navigation buttons", async () => {
+		await renderWithRouter(AuthenticatedNotFound);
 
-		expect(
-			screen.getByRole("link", { name: /Go to Dashboard/i }),
-		).toBeInTheDocument();
+		await waitFor(() => {
+			expect(
+				screen.getByRole("link", { name: /Go to Dashboard/i }),
+			).toBeInTheDocument();
+		});
 		expect(screen.getByRole("link", { name: /Go Back/i })).toBeInTheDocument();
 	});
 });
