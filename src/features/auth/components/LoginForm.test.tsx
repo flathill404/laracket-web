@@ -1,13 +1,6 @@
-import {
-	createMemoryHistory,
-	createRootRoute,
-	createRoute,
-	createRouter,
-	Outlet,
-	RouterProvider,
-} from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { renderWithRouter } from "@/test/renderWithRouter";
 import { render, screen, waitFor } from "@/test/utils";
 import { LoginForm } from "./LoginForm";
 
@@ -18,30 +11,6 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
 		login: loginMock,
 	}),
 }));
-
-async function renderWithRouter(Component: React.ComponentType) {
-	const rootRoute = createRootRoute({
-		component: () => <Outlet />,
-	});
-
-	const indexRoute = createRoute({
-		getParentRoute: () => rootRoute,
-		path: "/",
-		// component is passed as element from test
-		component: () => <Component />,
-	});
-
-	const router = createRouter({
-		routeTree: rootRoute.addChildren([indexRoute]),
-		history: createMemoryHistory({
-			initialEntries: ["/"],
-		}),
-	});
-
-	await router.load();
-
-	return render(<RouterProvider router={router} />);
-}
 
 describe("LoginForm", () => {
 	it("renders bare sanity check", () => {

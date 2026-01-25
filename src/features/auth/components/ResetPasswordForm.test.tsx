@@ -1,14 +1,8 @@
-import {
-	createMemoryHistory,
-	createRootRoute,
-	createRoute,
-	createRouter,
-	Outlet,
-	RouterProvider,
-} from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
+import type { ComponentType } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@/test/utils";
+import { renderWithRouter as baseRenderWithRouter } from "@/test/renderWithRouter";
+import { screen, waitFor } from "@/test/utils";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
 const resetPasswordMock = vi.fn();
@@ -24,31 +18,12 @@ vi.mock("sonner", () => ({
 	},
 }));
 
+// Wrapper to support component props
 async function renderWithRouter<T extends object>(
-	Component: React.ComponentType<T>,
+	Component: ComponentType<T>,
 	props = {} as T,
 ) {
-	const rootRoute = createRootRoute({
-		component: () => <Outlet />,
-	});
-
-	const indexRoute = createRoute({
-		getParentRoute: () => rootRoute,
-		path: "/",
-		// component is passed as element from test
-		component: () => <Component {...props} />,
-	});
-
-	const router = createRouter({
-		routeTree: rootRoute.addChildren([indexRoute]),
-		history: createMemoryHistory({
-			initialEntries: ["/"],
-		}),
-	});
-
-	await router.load();
-
-	return render(<RouterProvider router={router} />);
+	return baseRenderWithRouter(() => <Component {...props} />);
 }
 
 describe("ResetPasswordForm", () => {

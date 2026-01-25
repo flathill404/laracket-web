@@ -1,14 +1,7 @@
-import {
-	createMemoryHistory,
-	createRootRoute,
-	createRoute,
-	createRouter,
-	Outlet,
-	RouterProvider,
-} from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@/test/utils";
+import { renderWithRouter } from "@/test/renderWithRouter";
+import { screen, waitFor } from "@/test/utils";
 import { TwoFactorChallengeForm } from "./TwoFactorChallengeForm";
 
 const twoFactorChallengeMock = vi.fn();
@@ -23,30 +16,6 @@ vi.mock("sonner", () => ({
 		error: vi.fn(),
 	},
 }));
-
-async function renderWithRouter(Component: React.ComponentType) {
-	const rootRoute = createRootRoute({
-		component: () => <Outlet />,
-	});
-
-	const indexRoute = createRoute({
-		getParentRoute: () => rootRoute,
-		path: "/",
-		// component is passed as element from test
-		component: () => <Component />,
-	});
-
-	const router = createRouter({
-		routeTree: rootRoute.addChildren([indexRoute]),
-		history: createMemoryHistory({
-			initialEntries: ["/"],
-		}),
-	});
-
-	await router.load();
-
-	return render(<RouterProvider router={router} />);
-}
 
 describe("TwoFactorChallengeForm", () => {
 	it("renders otp input", async () => {

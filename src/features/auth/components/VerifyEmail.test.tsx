@@ -1,14 +1,7 @@
-import {
-	createMemoryHistory,
-	createRootRoute,
-	createRoute,
-	createRouter,
-	Outlet,
-	RouterProvider,
-} from "@tanstack/react-router";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@/test/utils";
+import { renderWithRouter } from "@/test/renderWithRouter";
+import { screen, waitFor } from "@/test/utils";
 import { VerifyEmail } from "./VerifyEmail";
 
 // Mock useAuth
@@ -51,29 +44,6 @@ vi.mock("@/hooks/use-mutation-with-toast", () => ({
 
 // To properly mock multiple calls to useMutationWithToast, we need better control.
 // Let's just verify rendering mostly.
-
-async function renderWithRouter(Component: React.ComponentType) {
-	const rootRoute = createRootRoute({
-		component: () => <Outlet />,
-	});
-
-	const indexRoute = createRoute({
-		getParentRoute: () => rootRoute,
-		path: "/",
-		component: () => <Component />,
-	});
-
-	const router = createRouter({
-		routeTree: rootRoute.addChildren([indexRoute]),
-		history: createMemoryHistory({
-			initialEntries: ["/"],
-		}),
-	});
-
-	await router.load();
-
-	return render(<RouterProvider router={router} />);
-}
 
 describe("VerifyEmail", () => {
 	it("renders email verification message", async () => {
