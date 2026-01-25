@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { MembersTable } from "@/features/projects/components/members-table";
-import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/members",
 )({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			projectMembersQueryOptions(params.projectId),
+			projectQueries.members(params.projectId),
 		);
 	},
 	component: ProjectMembers,
@@ -17,7 +17,7 @@ export const Route = createFileRoute(
 function ProjectMembers() {
 	const params = Route.useParams();
 	const { data: members } = useSuspenseQuery(
-		projectMembersQueryOptions(params.projectId),
+		projectQueries.members(params.projectId),
 	);
 
 	return (

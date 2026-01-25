@@ -1,14 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ProjectSettingsForm } from "@/features/projects/components/project-settings-form";
-import { projectQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 
 export const Route = createFileRoute(
 	"/_authenticated/projects/$projectId/settings",
 )({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			projectQueryOptions(params.projectId),
+			projectQueries.detail(params.projectId),
 		);
 	},
 	component: ProjectSettings,
@@ -17,7 +17,7 @@ export const Route = createFileRoute(
 function ProjectSettings() {
 	const params = Route.useParams();
 	const { data: project } = useSuspenseQuery(
-		projectQueryOptions(params.projectId),
+		projectQueries.detail(params.projectId),
 	);
 
 	return (

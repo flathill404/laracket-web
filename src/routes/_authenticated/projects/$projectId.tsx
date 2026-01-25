@@ -18,13 +18,13 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { projectQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
 
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 	loader: async ({ context, params }) => {
 		return context.queryClient.ensureQueryData(
-			projectQueryOptions(params.projectId),
+			projectQueries.detail(params.projectId),
 		);
 	},
 	component: ProjectLayout,
@@ -35,7 +35,7 @@ function ProjectLayout() {
 	const location = useLocation();
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const { data: project } = useSuspenseQuery(
-		projectQueryOptions(params.projectId),
+		projectQueries.detail(params.projectId),
 	);
 
 	const navItems = [

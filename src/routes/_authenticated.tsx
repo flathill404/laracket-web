@@ -6,7 +6,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
-import { projectsQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 import { teamsQueryOptions } from "@/features/teams/utils/queries";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_authenticated")({
 
 		// Load projects, teams, and organizations for sidebar
 		const promises = [
-			context.queryClient.ensureQueryData(projectsQueryOptions(user.id)),
+			context.queryClient.ensureQueryData(projectQueries.list(user.id)),
 			context.queryClient.ensureQueryData(teamsQueryOptions(user.id)),
 			context.queryClient.ensureQueryData(organizationQueries.list()),
 		];
@@ -48,7 +48,7 @@ function AuthLayout() {
 	const userId = user?.id ?? "";
 	const isVerified = !!user?.emailVerifiedAt; // Derived state
 
-	const { data: projects } = useSuspenseQuery(projectsQueryOptions(userId));
+	const { data: projects } = useSuspenseQuery(projectQueries.list(userId));
 	const { data: teams } = useSuspenseQuery(teamsQueryOptions(userId));
 	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
 

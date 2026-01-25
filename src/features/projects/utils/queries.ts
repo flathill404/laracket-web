@@ -6,22 +6,25 @@ import {
 	fetchProjects,
 } from "../api/projects";
 
-export const projectsQueryOptions = (userId: string) =>
-	queryOptions({
-		queryKey: queryKeys.projects.list(userId),
-		queryFn: async () => {
-			return await fetchProjects(userId);
-		},
-	});
+export const projectQueries = {
+	list: (userId: string) =>
+		queryOptions({
+			queryKey: queryKeys.projects.list(userId),
+			queryFn: () => fetchProjects(userId),
+			enabled: !!userId,
+		}),
 
-export const projectMembersQueryOptions = (projectId: string) =>
-	queryOptions({
-		queryKey: queryKeys.projects.members(projectId),
-		queryFn: () => fetchProjectMembers(projectId),
-	});
+	detail: (projectId: string) =>
+		queryOptions({
+			queryKey: queryKeys.projects.detail(projectId),
+			queryFn: () => fetchProject(projectId),
+			enabled: !!projectId,
+		}),
 
-export const projectQueryOptions = (projectId: string) =>
-	queryOptions({
-		queryKey: queryKeys.projects.detail(projectId),
-		queryFn: () => fetchProject(projectId),
-	});
+	members: (projectId: string) =>
+		queryOptions({
+			queryKey: queryKeys.projects.members(projectId),
+			queryFn: () => fetchProjectMembers(projectId),
+			enabled: !!projectId,
+		}),
+};

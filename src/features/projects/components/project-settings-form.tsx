@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { updateProject } from "@/features/projects/api/projects";
 import type { Project } from "@/features/projects/types";
-import { projectQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 
@@ -27,7 +27,7 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 		errorMessage: "Failed to update project",
 		onSuccess: (updatedProject) => {
 			queryClient.setQueryData(
-				projectQueryOptions(project.id).queryKey,
+				projectQueries.detail(project.id).queryKey,
 				updatedProject,
 			);
 		},

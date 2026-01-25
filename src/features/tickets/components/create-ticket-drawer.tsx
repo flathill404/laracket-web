@@ -23,7 +23,7 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 import { createTicket } from "@/features/tickets/api/tickets";
 import { TicketStatusSelect } from "@/features/tickets/components/ticket-status-select";
 import { TicketUserSelector } from "@/features/tickets/components/ticket-user-selector";
@@ -60,7 +60,7 @@ export function CreateTicketDrawer({
 	const titleInputRef = useRef<HTMLInputElement>(null);
 
 	const { data: members = [] } = useQuery(
-		projectMembersQueryOptions(projectId),
+		projectQueries.members(projectId),
 	);
 
 	const form = useAppForm({

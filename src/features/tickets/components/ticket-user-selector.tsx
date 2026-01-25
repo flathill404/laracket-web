@@ -16,7 +16,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { projectMembersQueryOptions } from "@/features/projects/utils/queries";
+import { projectQueries } from "@/features/projects/utils/queries";
 import type { TicketUser } from "../types";
 
 interface TicketUserSelectorProps {
@@ -46,7 +46,7 @@ export function TicketUserSelector({
 	const [open, setOpen] = useState(false);
 
 	const { data: members = [] } = useQuery(
-		projectMembersQueryOptions(projectId),
+		projectQueries.members(projectId),
 	);
 
 	const userIds = new Set(users.map((u) => u.id));

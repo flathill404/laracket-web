@@ -13,11 +13,7 @@ import {
 	projectsSchema,
 } from "../types/schemas";
 
-/**
- * Fetches the list of projects for a specific user.
- * @param userId - The ID of the user.
- * @returns An array of projects.
- */
+
 export const fetchProjects = async (userId: string) => {
 	const response = await client.get(`/users/${userId}/projects`);
 	const json = await response.json();
@@ -63,12 +59,6 @@ export const fetchProjectTickets = async (
 	return paginatedTicketsSchema.parse(json);
 };
 
-export const fetchProjectMembers = async (projectId: string) => {
-	const response = await client.get(`/projects/${projectId}/members`);
-	const json = await response.json();
-	return projectMembersSchema.parse(json.data);
-};
-
 export const createProject = async (input: CreateProjectInput) => {
 	const response = await client.post("/projects", input);
 	const json = await response.json();
@@ -79,7 +69,11 @@ export const deleteProject = async (projectId: string) => {
 	await client.delete(`/projects/${projectId}`);
 };
 
-/* Members */
+export const fetchProjectMembers = async (projectId: string) => {
+	const response = await client.get(`/projects/${projectId}/members`);
+	const json = await response.json();
+	return projectMembersSchema.parse(json.data);
+};
 
 export const addProjectMember = async (
 	projectId: string,
@@ -97,7 +91,6 @@ export const removeProjectMember = async (
 	await client.delete(`/projects/${projectId}/members/${userId}`);
 };
 
-/* Teams */
 
 export const addProjectTeam = async (
 	projectId: string,
