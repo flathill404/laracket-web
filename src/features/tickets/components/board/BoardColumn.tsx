@@ -3,13 +3,13 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib";
-import { useInfiniteTickets } from "../../hooks/use-infinite-tickets";
+import { useInfiniteTickets } from "../../hooks/useInfiniteTickets";
 import {
 	STATUS_BG_COLORS,
 	STATUS_LABELS,
 	type TicketStatus,
 } from "../../utils/constants";
-import { BoardTicketCard } from "./board-ticket-card";
+import { BoardTicketCard } from "./BoardTicketCard";
 
 interface BoardColumnProps {
 	projectId: string;

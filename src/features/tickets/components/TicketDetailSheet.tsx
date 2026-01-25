@@ -33,12 +33,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/use-app-form";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
-import { useTicket } from "../hooks/use-ticket";
+import { useTicket } from "../hooks/useTicket";
 import type { TicketStatus } from "../types";
 import { ticketQueries } from "../utils/queries";
-import { ActivityTimeline } from "./activity-timeline";
-import { TicketStatusSelect } from "./ticket-status-select";
-import { TicketUserSelector } from "./ticket-user-selector";
+import { ActivityTimeline } from "./ActivityTimeline";
+import { TicketStatusSelect } from "./TicketStatusSelect";
+import { TicketUserSelector } from "./TicketUserSelector";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;

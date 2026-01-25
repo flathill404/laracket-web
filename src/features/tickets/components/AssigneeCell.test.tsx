@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { Ticket } from "../types";
-import { AssigneeCell } from "./assignee-cell";
+import { AssigneeCell } from "./AssigneeCell";
 
 type Assignee = Ticket["assignees"][number];
 

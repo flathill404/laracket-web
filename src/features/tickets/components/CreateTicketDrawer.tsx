@@ -25,8 +25,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { projectQueries } from "@/features/projects/utils/queries";
 import { createTicket } from "@/features/tickets/api/tickets";
-import { TicketStatusSelect } from "@/features/tickets/components/ticket-status-select";
-import { TicketUserSelector } from "@/features/tickets/components/ticket-user-selector";
+import { TicketStatusSelect } from "@/features/tickets/components/TicketStatusSelect";
+import { TicketUserSelector } from "@/features/tickets/components/TicketUserSelector";
 import type { TicketStatus } from "@/features/tickets/types";
 import { ticketStatusSchema } from "@/features/tickets/types/schemas";
 import { useAppForm } from "@/hooks/use-app-form";

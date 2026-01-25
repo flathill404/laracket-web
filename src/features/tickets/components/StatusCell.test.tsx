@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { StatusCell } from "./status-cell";
+import { StatusCell } from "./StatusCell";
 
 describe("StatusCell", () => {
 	it("should render open status with correct label", () => {

@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { projectQueries } from "@/features/projects/utils/queries";
-import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
+import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
 	loader: async ({ context, params }) => {

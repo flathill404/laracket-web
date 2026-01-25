@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { TicketStatusSelect } from "./ticket-status-select";
+import { TicketStatusSelect } from "./TicketStatusSelect";
 
 vi.mock("@/features/tickets/utils", () => ({
 	getAllStatuses: () => ["open", "closed"],

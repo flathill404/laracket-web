@@ -1,12 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Ticket, TicketTableMeta } from "../types";
-import { ActionsCell } from "./actions-cell";
-import { AssigneeCell } from "./assignee-cell";
-import { DueDateCell } from "./due-date-cell";
-import { DueDateHeader } from "./due-date-header";
-import { StatusCell } from "./status-cell";
-import { StatusHeader } from "./status-header";
-import { SubjectCell } from "./subject-cell";
+import { ActionsCell } from "./ActionsCell";
+import { AssigneeCell } from "./AssigneeCell";
+import { DueDateCell } from "./DueDateCell";
+import { DueDateHeader } from "./DueDateHeader";
+import { StatusCell } from "./StatusCell";
+import { StatusHeader } from "./StatusHeader";
+import { SubjectCell } from "./SubjectCell";
 
 export type { Ticket, TicketTableMeta } from "../types";
 

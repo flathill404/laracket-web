@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TicketDetailSheet } from "@/features/tickets/components/ticket-detail-sheet";
+import { TicketDetailSheet } from "@/features/tickets/components/TicketDetailSheet";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 
 export const Route = createFileRoute(

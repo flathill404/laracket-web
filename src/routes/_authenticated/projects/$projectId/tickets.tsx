@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { fetchProjectTickets } from "@/features/projects/api/projects";
-import { CreateTicketDrawer } from "@/features/tickets/components/create-ticket-drawer";
-import { TicketList } from "@/features/tickets/components/ticket-list";
-import { useInfiniteTickets } from "@/features/tickets/hooks/use-infinite-tickets";
+import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
+import { TicketList } from "@/features/tickets/components/TicketList";
+import { useInfiniteTickets } from "@/features/tickets/hooks/useInfiniteTickets";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
 
 const ticketsQuery = (

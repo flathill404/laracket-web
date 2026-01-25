@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { updateTicketStatus } from "@/features/tickets/api/tickets";
-import { BoardColumn } from "@/features/tickets/components/board/board-column";
+import { BoardColumn } from "@/features/tickets/components/board/BoardColumn";
 import {
 	ALL_STATUSES,
 	type TicketStatus,

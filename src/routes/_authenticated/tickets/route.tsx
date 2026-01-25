@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
-import { TicketList } from "@/features/tickets/components/ticket-list";
+import { TicketList } from "@/features/tickets/components/TicketList";
 
 const userTicketsQuery = (userId: string) =>
 	queryOptions({

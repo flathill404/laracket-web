@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { Ticket } from "../types";
-import { SubjectCell } from "./subject-cell";
+import { SubjectCell } from "./SubjectCell";
 
 const createMockTicket = (overrides: Partial<Ticket> = {}): Ticket => ({
 	id: "ticket-12345678-abcd-efgh-ijkl-mnopqrstuvwx",

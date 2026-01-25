@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Activity } from "../types";
-import { ActivityItem, ActivityTimeline } from "./activity-timeline";
+import { ActivityItem, ActivityTimeline } from "./ActivityTimeline";
 
 const createMockActivity = (overrides: Partial<Activity> = {}): Activity => ({
 	id: 1,

@@ -4,7 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { fetchProjectTickets } from "@/features/projects/api/projects";
 import { createTestQueryClient } from "@/test/utils";
-import { useInfiniteTickets } from "./use-infinite-tickets";
+import { useInfiniteTickets } from "./useInfiniteTickets";
 
 vi.mock("@/features/projects/api/projects", () => ({
 	fetchProjectTickets: vi.fn(),
