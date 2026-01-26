@@ -1,6 +1,10 @@
 import type { Ticket } from "../types";
 
 export function SubjectCell({ ticket }: { ticket: Ticket }) {
+	if (!ticket || !ticket.id) {
+		return null;
+	}
+
 	return (
 		<div className="flex flex-col gap-1">
 			<div className="flex items-center gap-2">

@@ -74,7 +74,9 @@ export function TicketList(props: TicketListProps) {
 			: [];
 
 	const allTickets = useMemo(() => {
-		return normalizedPages.flatMap((page: { data: Ticket[] }) => page.data);
+		return normalizedPages
+			.flatMap((page: { data: Ticket[] }) => page.data)
+			.filter((ticket: Ticket) => ticket && ticket.id);
 	}, [normalizedPages]);
 
 	// Infinite scroll props (safe access)
