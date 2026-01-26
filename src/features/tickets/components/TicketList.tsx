@@ -69,7 +69,7 @@ export function TicketList(props: TicketListProps) {
 	const p = props as any;
 	const normalizedPages = p.pages
 		? p.pages
-		: p.tickets
+		: Array.isArray(p.tickets)
 			? [{ data: p.tickets }]
 			: [];
 

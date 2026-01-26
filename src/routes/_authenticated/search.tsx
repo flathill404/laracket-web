@@ -25,7 +25,7 @@ function SearchRoute() {
 	const navigate = useNavigate();
 
 	const {
-		data: tickets,
+		data: ticketQueryData,
 		hasNextPage,
 		isFetchingNextPage,
 		fetchNextPage,
@@ -52,11 +52,13 @@ function SearchRoute() {
 			</div>
 
 			<TicketList
-				pages={tickets?.pages ?? []}
+				pages={ticketQueryData?.pages ?? []}
 				hasNextPage={hasNextPage}
 				isFetchingNextPage={isFetchingNextPage}
 				fetchNextPage={fetchNextPage}
 				isLoading={isLoading}
+				// biome-ignore lint/suspicious/noExplicitAny: explicit undefined to debug
+				tickets={undefined as any}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",
