@@ -50,7 +50,7 @@ function SearchRoute() {
 			</div>
 
 			<TicketList
-				tickets={Array.isArray(tickets) ? tickets : tickets.data}
+				tickets={tickets}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",
