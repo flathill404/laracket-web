@@ -35,8 +35,10 @@ describe("TwoFactorChallengeForm", () => {
 		});
 	});
 
-	// Skipping due to InputOTP using document.elementFromPoint which is not available in JSDOM
-	it.skip("submits valid code", async () => {
+	it("submits valid code", async () => {
+		// InputOTP using document.elementFromPoint which is not available in JSDOM
+		document.elementFromPoint = vi.fn();
+
 		twoFactorChallengeMock.mockResolvedValue({});
 		const user = userEvent.setup();
 		await renderWithRouter(TwoFactorChallengeForm);
