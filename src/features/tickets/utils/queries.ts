@@ -30,10 +30,8 @@ export const ticketQueries = {
 		infiniteQueryOptions({
 			queryKey: queryKeys.tickets.search(q),
 			queryFn: ({ pageParam }) => searchTickets(q, pageParam),
-			initialPageParam: 1,
-			getNextPageParam: (lastPage) => {
-				return lastPage.links.next ? lastPage.meta.currentPage + 1 : undefined;
-			},
+			initialPageParam: null as string | null,
+			getNextPageParam: (lastPage) => lastPage.meta.nextCursor,
 			enabled: !!q,
 		}),
 };

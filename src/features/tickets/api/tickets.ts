@@ -8,7 +8,7 @@ import type {
 	UpdateTicketStatusInput,
 } from "../types";
 import {
-	simplePaginatedTicketsSchema,
+	paginatedTicketsSchema,
 	ticketSchema,
 	ticketsSchema,
 } from "../types/schemas";
@@ -79,18 +79,19 @@ export const deleteTicket = async (ticketId: string) => {
 	await client.delete(`/tickets/${ticketId}`);
 };
 
-export const searchTickets = async (q: string, page = 1) => {
+export const searchTickets = async (q: string, cursor?: string | null) => {
 	const searchParams = new URLSearchParams({
 		q,
-		page: page.toString(),
 	});
+	if (cursor) {
+		searchParams.set("cursor", cursor);
+	}
 
 	const response = await client.get(
 		`/tickets/search?${searchParams.toString()}`,
 	);
 	const json = await response.json();
-	// simplePaginate return { data: [...], links: {...}, meta: {...} }
-	return simplePaginatedTicketsSchema.parse(json);
+	return paginatedTicketsSchema.parse(json);
 };
 
 export const updateTicketOrder = async (
