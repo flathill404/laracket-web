@@ -10,9 +10,6 @@ export type Reviewer = TicketUser;
 export type PaginatedTicketsResponse = z.infer<
 	typeof schemas.paginatedTicketsSchema
 >;
-export type SimplePaginatedTicketsResponse = z.infer<
-	typeof schemas.simplePaginatedTicketsSchema
->;
 
 // Activity Types
 export type Activity = z.infer<typeof schemas.activitySchema>;
