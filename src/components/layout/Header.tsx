@@ -1,4 +1,6 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Bell, HelpCircle, LogOut, Search } from "lucide-react";
+import { useState } from "react";
 import type { z } from "zod";
 import { UserAvatar } from "@/components/common/UserAvatar";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,9 @@ interface HeaderProps {
 }
 
 export function Header({ user, isVerified, logout }: HeaderProps) {
+	const navigate = useNavigate();
+	const [query, setQuery] = useState("");
+
 	return (
 		<header className="sticky top-0 z-50 flex h-14 items-center gap-4 border-b bg-background px-6">
 			<div className="flex items-center gap-2 font-semibold">
@@ -31,14 +36,24 @@ export function Header({ user, isVerified, logout }: HeaderProps) {
 
 			<div className="flex flex-1 items-center justify-center px-4">
 				{isVerified && (
-					<div className="relative w-full max-w-md">
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							if (query.trim()) {
+								navigate({ to: "/search", search: { q: query.trim() } });
+							}
+						}}
+						className="relative w-full max-w-md"
+					>
 						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
 							type="search"
 							placeholder="Search tickets..."
 							className="h-9 w-full rounded-md bg-muted pl-9"
+							value={query}
+							onChange={(e) => setQuery(e.target.value)}
 						/>
-					</div>
+					</form>
 				)}
 			</div>
 
