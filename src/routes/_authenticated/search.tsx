@@ -1,8 +1,8 @@
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 
 import { TicketList } from "@/features/tickets/components/TicketList";
+import { useInfiniteSearchTickets } from "@/features/tickets/hooks/useInfiniteSearchTickets";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 
 const searchParamsSchema = z.object({
@@ -24,16 +24,13 @@ function SearchRoute() {
 	const { q } = Route.useSearch();
 	const navigate = useNavigate();
 
-	const queryOption = ticketQueries.search(q || "");
-
 	const {
 		data: tickets,
 		hasNextPage,
 		isFetchingNextPage,
 		fetchNextPage,
-	} = useSuspenseInfiniteQuery({
-		...queryOption,
-	});
+		isLoading,
+	} = useInfiniteSearchTickets(q || "");
 
 	if (!q) {
 		return (
@@ -55,10 +52,11 @@ function SearchRoute() {
 			</div>
 
 			<TicketList
-				pages={tickets.pages}
+				pages={tickets?.pages ?? []}
 				hasNextPage={hasNextPage}
 				isFetchingNextPage={isFetchingNextPage}
 				fetchNextPage={fetchNextPage}
+				isLoading={isLoading}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",
