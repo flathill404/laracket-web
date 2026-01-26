@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/search")({
 	loaderDeps: ({ search: { q } }) => ({ q }),
 	loader: ({ context, deps: { q } }) => {
 		if (q) {
-			context.queryClient.ensureQueryData(ticketQueries.search(q));
+			context.queryClient.ensureInfiniteQueryData(ticketQueries.search(q));
 		}
 	},
 	component: SearchRoute,
@@ -26,7 +26,12 @@ function SearchRoute() {
 
 	const queryOption = ticketQueries.search(q || "");
 
-	const { data: tickets } = useSuspenseQuery({
+	const {
+		data: tickets,
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+	} = useSuspenseInfiniteQuery({
 		...queryOption,
 	});
 
@@ -50,7 +55,10 @@ function SearchRoute() {
 			</div>
 
 			<TicketList
-				tickets={tickets}
+				pages={tickets.pages}
+				hasNextPage={hasNextPage}
+				isFetchingNextPage={isFetchingNextPage}
+				fetchNextPage={fetchNextPage}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",
