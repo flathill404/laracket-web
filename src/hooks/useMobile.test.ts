@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { useIsMobile } from "./use-mobile";
+import { useIsMobile } from "./useMobile";
 
 describe("useIsMobile", () => {
 	let mockMatchMedia: ReturnType<typeof vi.fn>;
