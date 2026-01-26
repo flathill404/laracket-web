@@ -26,14 +26,14 @@ export const ticketQueries = {
 			enabled: !!ticketId,
 		}),
 
-	search: (keyword: string) =>
+	search: (q: string) =>
 		infiniteQueryOptions({
-			queryKey: queryKeys.tickets.search(keyword),
-			queryFn: ({ pageParam }) => searchTickets(keyword, pageParam),
+			queryKey: queryKeys.tickets.search(q),
+			queryFn: ({ pageParam }) => searchTickets(q, pageParam),
 			initialPageParam: 1,
 			getNextPageParam: (lastPage) => {
 				return lastPage.links.next ? lastPage.meta.currentPage + 1 : undefined;
 			},
-			enabled: !!keyword,
+			enabled: !!q,
 		}),
 };

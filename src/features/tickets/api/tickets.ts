@@ -79,9 +79,9 @@ export const deleteTicket = async (ticketId: string) => {
 	await client.delete(`/tickets/${ticketId}`);
 };
 
-export const searchTickets = async (keyword: string, page = 1) => {
+export const searchTickets = async (q: string, page = 1) => {
 	const searchParams = new URLSearchParams({
-		keyword,
+		q,
 		page: page.toString(),
 	});
 	const response = await client.get(
