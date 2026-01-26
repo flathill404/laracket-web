@@ -27,8 +27,9 @@ export const ticketSchema = z.object({
 			id: z.string(),
 			name: z.string(),
 			displayName: z.string(),
+			description: z.string().optional(),
+			organizationId: z.string().optional(),
 		})
-		.passthrough()
 		.optional(),
 	displayOrder: z.number().optional(),
 	createdAt: z.iso.datetime(),
