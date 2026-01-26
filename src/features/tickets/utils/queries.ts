@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { fetchTicketActivities } from "../api/activities";
 import { fetchTicketComments } from "../api/comments";
 import { fetchTicket, searchTickets } from "../api/tickets";

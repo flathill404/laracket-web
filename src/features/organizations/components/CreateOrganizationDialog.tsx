@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { createOrganization } from "../api/organizations";
 
 const createOrganizationSchema = z.object({

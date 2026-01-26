@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { UnauthorizedError } from "@/lib/errors";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { fetchUser } from "../api";
 
 export const userQueryOptions = queryOptions({

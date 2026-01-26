@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { queryKeys } from "./query-keys";
+import { queryKeys } from "./queryKeys";
 
 describe("queryKeys", () => {
 	describe("user", () => {

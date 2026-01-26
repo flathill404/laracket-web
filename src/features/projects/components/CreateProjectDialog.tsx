@@ -15,7 +15,7 @@ import {
 import { FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { createProject } from "../api/projects";
 
 const createProjectSchema = z.object({

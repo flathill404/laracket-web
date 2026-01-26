@@ -18,7 +18,7 @@ import {
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function VerifyEmail() {
 	const { user, logout } = useAuth();

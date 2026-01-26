@@ -16,7 +16,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { createTeam } from "../api/teams";
 
 const createTeamSchema = z.object({

@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 import { fetchTeam, fetchTeamMembers, fetchTeams } from "../api/teams";
 
 export const teamQueries = {

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchProjectTickets } from "@/features/projects/api/projects";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface UseInfiniteTicketsOptions {
 	status?: string[];

@@ -34,7 +34,7 @@ import { useArrayField } from "@/hooks/use-array-field";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/queryKeys";
 
 const createTicketSchema = z.object({
 	title: z.string().min(1, "Subject is required"),
