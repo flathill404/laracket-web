@@ -17,7 +17,7 @@ import {
 	updateProfileInformation,
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 
 export function VerifyEmail() {

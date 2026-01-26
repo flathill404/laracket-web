@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 import { createTeam } from "../api/teams";
 

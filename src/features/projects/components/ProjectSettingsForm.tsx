@@ -5,8 +5,8 @@ import { FieldGroup } from "@/components/ui/field";
 import { updateProject } from "@/features/projects/api/projects";
 import type { Project } from "@/features/projects/types";
 import { projectQueries } from "@/features/projects/utils/queries";
-import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { useAppForm } from "@/hooks/useAppForm";
+import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 
 const updateProjectSchema = z.object({
 	name: z.string().min(1, "Name is required"),

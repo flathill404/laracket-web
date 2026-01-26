@@ -3,11 +3,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { createTestQueryClient } from "@/test/utils";
 import { ProjectSettingsForm } from "./ProjectSettingsForm";
 
-vi.mock("@/hooks/use-mutation-with-toast", () => ({
+vi.mock("@/hooks/useMutationWithToast", () => ({
 	useMutationWithToast: vi.fn(),
 }));
 

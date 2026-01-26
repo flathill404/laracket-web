@@ -22,7 +22,7 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
 // Mock useMutationWithToast
 // Mocks for useMutationWithToast (removed if not used)
 
-vi.mock("@/hooks/use-mutation-with-toast", () => ({
+vi.mock("@/hooks/useMutationWithToast", () => ({
 	// biome-ignore lint/suspicious/noExplicitAny: mock needs flexible options
 	useMutationWithToast: (_options: any) => {
 		// Note: In real app, we check mutationFn identity or name, but here we just return generic mocks
