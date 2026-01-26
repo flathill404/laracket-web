@@ -16,6 +16,7 @@ import { Route as GuestWipRouteImport } from './routes/_guest/wip'
 import { Route as GuestFormRouteImport } from './routes/_guest/_form'
 import { Route as AuthenticatedVerifyEmailRouteImport } from './routes/_authenticated/verify-email'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedMyWorkRouteImport } from './routes/_authenticated/my-work'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedTicketsRouteRouteImport } from './routes/_authenticated/tickets/route'
@@ -71,6 +72,11 @@ const AuthenticatedVerifyEmailRoute =
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedMyWorkRoute = AuthenticatedMyWorkRouteImport.update({
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
+  '/search': typeof AuthenticatedSearchRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
+  '/search': typeof AuthenticatedSearchRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/_authenticated/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/my-work': typeof AuthenticatedMyWorkRoute
+  '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/_guest/_form': typeof GuestFormRouteWithChildren
@@ -303,6 +312,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/dashboard'
     | '/my-work'
+    | '/search'
     | '/settings'
     | '/verify-email'
     | '/wip'
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/dashboard'
     | '/my-work'
+    | '/search'
     | '/settings'
     | '/verify-email'
     | '/wip'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tickets'
     | '/_authenticated/dashboard'
     | '/_authenticated/my-work'
+    | '/_authenticated/search'
     | '/_authenticated/settings'
     | '/_authenticated/verify-email'
     | '/_guest/_form'
@@ -444,6 +456,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/search': {
+      id: '/_authenticated/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthenticatedSearchRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/my-work': {
@@ -709,6 +728,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedTicketsRouteRoute: typeof AuthenticatedTicketsRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyWorkRoute: typeof AuthenticatedMyWorkRoute
+  AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVerifyEmailRoute: typeof AuthenticatedVerifyEmailRoute
   AuthenticatedOrganizationsOrganizationIdRoute: typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
@@ -720,6 +740,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedTicketsRouteRoute: AuthenticatedTicketsRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMyWorkRoute: AuthenticatedMyWorkRoute,
+  AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVerifyEmailRoute: AuthenticatedVerifyEmailRoute,
   AuthenticatedOrganizationsOrganizationIdRoute:
