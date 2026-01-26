@@ -19,7 +19,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-import type { PaginatedTicketsResponse } from "@/features/tickets/types";
 import { columns, type Ticket } from "./columns";
 
 // Base props shared between both modes
@@ -35,7 +34,7 @@ interface BaseTicketListProps {
 
 // Props for infinite scroll mode (pages from useInfiniteQuery)
 interface InfiniteScrollProps extends BaseTicketListProps {
-	pages: PaginatedTicketsResponse[];
+	pages: { data: Ticket[] }[];
 	hasNextPage: boolean;
 	isFetchingNextPage: boolean;
 	fetchNextPage: () => void;
