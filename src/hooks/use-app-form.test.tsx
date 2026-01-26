@@ -24,36 +24,31 @@ function TestForm({ onSubmit }: { onSubmit: (values: unknown) => void }) {
 				form.handleSubmit();
 			}}
 		>
-			<form.Field
+			<form.AppField
 				name="name"
-				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
-				children={(field: any) => (
+				children={(field) => (
 					<field.InputField label="Name" placeholder="Enter name" />
 				)}
 			/>
-			<form.Field
+			<form.AppField
 				name="description"
-				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
-				children={(field: any) => (
+				children={(field) => (
 					<field.TextareaField label="Description" placeholder="Enter desc" />
 				)}
 			/>
-			<form.Field
+			<form.AppField
 				name="agree"
-				// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
-				children={(field: any) => (
-					<field.CheckboxField label="Agree to terms" />
-				)}
+				children={(field) => <field.CheckboxField label="Agree to terms" />}
 			/>
-			<form.SubscribeButton label="Submit" />
+			<form.AppForm>
+				<form.SubscribeButton label="Submit" />
+			</form.AppForm>
 		</form>
 	);
 }
 
 describe("useAppForm", () => {
-	// Skipping tests due to JSDOM rendering issue with TanStack Form's createFormHook
-	// The Field component injected by createFormHook does not render correctly in JSDOM
-	it.skip("renders form fields correctly", () => {
+	it("renders form fields correctly", () => {
 		render(<TestForm onSubmit={() => {}} />);
 
 		expect(screen.getByLabelText("Name")).toBeInTheDocument();
@@ -64,7 +59,7 @@ describe("useAppForm", () => {
 		expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
 	});
 
-	it.skip("handles input changes and submission", async () => {
+	it("handles input changes and submission", async () => {
 		const handleSubmit = vi.fn();
 		const user = userEvent.setup();
 
@@ -85,8 +80,7 @@ describe("useAppForm", () => {
 		});
 	});
 
-	it.skip("displays validation errors", async () => {
-		const handleSubmit = vi.fn();
+	it("applies error styling when validation fails", async () => {
 		const user = userEvent.setup();
 
 		function ValidatedForm() {
@@ -94,38 +88,39 @@ describe("useAppForm", () => {
 				defaultValues: {
 					name: "",
 				},
-				validators: {
-					onChange: ({ value }) => ({
-						name: !value.name ? { message: "Name is required" } : undefined,
-					}),
-				},
-				onSubmit: ({ value }) => handleSubmit(value),
+				onSubmit: () => {},
 			});
 
 			return (
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						form.handleSubmit();
-					}}
-				>
-					<form.Field
+				<form>
+					<form.AppField
 						name="name"
-						// biome-ignore lint/suspicious/noExplicitAny: field components are injected by createFormHook
-						children={(field: any) => <field.InputField label="Name" />}
+						validators={{
+							onBlur: ({ value }) => (!value ? "Name is required" : undefined),
+						}}
+						children={(field) => <field.InputField label="Name" />}
 					/>
-					<form.SubscribeButton label="Submit" />
+					<form.AppForm>
+						<form.SubscribeButton label="Submit" />
+					</form.AppForm>
 				</form>
 			);
 		}
 
 		render(<ValidatedForm />);
 
-		const submitBtn = screen.getByRole("button", { name: "Submit" });
-		await user.click(submitBtn);
+		const nameInput = screen.getByLabelText("Name");
 
+		// Before blur, no error styling
+		expect(nameInput).not.toHaveClass("border-red-500");
+
+		// Focus and blur to trigger validation
+		await user.click(nameInput);
+		await user.tab();
+
+		// After blur with empty value, error styling should be applied
 		await waitFor(() => {
-			expect(screen.getByText("Name is required")).toBeInTheDocument();
+			expect(nameInput).toHaveClass("border-red-500");
 		});
 	});
 });
