@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { useArrayField } from "@/hooks/use-array-field";
+import { useArrayField } from "@/hooks/useArrayField";
 
 interface TestItem {
 	id: string;

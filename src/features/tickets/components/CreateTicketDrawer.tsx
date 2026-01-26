@@ -29,9 +29,9 @@ import { TicketStatusSelect } from "@/features/tickets/components/TicketStatusSe
 import { TicketUserSelector } from "@/features/tickets/components/TicketUserSelector";
 import type { TicketStatus } from "@/features/tickets/types";
 import { ticketStatusSchema } from "@/features/tickets/types/schemas";
-import { useArrayField } from "@/hooks/use-array-field";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
 import { useAppForm } from "@/hooks/useAppForm";
+import { useArrayField } from "@/hooks/useArrayField";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
 import { queryKeys } from "@/lib/queryKeys";
