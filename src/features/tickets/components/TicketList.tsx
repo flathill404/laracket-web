@@ -64,26 +64,23 @@ export function TicketList(props: TicketListProps) {
 		onSortingChange,
 	} = props;
 
-	// Determine mode and get tickets
-	const isInfiniteMode = "pages" in props && props.pages !== undefined;
+	// Normalize input to pages
+	// biome-ignore lint/suspicious/noExplicitAny: simplifying prop handling
+	const p = props as any;
+	const normalizedPages = p.pages
+		? p.pages
+		: p.tickets
+			? [{ data: p.tickets }]
+			: [];
 
 	const allTickets = useMemo(() => {
-		if (isInfiniteMode) {
-			return (props as InfiniteScrollProps).pages.flatMap((page) => page.data);
-		}
-		return (props as SimpleListProps).tickets;
-	}, [isInfiniteMode, props]);
+		return normalizedPages.flatMap((page: { data: Ticket[] }) => page.data);
+	}, [normalizedPages]);
 
-	// Infinite scroll props (with defaults for simple mode)
-	const hasNextPage = isInfiniteMode
-		? (props as InfiniteScrollProps).hasNextPage
-		: false;
-	const isFetchingNextPage = isInfiniteMode
-		? (props as InfiniteScrollProps).isFetchingNextPage
-		: false;
-	const fetchNextPage = isInfiniteMode
-		? (props as InfiniteScrollProps).fetchNextPage
-		: () => {};
+	// Infinite scroll props (safe access)
+	const hasNextPage = p.hasNextPage ?? false;
+	const isFetchingNextPage = p.isFetchingNextPage ?? false;
+	const fetchNextPage = p.fetchNextPage ?? (() => {});
 
 	const table = useReactTable({
 		data: allTickets,
@@ -255,25 +252,20 @@ export function TicketList(props: TicketListProps) {
 										{emptyState ?? "No tickets found."}
 										<div className="mt-4 rounded border bg-muted p-2 text-left text-muted-foreground text-xs">
 											<p className="font-bold">Debug Info (TicketList):</p>
-											<p>Mode: {isInfiniteMode ? "Infinite" : "Simple"}</p>
-											<p>
-												Pages Count: {(props as any).pages?.length ?? "N/A"}
-											</p>
+											<p>Props Keys: {Object.keys(props).join(", ")}</p>
+											<p>Normalized Pages Count: {normalizedPages.length}</p>
 											<p>
 												First Page Data Len:{" "}
-												{(props as any).pages?.[0]?.data?.length ?? "N/A"}
+												{normalizedPages[0]?.data?.length ?? "N/A"}
 											</p>
 											<p>All Tickets Len: {allTickets.length}</p>
 											<p>Rows Len: {rows.length}</p>
-											{isInfiniteMode &&
-												(props as any).pages?.[0]?.data?.[0] && (
-													<p>
-														Keys in P0 Data[0]:{" "}
-														{Object.keys((props as any).pages[0].data[0]).join(
-															", ",
-														)}
-													</p>
-												)}
+											{normalizedPages[0]?.data?.[0] && (
+												<p>
+													Keys in P0 Data[0]:{" "}
+													{Object.keys(normalizedPages[0].data[0]).join(", ")}
+												</p>
+											)}
 										</div>
 									</TableCell>
 								</TableRow>
