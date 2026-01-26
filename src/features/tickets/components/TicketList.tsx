@@ -253,6 +253,28 @@ export function TicketList(props: TicketListProps) {
 										className="h-24 text-center"
 									>
 										{emptyState ?? "No tickets found."}
+										<div className="mt-4 rounded border bg-muted p-2 text-left text-muted-foreground text-xs">
+											<p className="font-bold">Debug Info (TicketList):</p>
+											<p>Mode: {isInfiniteMode ? "Infinite" : "Simple"}</p>
+											<p>
+												Pages Count: {(props as any).pages?.length ?? "N/A"}
+											</p>
+											<p>
+												First Page Data Len:{" "}
+												{(props as any).pages?.[0]?.data?.length ?? "N/A"}
+											</p>
+											<p>All Tickets Len: {allTickets.length}</p>
+											<p>Rows Len: {rows.length}</p>
+											{isInfiniteMode &&
+												(props as any).pages?.[0]?.data?.[0] && (
+													<p>
+														Keys in P0 Data[0]:{" "}
+														{Object.keys((props as any).pages[0].data[0]).join(
+															", ",
+														)}
+													</p>
+												)}
+										</div>
 									</TableCell>
 								</TableRow>
 							</TableBody>
