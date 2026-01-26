@@ -264,13 +264,28 @@ describe("tickets API", () => {
 	describe("searchTickets", () => {
 		it("should search tickets", async () => {
 			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockTicket] }),
+				json: () =>
+					Promise.resolve({
+						data: [mockTicket],
+						links: {
+							first: "http://api/tickets?cursor=abc",
+							last: null,
+							prev: null,
+							next: null,
+						},
+						meta: {
+							path: "http://api/tickets",
+							perPage: 10,
+							nextCursor: null,
+							prevCursor: null,
+						},
+					}),
 			});
 
 			const result = await searchTickets("test");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/tickets/search?query=test");
-			expect(result).toEqual([mockTicket]);
+			expect(mockClient.get).toHaveBeenCalledWith("/tickets/search?q=test");
+			expect(result.data).toEqual([mockTicket]);
 		});
 	});
 
