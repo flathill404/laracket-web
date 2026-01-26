@@ -15,6 +15,7 @@ export const queryKeys = {
 		activities: (ticketId: string) =>
 			["tickets", ticketId, "activities"] as const,
 		comments: (ticketId: string) => ["tickets", ticketId, "comments"] as const,
+		search: (query: string) => ["tickets", "search", query] as const,
 	},
 
 	teams: {

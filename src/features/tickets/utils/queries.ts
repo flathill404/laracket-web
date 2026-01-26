@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { fetchTicketActivities } from "../api/activities";
 import { fetchTicketComments } from "../api/comments";
-import { fetchTicket } from "../api/tickets";
+import { fetchTicket, searchTickets } from "../api/tickets";
 
 export const ticketQueries = {
 	detail: (ticketId: string) =>
@@ -24,5 +24,12 @@ export const ticketQueries = {
 			queryKey: queryKeys.tickets.comments(ticketId),
 			queryFn: () => fetchTicketComments(ticketId),
 			enabled: !!ticketId,
+		}),
+
+	search: (keyword: string) =>
+		queryOptions({
+			queryKey: queryKeys.tickets.search(keyword),
+			queryFn: () => searchTickets(keyword),
+			enabled: !!keyword,
 		}),
 };
