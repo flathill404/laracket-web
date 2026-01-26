@@ -74,6 +74,14 @@ function SearchRoute() {
 						<p className="text-muted-foreground">
 							We couldn't find any tickets matching &quot;{q}&quot;
 						</p>
+						<div className="mt-4 text-left text-muted-foreground text-xs">
+							<p>Debug Info:</p>
+							<p>Pages: {tickets.pages.length}</p>
+							<p>
+								P0 Data Items: {tickets.pages[0]?.data?.length ?? "undefined"}
+							</p>
+							<p>P0 Keys: {Object.keys(tickets.pages[0] || {}).join(", ")}</p>
+						</div>
 					</div>
 				}
 			/>

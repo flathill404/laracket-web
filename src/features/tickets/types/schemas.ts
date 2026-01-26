@@ -22,6 +22,15 @@ export const ticketSchema = z.object({
 	assignees: z.array(ticketUserSchema),
 	reviewers: z.array(ticketUserSchema),
 	projectId: z.string(),
+	project: z
+		.object({
+			id: z.string(),
+			name: z.string(),
+			displayName: z.string(),
+		})
+		.passthrough()
+		.optional(),
+	displayOrder: z.number().optional(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
 });
