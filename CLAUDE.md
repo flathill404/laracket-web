@@ -20,7 +20,7 @@ bun run format         # Biome format only
 - **Framework**: TanStack Start (SPA mode with `/app` mask path)
 - **Routing**: TanStack Router (file-based routing in `src/routes/`)
 - **Data Fetching**: TanStack Query for server state
-- **Forms**: TanStack Form with custom hooks (`src/hooks/use-app-form.tsx`)
+- **Forms**: TanStack Form with custom hooks (`src/hooks/useAppForm.tsx`)
 - **Tables**: TanStack Table with TanStack Virtual for infinite scroll
 - **UI**: shadcn/ui (new-york style) with Tailwind CSS v4
 - **Validation**: Zod v4

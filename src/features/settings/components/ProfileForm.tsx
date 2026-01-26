@@ -29,8 +29,8 @@ import {
 	updateProfileInformation,
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useAppForm } from "@/hooks/useAppForm";
 import { queryKeys } from "@/lib/queryKeys";
 import { ImageCropDialog } from "./ImageCropDialog";
 

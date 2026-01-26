@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useAppForm } from "@/hooks/use-app-form";
+import { useAppForm } from "@/hooks/useAppForm";
 
 const registerSchema = z
 	.object({

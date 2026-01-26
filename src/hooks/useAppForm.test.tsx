@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@/test/utils";
-import { useAppForm } from "./use-app-form";
+import { useAppForm } from "./useAppForm";
 
 function TestForm({ onSubmit }: { onSubmit: (values: unknown) => void }) {
 	const form = useAppForm({

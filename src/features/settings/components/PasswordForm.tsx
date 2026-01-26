@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card";
 import { FieldGroup } from "@/components/ui/field";
 import { updatePassword } from "@/features/auth/api";
-import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useAppForm } from "@/hooks/useAppForm";
 
 const passwordSchema = z
 	.string()

@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { updateOrganization } from "@/features/organizations/api/organizations";
 import type { Organization } from "@/features/organizations/types";
 import { organizationQueries } from "@/features/organizations/utils/queries";
-import { useAppForm } from "@/hooks/use-app-form";
 import { useMutationWithToast } from "@/hooks/use-mutation-with-toast";
+import { useAppForm } from "@/hooks/useAppForm";
 
 const updateOrganizationSchema = z.object({
 	name: z
