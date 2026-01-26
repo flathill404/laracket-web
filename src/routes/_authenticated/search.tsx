@@ -57,8 +57,6 @@ function SearchRoute() {
 				isFetchingNextPage={isFetchingNextPage}
 				fetchNextPage={fetchNextPage}
 				isLoading={isLoading}
-				// biome-ignore lint/suspicious/noExplicitAny: explicit undefined to debug
-				tickets={undefined as any}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",

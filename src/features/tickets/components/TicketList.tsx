@@ -76,7 +76,7 @@ export function TicketList(props: TicketListProps) {
 	const allTickets = useMemo(() => {
 		return normalizedPages
 			.flatMap((page: { data: Ticket[] }) => page.data)
-			.filter((ticket: Ticket) => ticket && ticket.id);
+			.filter((ticket: Ticket) => ticket?.id);
 	}, [normalizedPages]);
 
 	// Infinite scroll props (safe access)
@@ -252,23 +252,6 @@ export function TicketList(props: TicketListProps) {
 										className="h-24 text-center"
 									>
 										{emptyState ?? "No tickets found."}
-										<div className="mt-4 rounded border bg-muted p-2 text-left text-muted-foreground text-xs">
-											<p className="font-bold">Debug Info (TicketList):</p>
-											<p>Props Keys: {Object.keys(props).join(", ")}</p>
-											<p>Normalized Pages Count: {normalizedPages.length}</p>
-											<p>
-												First Page Data Len:{" "}
-												{normalizedPages[0]?.data?.length ?? "N/A"}
-											</p>
-											<p>All Tickets Len: {allTickets.length}</p>
-											<p>Rows Len: {rows.length}</p>
-											{normalizedPages[0]?.data?.[0] && (
-												<p>
-													Keys in P0 Data[0]:{" "}
-													{Object.keys(normalizedPages[0].data[0]).join(", ")}
-												</p>
-											)}
-										</div>
 									</TableCell>
 								</TableRow>
 							</TableBody>
