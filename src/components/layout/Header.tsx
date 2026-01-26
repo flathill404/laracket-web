@@ -29,14 +29,14 @@ export function Header({ user, isVerified, logout }: HeaderProps) {
 				<span className="hidden sm:inline-block">Laracket</span>
 			</div>
 
-			<div className="flex w-full max-w-sm items-center space-x-2">
+			<div className="flex flex-1 items-center justify-center px-4">
 				{isVerified && (
-					<div className="relative w-full">
+					<div className="relative w-full max-w-md">
 						<Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
 							type="search"
 							placeholder="Search tickets..."
-							className="h-9 w-full rounded-md bg-muted pl-9 md:w-80 lg:w-96"
+							className="h-9 w-full rounded-md bg-muted pl-9"
 						/>
 					</div>
 				)}
