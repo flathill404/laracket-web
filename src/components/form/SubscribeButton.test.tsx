@@ -1,44 +1,16 @@
-import { useForm } from "@tanstack/react-form";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
+import { TestFormWrapper } from "@/test/utils";
 import { render } from "@/test/utils/render";
-import { formContext } from "./formContext";
 import { SubscribeButton } from "./SubscribeButton";
-
-function TestForm({
-	children,
-	onSubmit,
-}: {
-	children: ReactNode;
-	onSubmit?: () => Promise<void> | void;
-}) {
-	const form = useForm({
-		onSubmit: onSubmit ?? (() => {}),
-	});
-
-	return (
-		<formContext.Provider value={form}>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					form.handleSubmit();
-				}}
-			>
-				{children}
-			</form>
-		</formContext.Provider>
-	);
-}
 
 describe("SubscribeButton", () => {
 	test("renders with label", () => {
 		render(
-			<TestForm>
+			<TestFormWrapper>
 				<SubscribeButton label="Submit" />
-			</TestForm>,
+			</TestFormWrapper>,
 		);
 
 		expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
@@ -54,9 +26,9 @@ describe("SubscribeButton", () => {
 		});
 
 		render(
-			<TestForm onSubmit={handleSubmit}>
+			<TestFormWrapper onSubmit={handleSubmit}>
 				<SubscribeButton label="Save" />
-			</TestForm>,
+			</TestFormWrapper>,
 		);
 
 		const button = screen.getByRole("button", { name: "Save" });

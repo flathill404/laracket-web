@@ -1,52 +1,16 @@
-import { useForm } from "@tanstack/react-form";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
+import { TestFieldWrapper } from "@/test/utils";
 import { render } from "@/test/utils/render";
 import { CheckboxField } from "./CheckboxField";
-import { fieldContext } from "./formContext";
-
-function TestForm({
-	children,
-	defaultChecked = false,
-	validate,
-}: {
-	children: ReactNode;
-	defaultChecked?: boolean;
-	validate?: (value: boolean) => string | undefined;
-}) {
-	const form = useForm({
-		defaultValues: {
-			testField: defaultChecked,
-		},
-	});
-
-	return (
-		<form.Field
-			name="testField"
-			validators={{
-				onChange: validate
-					? ({ value }) => {
-							const error = validate(value as boolean);
-							return error ? { message: error } : undefined;
-						}
-					: undefined,
-			}}
-		>
-			{(field) => (
-				<fieldContext.Provider value={field}>{children}</fieldContext.Provider>
-			)}
-		</form.Field>
-	);
-}
 
 describe("CheckboxField", () => {
 	test("renders with label", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue={false}>
 				<CheckboxField label="Accept Terms" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		expect(screen.getByLabelText("Accept Terms")).toBeInTheDocument();
@@ -56,9 +20,9 @@ describe("CheckboxField", () => {
 	test("toggles checked state on click", async () => {
 		const user = userEvent.setup();
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue={false}>
 				<CheckboxField label="Enable Notifications" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const checkbox = screen.getByRole("checkbox", {
@@ -79,9 +43,12 @@ describe("CheckboxField", () => {
 		const errorMessage = "You must agree";
 
 		render(
-			<TestForm validate={(val) => (val ? undefined : errorMessage)}>
+			<TestFieldWrapper
+				defaultValue={false}
+				validate={(val) => (val ? undefined : errorMessage)}
+			>
 				<CheckboxField label="Agree" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const checkbox = screen.getByRole("checkbox", { name: "Agree" });

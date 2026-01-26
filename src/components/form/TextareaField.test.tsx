@@ -1,52 +1,16 @@
-import { useForm } from "@tanstack/react-form";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
+import { TestFieldWrapper } from "@/test/utils";
 import { render } from "@/test/utils/render";
-import { fieldContext } from "./formContext";
 import { TextareaField } from "./TextareaField";
-
-function TestForm({
-	children,
-	defaultValue = "",
-	validate,
-}: {
-	children: ReactNode;
-	defaultValue?: string;
-	validate?: (value: string) => string | undefined;
-}) {
-	const form = useForm({
-		defaultValues: {
-			testField: defaultValue,
-		},
-	});
-
-	return (
-		<form.Field
-			name="testField"
-			validators={{
-				onChange: validate
-					? ({ value }) => {
-							const error = validate(value as string);
-							return error ? { message: error } : undefined;
-						}
-					: undefined,
-			}}
-		>
-			{(field) => (
-				<fieldContext.Provider value={field}>{children}</fieldContext.Provider>
-			)}
-		</form.Field>
-	);
-}
 
 describe("TextareaField", () => {
 	test("renders with label and placeholder", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<TextareaField label="Bio" placeholder="Tell us about yourself" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		expect(screen.getByLabelText("Bio")).toBeInTheDocument();
@@ -57,12 +21,12 @@ describe("TextareaField", () => {
 
 	test("renders description when provided", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<TextareaField
 					label="Comments"
 					description="Please keep it respectful"
 				/>
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		expect(screen.getByText("Please keep it respectful")).toBeInTheDocument();
@@ -71,9 +35,9 @@ describe("TextareaField", () => {
 	test("updates value on input", async () => {
 		const user = userEvent.setup();
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<TextareaField label="Feedback" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const textarea = screen.getByLabelText("Feedback");
@@ -87,9 +51,12 @@ describe("TextareaField", () => {
 		const errorMessage = "Required field";
 
 		render(
-			<TestForm validate={(val) => (val ? undefined : errorMessage)}>
+			<TestFieldWrapper
+				defaultValue=""
+				validate={(val) => (val ? undefined : errorMessage)}
+			>
 				<TextareaField label="Description" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const textarea = screen.getByLabelText("Description");
@@ -104,9 +71,9 @@ describe("TextareaField", () => {
 
 	test("applies custom className", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<TextareaField label="Custom" className="h-32" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const textarea = screen.getByLabelText("Custom");

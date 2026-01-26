@@ -1,52 +1,16 @@
-import { useForm } from "@tanstack/react-form";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
+import { TestFieldWrapper } from "@/test/utils";
 import { render } from "@/test/utils/render";
-import { fieldContext } from "./formContext";
 import { InputField } from "./InputField";
-
-function TestForm({
-	children,
-	defaultValue = "",
-	validate,
-}: {
-	children: ReactNode;
-	defaultValue?: string;
-	validate?: (value: string) => string | undefined;
-}) {
-	const form = useForm({
-		defaultValues: {
-			testField: defaultValue,
-		},
-	});
-
-	return (
-		<form.Field
-			name="testField"
-			validators={{
-				onChange: validate
-					? ({ value }) => {
-							const error = validate(value as string);
-							return error ? { message: error } : undefined;
-						}
-					: undefined,
-			}}
-		>
-			{(field) => (
-				<fieldContext.Provider value={field}>{children}</fieldContext.Provider>
-			)}
-		</form.Field>
-	);
-}
 
 describe("InputField", () => {
 	test("renders with label and placeholder", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<InputField label="Email Address" placeholder="Enter your email" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
@@ -55,12 +19,12 @@ describe("InputField", () => {
 
 	test("renders description when provided", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<InputField
 					label="Username"
 					description="Must be at least 3 characters"
 				/>
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		expect(
@@ -71,9 +35,9 @@ describe("InputField", () => {
 	test("updates value on input", async () => {
 		const user = userEvent.setup();
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<InputField label="Name" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const input = screen.getByLabelText("Name");
@@ -87,9 +51,12 @@ describe("InputField", () => {
 		const errorMessage = "Required field";
 
 		render(
-			<TestForm validate={(val) => (val ? undefined : errorMessage)}>
+			<TestFieldWrapper
+				defaultValue=""
+				validate={(val) => (val ? undefined : errorMessage)}
+			>
 				<InputField label="Subject" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const input = screen.getByLabelText("Subject");
@@ -104,9 +71,9 @@ describe("InputField", () => {
 
 	test("respects type prop", () => {
 		render(
-			<TestForm>
+			<TestFieldWrapper defaultValue="">
 				<InputField label="Password" type="password" />
-			</TestForm>,
+			</TestFieldWrapper>,
 		);
 
 		const input = screen.getByLabelText("Password");
