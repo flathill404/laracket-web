@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AuthenticatedNotFound } from "@/components/common/authenticated-not-found";
-import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/layout/sidebar";
+import { AuthenticatedNotFound } from "@/components/common/AuthenticatedNotFound";
+import { Header } from "@/components/layout/Header";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { userQueryOptions } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";

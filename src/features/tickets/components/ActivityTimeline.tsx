@@ -1,4 +1,4 @@
-import { UserAvatar } from "@/components/common/user-avatar";
+import { UserAvatar } from "@/components/common/UserAvatar";
 import { formatRelativeTime } from "@/lib/date";
 import type { Activity } from "../types";
 import { getStatusLabel } from "../utils/status";

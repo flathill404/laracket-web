@@ -7,8 +7,8 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { DefaultNotFound } from "@/components/common/default-not-found";
-import LocalstackDevtoolsPanel from "@/components/devtools/localstack-devtools-panel";
+import { DefaultNotFound } from "@/components/common/DefaultNotFound";
+import LocalstackDevtoolsPanel from "@/components/devtools/LocalstackDevtoolsPanel";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 

@@ -1,5 +1,5 @@
-import { UserAvatarStack } from "@/components/common/user-avatar-stack";
-import { UserAvatarWithName } from "@/components/common/user-avatar-with-name";
+import { UserAvatarStack } from "@/components/common/UserAvatarStack";
+import { UserAvatarWithName } from "@/components/common/UserAvatarWithName";
 import type { Ticket } from "../types";
 
 export function AssigneeCell({

@@ -6,7 +6,7 @@ import {
 	getInitials,
 	UserAvatar,
 	type UserLike,
-} from "./user-avatar";
+} from "./UserAvatar";
 
 const MAX_VISIBLE_AVATARS = 3;
 

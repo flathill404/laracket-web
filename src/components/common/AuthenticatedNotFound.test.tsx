@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { renderWithRouter } from "@/test/utils";
-import { AuthenticatedNotFound } from "./authenticated-not-found";
+import { AuthenticatedNotFound } from "./AuthenticatedNotFound";
 
 describe("AuthenticatedNotFound", () => {
 	it("renders not found message", async () => {

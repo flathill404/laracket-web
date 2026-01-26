@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { UserAvatarWithName } from "./user-avatar-with-name";
+import { UserAvatarWithName } from "./UserAvatarWithName";
 
 describe("UserAvatarWithName", () => {
 	const user = {

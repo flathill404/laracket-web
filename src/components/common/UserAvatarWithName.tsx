@@ -1,5 +1,5 @@
 import { cn } from "@/lib";
-import { UserAvatar, type UserAvatarProps } from "./user-avatar";
+import { UserAvatar, type UserAvatarProps } from "./UserAvatar";
 
 export interface UserAvatarWithNameProps extends UserAvatarProps {
 	showSecondaryName?: boolean;

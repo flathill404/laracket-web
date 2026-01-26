@@ -2,7 +2,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { renderWithRouter } from "@/test/utils";
-import { DefaultNotFound } from "./default-not-found";
+import { DefaultNotFound } from "./DefaultNotFound";
 
 describe("DefaultNotFound", () => {
 	it("renders 404 message", async () => {

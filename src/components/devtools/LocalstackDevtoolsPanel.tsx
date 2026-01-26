@@ -9,8 +9,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { S3Panel } from "./localstack/s3-panel";
-import { SesPanel } from "./localstack/ses-panel";
+import { S3Panel } from "./localstack/S3Panel";
+import { SesPanel } from "./localstack/SesPanel";
 
 type LocalstackHealth = {
 	services: Record<string, "running" | "disabled" | "available">;

@@ -15,8 +15,8 @@ import { CreateProjectDialog } from "@/features/projects/components/CreateProjec
 import type { Project } from "@/features/projects/types";
 import { CreateTeamDialog } from "@/features/teams/components/CreateTeamDialog";
 import type { Team } from "@/features/teams/types";
-import { SidebarLink } from "./sidebar-link";
-import { SidebarSection } from "./sidebar-section";
+import { SidebarLink } from "./SidebarLink";
+import { SidebarSection } from "./SidebarSection";
 
 interface SidebarProps {
 	projects: Project[];

@@ -1,6 +1,6 @@
 import { Bell, HelpCircle, LogOut, Search } from "lucide-react";
 import type { z } from "zod";
-import { UserAvatar } from "@/components/common/user-avatar";
+import { UserAvatar } from "@/components/common/UserAvatar";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
