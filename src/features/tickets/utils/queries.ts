@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { fetchTicketActivities } from "../api/activities";
 import { fetchTicketComments } from "../api/comments";
@@ -27,9 +27,13 @@ export const ticketQueries = {
 		}),
 
 	search: (keyword: string) =>
-		queryOptions({
+		infiniteQueryOptions({
 			queryKey: queryKeys.tickets.search(keyword),
-			queryFn: () => searchTickets(keyword),
+			queryFn: ({ pageParam }) => searchTickets(keyword, pageParam),
+			initialPageParam: 1,
+			getNextPageParam: (lastPage) => {
+				return lastPage.links.next ? lastPage.meta.currentPage + 1 : undefined;
+			},
 			enabled: !!keyword,
 		}),
 };

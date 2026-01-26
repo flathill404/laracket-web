@@ -45,6 +45,24 @@ export const paginatedTicketsSchema = z.object({
 	}),
 });
 
+// Schema for Laravel simple pagination response (search)
+export const simplePaginatedTicketsSchema = z.object({
+	data: z.array(ticketSchema),
+	links: z.object({
+		first: z.string().nullable(),
+		last: z.string().nullable(), // SimplePaginate often has null last
+		prev: z.string().nullable(),
+		next: z.string().nullable(),
+	}),
+	meta: z.object({
+		currentPage: z.number(),
+		from: z.number().nullable(),
+		path: z.string(),
+		perPage: z.number(),
+		to: z.number().nullable(),
+	}),
+});
+
 // Activity Schemas
 const activityUserSchema = z.object({
 	id: z.string(),
