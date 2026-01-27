@@ -4,7 +4,7 @@ import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
-import { RocketMascot } from "@/components/illustrations/rocket-mascot";
+import { RocketMascot } from "@/components/illustrations/RocketMascot";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,

@@ -2,7 +2,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import * as React from "react";
-import { RocketMascot } from "@/components/illustrations/rocket-mascot";
+import { RocketMascot } from "@/components/illustrations/RocketMascot";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
