@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { CreateProjectDrawer } from "@/features/projects/components/CreateProjectDrawer";
+import { CreateTeamDrawer } from "@/features/teams/components/CreateTeamDrawer";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId",
@@ -38,6 +39,7 @@ function OrganizationLayout() {
 	);
 
 	const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
+	const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
 
 	const navItems = [
 		{
@@ -129,7 +131,7 @@ function OrganizationLayout() {
 				{/* Teams Actions */}
 				{currentTab === "teams" && (
 					<div className="flex items-center gap-2">
-						<Button onClick={() => toast.info("Create Team is coming soon")}>
+						<Button onClick={() => setIsCreateTeamOpen(true)}>
 							<Plus className="mr-2 h-4 w-4" />
 							New Team
 						</Button>
@@ -149,6 +151,12 @@ function OrganizationLayout() {
 				organizationId={params.organizationId}
 				open={isCreateProjectOpen}
 				onOpenChange={setIsCreateProjectOpen}
+			/>
+
+			<CreateTeamDrawer
+				organizationId={params.organizationId}
+				open={isCreateTeamOpen}
+				onOpenChange={setIsCreateTeamOpen}
 			/>
 		</Tabs>
 	);
