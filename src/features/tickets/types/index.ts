@@ -39,4 +39,9 @@ export type TicketReviewerInput = z.infer<
 >;
 export type TicketOrderInput = z.infer<typeof schemas.ticketOrderInputSchema>;
 
+export interface TicketListOptions {
+	status?: string[];
+	sort?: string;
+}
+
 export * from "./schemas";

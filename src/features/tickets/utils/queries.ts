@@ -4,6 +4,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { fetchTicketActivities } from "../api/activities";
 import { fetchTicketComments } from "../api/comments";
 import { fetchTicket, searchTickets } from "../api/tickets";
+import type { TicketListOptions } from "../types";
 
 export const ticketQueries = {
 	detail: (ticketId: string) =>
@@ -36,16 +37,9 @@ export const ticketQueries = {
 			enabled: !!q,
 		}),
 
-	infinite: (
-		projectId: string,
-		options?: { status?: string[]; sort?: string },
-	) =>
+	list: (projectId: string, options?: TicketListOptions) =>
 		infiniteQueryOptions({
-			queryKey: [
-				...queryKeys.projects.tickets(projectId),
-				"infinite",
-				options,
-			] as const,
+			queryKey: queryKeys.projects.ticketsInfinite(projectId, options),
 			queryFn: ({ pageParam }) =>
 				fetchProjectTickets(projectId, {
 					status: options?.status,

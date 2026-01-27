@@ -57,10 +57,9 @@ function ProjectDetail() {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
-	// Use infinite query hook
 	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
 		useInfiniteQuery(
-			ticketQueries.infinite(projectId, {
+			ticketQueries.list(projectId, {
 				status: search.status,
 				sort: search.sort,
 			}),

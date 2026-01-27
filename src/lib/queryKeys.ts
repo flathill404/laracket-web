@@ -7,6 +7,8 @@ export const queryKeys = {
 		detail: (projectId: string) => ["projects", projectId] as const,
 		members: (projectId: string) => ["projects", projectId, "members"] as const,
 		tickets: (projectId: string) => ["projects", projectId, "tickets"] as const,
+		ticketsInfinite: (projectId: string, filters?: unknown) =>
+			["projects", projectId, "tickets", "infinite", filters] as const,
 	},
 
 	tickets: {
