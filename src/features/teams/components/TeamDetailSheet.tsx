@@ -37,8 +37,8 @@ import {
 } from "@/components/ui/sheet";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useTeam } from "../hooks/useTeam";
-import { useTeamMembers } from "../hooks/useTeamMembers";
+import { useTeamActions } from "../hooks/useTeamActions";
+import { useTeamMemberActions } from "../hooks/useTeamMemberActions";
 import { teamQueries } from "../utils/queries";
 import { AddTeamMemberDialog } from "./AddTeamMemberDialog";
 
@@ -61,12 +61,12 @@ export function TeamDetailSheet({
 	const queryClient = useQueryClient();
 
 	// Mutations
-	const { actions: teamActions } = useTeam(teamId);
-	const { actions: memberActions } = useTeamMembers(teamId);
-
-	const updateMutation = teamActions.update;
-	const deleteMutation = teamActions.delete;
-	const removeMemberMutation = memberActions.remove;
+	const { update: updateMutation, delete: deleteMutation } = useTeamActions();
+	const {
+		// add: addMember,
+		// update: updateMember,
+		remove: removeMemberMutation,
+	} = useTeamMemberActions();
 
 	// Local State
 	const [isEditingName, setIsEditingName] = useState(false);
@@ -87,7 +87,10 @@ export function TeamDetailSheet({
 				return;
 			}
 			updateMutation.mutate(
-				{ name: team.name, displayName: value.displayName },
+				{
+					id: teamId,
+					data: { name: team.name, displayName: value.displayName },
+				},
 				{
 					onSuccess: () => {
 						setIsEditingName(false);
@@ -107,7 +110,7 @@ export function TeamDetailSheet({
 	}, [team, nameForm]);
 
 	const handleDelete = () => {
-		deleteMutation.mutate(undefined, {
+		deleteMutation.mutate(teamId, {
 			onSuccess: () => {
 				queryClient.invalidateQueries(
 					organizationQueries.teams(organizationId),
@@ -123,14 +126,17 @@ export function TeamDetailSheet({
 	};
 
 	const handleRemoveMember = (userId: string) => {
-		removeMemberMutation.mutate(userId, {
-			onSuccess: () => {
-				toast.success("Member removed");
+		removeMemberMutation.mutate(
+			{ teamId, userId },
+			{
+				onSuccess: () => {
+					toast.success("Member removed");
+				},
+				onError: () => {
+					toast.error("Failed to remove member");
+				},
 			},
-			onError: () => {
-				toast.error("Failed to remove member");
-			},
-		});
+		);
 	};
 
 	return (

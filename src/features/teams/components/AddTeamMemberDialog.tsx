@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { cn } from "@/lib/cn";
-import { useTeamMembers } from "../hooks/useTeamMembers";
+import { useTeamMemberActions } from "../hooks/useTeamMemberActions";
 import { teamQueries } from "../utils/queries";
 
 interface AddTeamMemberDialogProps {
@@ -48,8 +48,7 @@ export function AddTeamMemberDialog({
 	);
 	const { data: teamMembers } = useSuspenseQuery(teamQueries.members(teamId));
 
-	const { actions } = useTeamMembers(teamId);
-	const addMemberMutation = actions.add;
+	const { add: addMemberMutation } = useTeamMemberActions();
 
 	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 	const [openCombobox, setOpenCombobox] = useState(false);
@@ -66,7 +65,7 @@ export function AddTeamMemberDialog({
 		if (!selectedUserId) return;
 
 		addMemberMutation.mutate(
-			{ userId: selectedUserId },
+			{ teamId, data: { userId: selectedUserId } },
 			{
 				onSuccess: () => {
 					toast.success("Member added");
