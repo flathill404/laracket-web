@@ -19,7 +19,7 @@ bun run format         # Biome format only
 ### Stack
 - **Framework**: TanStack Start (SPA mode with `/app` mask path)
 - **Routing**: TanStack Router (file-based routing in `src/routes/`)
-- **Data Fetching**: TanStack Query for server state
+- **Data Fetching**: TanStack Query (Separation of Read/Suspense and Write/Actions)
 - **Forms**: TanStack Form with custom hooks (`src/hooks/useAppForm.tsx`)
 - **Tables**: TanStack Table with TanStack Virtual for infinite scroll
 - **UI**: shadcn/ui (new-york style) with Tailwind CSS v4
@@ -59,14 +59,16 @@ Each domain feature in `src/features/` MUST follow this unified pattern to ensur
 ```text
 features/<feature>/
   api/          # API communication & Query logic
-    ├── queries.ts    # Fetch functions & Query Options (get)
-    └── mutations.ts  # Modification functions (create, update, delete)
+    ├── <resource>.ts     # REST API communication (e.g., posts for posts)
+    └── <sub-resource>.ts # REST API communication (e.g., comments for posts)
   components/   # Feature-specific UI components (PascalCase)
   hooks/        # Feature-specific hooks (camelCase)
+    └── use<Feature>Actions.ts # Mutation logic only (Create/Update/Delete)
   types/        # TypeScript definitions
     ├── index.ts      # Interfaces and Types
     └── schemas.ts    # Zod schemas
   utils/        # Pure helper functions (replaces 'lib')
+    └── queries.ts    # TanStackQuery Options
   index.ts      # Barrel file exporting ONLY public components/hooks
 ```
 
@@ -79,10 +81,10 @@ features/<feature>/
   - *Goal:* Improve readability and avoid deep relative paths.
 
 #### Query Object Pattern
-Define all queries in `utils/queries.ts` as a single object with methods:
+Define all queries in `features/<feature>/utils/queries.ts` as a single object with methods. This object is used by both Route Loaders and Components.
 
 ```typescript
-// utils/queries.ts
+// features/<feature>/utils/queries.ts
 export const featureQueries = {
   list: () =>
     queryOptions({
@@ -94,73 +96,63 @@ export const featureQueries = {
     queryOptions({
       queryKey: queryKeys.feature.detail(id),
       queryFn: () => fetchFeature(id),
-      enabled: !!id,
-    }),
-
-  // Related resources follow the same pattern
-  members: (id: string) =>
-    queryOptions({
-      queryKey: queryKeys.feature.members(id),
-      queryFn: () => fetchFeatureMembers(id),
-      enabled: !!id,
     }),
 };
 ```
 
-#### Feature Hooks Pattern
-Create hooks that combine queries and mutations with a consistent return structure:
+#### Data Fetching & State Management (Separation of Concerns)
 
-**Single Entity Hook** (`use-feature.ts`):
-```typescript
-export const useFeature = (id: string) => {
-  const queryClient = useQueryClient();
-  const query = useQuery(featureQueries.detail(id));
+**1. Read (Query & Suspense)**
+- **Do not wrap queries in custom hooks** just for fetching data. Use `useSuspenseQuery` directly in components or presentational wrappers.
+- **Route Loaders**: ALWAYS use `ensureQueryData` in the route loader to prevent waterfalls.
 
-  const updateMutation = useMutation({
-    mutationFn: (input: UpdateInput) => updateFeature(id, input),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(featureQueries.detail(id));
-      await queryClient.invalidateQueries(featureQueries.list());
-    },
-  });
+```tsx
+// routes/features.$id.tsx (Loader)
+loader: ({ context: { queryClient }, params }) =>
+  queryClient.ensureQueryData(featureQueries.detail(params.id))
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteFeature(id),
-    onSuccess: () => {
-      queryClient.removeQueries(featureQueries.detail(id));
-      queryClient.invalidateQueries(featureQueries.list());
-    },
-  });
-
-  return {
-    ...query,
-    actions: {
-      update: updateMutation,
-      delete: deleteMutation,
-    },
-  };
-};
+// features/<feature>/pages/FeatureDetailPage.tsx (Component)
+const { data } = useSuspenseQuery(featureQueries.detail(id));
 ```
 
-**Collection Hook** (`use-features.ts`):
-```typescript
-export const useFeatures = () => {
-  const queryClient = useQueryClient();
-  const query = useQuery(featureQueries.list());
+**2. Write (Actions Hooks)**
+- Create a dedicated hook for mutations to encapsulate side effects (invalidation, optimistic updates).
+- Naming convention: `use<Feature>Actions`.
 
-  const createMutation = useMutation({
+```typescript
+// features/<feature>/hooks/useFeatureActions.ts
+export const useFeatureActions = () => {
+  const queryClient = useQueryClient();
+
+  const create = useMutation({
     mutationFn: createFeature,
     onSuccess: () => {
       queryClient.invalidateQueries(featureQueries.list());
     },
   });
 
-  return {
-    ...query,
-    actions: {
-      create: createMutation,
+  const update = useMutation({
+    mutationFn: ({ id, data }: UpdateInput) => updateFeature(id, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(featureQueries.detail(variables.id));
+      queryClient.invalidateQueries(featureQueries.list());
     },
-  };
+  });
+
+  return { create, update };
+};
+```
+
+**Usage in Component**:
+```tsx
+const FeaturePage = () => {
+  // Read
+  const { data } = useSuspenseQuery(featureQueries.list());
+  
+  // Write
+  const { create } = useFeatureActions();
+
+  return <FeatureList data={data} onCreate={create.mutate} />;
 };
 ```
 
