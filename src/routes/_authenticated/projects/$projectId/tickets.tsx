@@ -26,7 +26,11 @@ const ticketsQuery = (
 ) =>
 	queryOptions({
 		queryKey: ["projects", projectId, "tickets", filters],
-		queryFn: () => fetchProjectTickets(projectId, filters),
+		queryFn: () =>
+			fetchProjectTickets(projectId, {
+				filters: { status: filters?.status },
+				sort: filters?.sort,
+			}),
 	});
 
 const searchSchema = z.object({

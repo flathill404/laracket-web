@@ -12,9 +12,9 @@ export const ticketQueries = {
 			queryKey: queryKeys.projects.ticketsInfinite(projectId, options),
 			queryFn: ({ pageParam }) =>
 				fetchProjectTickets(projectId, {
-					status: options?.status,
+					filters: { status: options?.status },
 					sort: options?.sort,
-					cursor: pageParam,
+					pagination: { cursor: pageParam },
 				}),
 			initialPageParam: undefined as string | undefined,
 			getNextPageParam: (lastPage) => lastPage.meta.nextCursor ?? undefined,

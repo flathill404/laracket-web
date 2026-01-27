@@ -67,7 +67,7 @@ describe("tickets API", () => {
 			});
 
 			await fetchProjectTickets("project-123", {
-				status: ["open", "in_progress"],
+				filters: { status: ["open", "in_progress"] },
 			});
 
 			expect(mockClient.get).toHaveBeenCalledWith(
@@ -112,7 +112,9 @@ describe("tickets API", () => {
 				json: () => Promise.resolve(paginatedResponse),
 			});
 
-			await fetchProjectTickets("project-123", { cursor: "abc123" });
+			await fetchProjectTickets("project-123", {
+				pagination: { cursor: "abc123" },
+			});
 
 			expect(mockClient.get).toHaveBeenCalledWith(
 				"/projects/project-123/tickets?cursor=abc123",
