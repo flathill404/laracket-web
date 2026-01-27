@@ -24,7 +24,7 @@ export function BoardColumn({ projectId, status }: BoardColumnProps) {
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
 		useInfiniteQuery(
 			ticketQueries.list(projectId, {
-				status: [status],
+				filters: { status: [status] },
 			}),
 		);
 

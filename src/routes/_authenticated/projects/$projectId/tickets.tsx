@@ -64,7 +64,7 @@ function ProjectDetail() {
 	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
 		useInfiniteQuery(
 			ticketQueries.list(projectId, {
-				status: search.status,
+				filters: { status: search.status },
 				sort: search.sort,
 			}),
 		);

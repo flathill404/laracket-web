@@ -1,19 +1,21 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { fetchProjectTickets } from "@/features/projects/api/tickets";
+import type { FetchTicketsOptions } from "@/features/projects/types";
 import { queryKeys } from "@/lib/queryKeys";
 import { fetchTicketActivities } from "../api/activities";
 import { fetchTicketComments } from "../api/comments";
 import { fetchTicket, searchTickets } from "../api/tickets";
-import type { TicketListOptions } from "../types";
 
 export const ticketQueries = {
-	list: (projectId: string, options?: TicketListOptions) =>
+	list: (
+		projectId: string,
+		options?: Omit<FetchTicketsOptions, "pagination">,
+	) =>
 		infiniteQueryOptions({
 			queryKey: queryKeys.projects.ticketsInfinite(projectId, options),
 			queryFn: ({ pageParam }) =>
 				fetchProjectTickets(projectId, {
-					filters: { status: options?.status },
-					sort: options?.sort,
+					...options,
 					pagination: { cursor: pageParam },
 				}),
 			initialPageParam: undefined as string | undefined,
