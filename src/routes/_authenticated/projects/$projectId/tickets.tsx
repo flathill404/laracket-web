@@ -17,12 +17,14 @@ import {
 import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
+import { fetchTicketsSortSchema } from "@/features/projects/types/schemas";
+import type { FetchTicketsSort } from "@/features/projects/types";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
 
 const ticketsQuery = (
 	projectId: string,
-	filters?: { status?: string[]; sort?: string },
+	filters?: { status?: string[]; sort?: FetchTicketsSort },
 ) =>
 	queryOptions({
 		queryKey: ["projects", projectId, "tickets", filters],
@@ -35,7 +37,7 @@ const ticketsQuery = (
 
 const searchSchema = z.object({
 	status: z.array(z.string()).optional(),
-	sort: z.string().optional(),
+	sort: fetchTicketsSortSchema.optional(),
 });
 
 export const Route = createFileRoute(
@@ -89,7 +91,10 @@ function ProjectDetail() {
 
 		navigate({
 			to: ".",
-			search: (prev) => ({ ...prev, sort: toSortParam(newSorting) }),
+			search: (prev) => ({
+				...prev,
+				sort: toSortParam(newSorting) as FetchTicketsSort,
+			}),
 		});
 	};
 

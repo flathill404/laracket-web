@@ -90,10 +90,10 @@ describe("tickets API", () => {
 				json: () => Promise.resolve(paginatedResponse),
 			});
 
-			await fetchProjectTickets("project-123", { sort: "-due_date" });
+			await fetchProjectTickets("project-123", { sort: "-dueDate" });
 
 			expect(mockClient.get).toHaveBeenCalledWith(
-				"/projects/project-123/tickets?sort=-due_date",
+				"/projects/project-123/tickets?sort=-dueDate",
 			);
 		});
 

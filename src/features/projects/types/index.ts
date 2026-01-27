@@ -17,5 +17,12 @@ export type ProjectTeamInput = z.infer<typeof schemas.projectTeamInputSchema>;
 export type FetchTicketsOptions = z.infer<
 	typeof schemas.fetchTicketsOptionsSchema
 >;
+export type FetchTicketsFilters = z.infer<
+	typeof schemas.fetchTicketsFiltersSchema
+>;
+export type FetchTicketsSort = z.infer<typeof schemas.fetchTicketsSortSchema>;
+export type FetchTicketsPagination = z.infer<
+	typeof schemas.fetchTicketsPaginationSchema
+>;
 
 export * from "./schemas";

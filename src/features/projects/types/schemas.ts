@@ -34,16 +34,27 @@ export const projectTeamInputSchema = z.object({
 	teamId: z.string(),
 });
 
+export const fetchTicketsFiltersSchema = z.object({
+	status: z.array(z.string()).optional(),
+});
+
+export const fetchTicketsSortSchema = z.enum([
+	"id",
+	"-id",
+	"createdAt",
+	"-createdAt",
+	"updatedAt",
+	"-updatedAt",
+	"dueDate",
+	"-dueDate",
+]);
+
+export const fetchTicketsPaginationSchema = z.object({
+	cursor: z.string().optional(),
+});
+
 export const fetchTicketsOptionsSchema = z.object({
-	filters: z
-		.object({
-			status: z.array(z.string()).optional(),
-		})
-		.optional(),
-	sort: z.string().optional(),
-	pagination: z
-		.object({
-			cursor: z.string().optional(),
-		})
-		.optional(),
+	filters: fetchTicketsFiltersSchema.optional(),
+	sort: fetchTicketsSortSchema.optional(),
+	pagination: fetchTicketsPaginationSchema.optional(),
 });
