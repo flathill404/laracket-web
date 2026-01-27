@@ -228,7 +228,11 @@ describe("organizations API", () => {
 					json: () => Promise.resolve({ data: mockProject }),
 				});
 
-				const data = { name: "test", description: "desc" };
+				const data = {
+					name: "test",
+					displayName: "Test Project",
+					description: "desc",
+				};
 				const result = await createOrganizationProject("org-123", data);
 
 				expect(mockClient.post).toHaveBeenCalledWith(

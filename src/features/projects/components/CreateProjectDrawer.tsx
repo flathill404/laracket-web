@@ -28,9 +28,11 @@ export function CreateProjectDrawer({
 }: CreateProjectDrawerProps) {
 	const mutation = useCreateProjectMutation(organizationId);
 
+	// Form
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
+			displayName: "",
 			description: "",
 		} as CreateProjectInput,
 		validators: {
@@ -92,29 +94,55 @@ export function CreateProjectDrawer({
 					{/* Body */}
 					<div className="flex-1 overflow-y-auto p-6">
 						<div className="space-y-6">
-							<form.Field name="name">
-								{(field) => (
-									<div className="space-y-2">
-										<label
-											htmlFor={field.name}
-											className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-										>
-											Name
-										</label>
-										<Input
-											id={field.name}
-											placeholder="Project Name"
-											value={field.state.value}
-											onChange={(e) => field.handleChange(e.target.value)}
-										/>
-										{field.state.meta.errors.length > 0 && (
-											<p className="font-medium text-destructive text-sm">
-												{field.state.meta.errors.join(", ")}
-											</p>
-										)}
-									</div>
-								)}
-							</form.Field>
+							<div className="grid gap-6 sm:grid-cols-2">
+								<form.Field name="displayName">
+									{(field) => (
+										<div className="space-y-2">
+											<label
+												htmlFor={field.name}
+												className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											>
+												Project Name
+											</label>
+											<Input
+												id={field.name}
+												placeholder="My Awesome Project"
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+											/>
+											{field.state.meta.errors.length > 0 && (
+												<p className="font-medium text-destructive text-sm">
+													{field.state.meta.errors.join(", ")}
+												</p>
+											)}
+										</div>
+									)}
+								</form.Field>
+
+								<form.Field name="name">
+									{(field) => (
+										<div className="space-y-2">
+											<label
+												htmlFor={field.name}
+												className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											>
+												Slug (ID)
+											</label>
+											<Input
+												id={field.name}
+												placeholder="my-project-slug"
+												value={field.state.value}
+												onChange={(e) => field.handleChange(e.target.value)}
+											/>
+											{field.state.meta.errors.length > 0 && (
+												<p className="font-medium text-destructive text-sm">
+													{field.state.meta.errors.join(", ")}
+												</p>
+											)}
+										</div>
+									)}
+								</form.Field>
+							</div>
 
 							<form.Field name="description">
 								{(field) => (

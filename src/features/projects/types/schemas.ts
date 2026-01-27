@@ -20,6 +20,7 @@ export const projectMembersSchema = z.array(projectMemberSchema);
 
 export const createProjectInputSchema = z.object({
 	name: z.string().min(1),
+	displayName: z.string().min(1),
 	description: z.string(),
 });
 

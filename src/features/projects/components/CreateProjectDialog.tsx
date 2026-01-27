@@ -19,7 +19,8 @@ import { queryKeys } from "@/lib/queryKeys";
 import { createProject } from "../api/projects";
 
 const createProjectSchema = z.object({
-	name: z.string().min(1, "Name is required"),
+	name: z.string().min(1, "Slug is required"),
+	displayName: z.string().min(1, "Name is required"),
 	description: z.string().min(1, "Description is required"),
 });
 
@@ -59,6 +60,7 @@ export function CreateProjectDialog({
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
+			displayName: "",
 			description: "",
 		},
 		validators: {
@@ -89,11 +91,20 @@ export function CreateProjectDialog({
 				>
 					<FieldGroup>
 						<form.AppField
-							name="name"
+							name="displayName"
 							children={(field) => (
 								<field.InputField
 									label="Name"
 									placeholder="e.g. Laracket Web"
+								/>
+							)}
+						/>
+						<form.AppField
+							name="name"
+							children={(field) => (
+								<field.InputField
+									label="Slug"
+									placeholder="e.g. laracket-web"
 								/>
 							)}
 						/>
