@@ -13,6 +13,7 @@ import {
 	Smile,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -33,7 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/useAppForm";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
-import { useTicket } from "../hooks/useTicket";
+import { useTicketActions } from "../hooks/useTicketActions";
 import type { TicketStatus } from "../types";
 import { ticketQueries } from "../utils/queries";
 import { ActivityTimeline } from "./ActivityTimeline";
@@ -56,7 +57,7 @@ export function TicketDetailSheet({
 		ticketQueries.activities(ticketId),
 	);
 
-	const { updateCache, actions } = useTicket(ticketId, ticket.projectId);
+	const actions = useTicketActions();
 
 	const [isEditingTitle, setIsEditingTitle] = useState(false);
 	const titleInputRef = useRef<HTMLInputElement>(null);
@@ -69,13 +70,10 @@ export function TicketDetailSheet({
 			const trimmedTitle = value.title.trim();
 			if (trimmedTitle && trimmedTitle !== ticket.title) {
 				actions.update.mutate(
-					{ title: trimmedTitle },
+					{ id: ticketId, data: { title: trimmedTitle } },
 					{
 						onSuccess: () => {
-							updateCache((old) => ({
-								...old,
-								title: trimmedTitle,
-							}));
+							toast.success("Title updated");
 						},
 					},
 				);
@@ -148,7 +146,10 @@ export function TicketDetailSheet({
 							<TicketStatusSelect
 								value={ticket.status}
 								onValueChange={(value) =>
-									actions.updateStatus.mutate(value as TicketStatus)
+									actions.updateStatus.mutate({
+										id: ticketId,
+										status: value as TicketStatus,
+									})
 								}
 							/>
 							<Button variant="ghost" size="icon">
@@ -276,8 +277,15 @@ export function TicketDetailSheet({
 										addButtonLabel="+ Add Assignee"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(user) => actions.addAssignee.mutate(user)}
-										onRemove={(userId) => actions.removeAssignee.mutate(userId)}
+										onAdd={(user) =>
+											actions.addAssignee.mutate({
+												id: ticketId,
+												data: { userId: user.id },
+											})
+										}
+										onRemove={(userId) =>
+											actions.removeAssignee.mutate({ id: ticketId, userId })
+										}
 									/>
 
 									{/* Due Date */}
@@ -312,7 +320,10 @@ export function TicketDetailSheet({
 													}
 													onSelect={(date) =>
 														actions.update.mutate({
-															dueDate: date ? date.toISOString() : null,
+															id: ticketId,
+															data: {
+																dueDate: date ? date.toISOString() : null,
+															},
 														})
 													}
 													initialFocus
@@ -330,8 +341,15 @@ export function TicketDetailSheet({
 										addButtonLabel="+ Add Reviewer"
 										addButtonVariant="outline"
 										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(user) => actions.addReviewer.mutate(user)}
-										onRemove={(userId) => actions.removeReviewer.mutate(userId)}
+										onAdd={(user) =>
+											actions.addReviewer.mutate({
+												id: ticketId,
+												data: { userId: user.id },
+											})
+										}
+										onRemove={(userId) =>
+											actions.removeReviewer.mutate({ id: ticketId, userId })
+										}
 									/>
 								</div>
 							</div>
