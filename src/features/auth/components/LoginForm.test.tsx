@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from "vitest";
 import { render, renderWithRouter } from "@/test/utils";
 import { LoginForm } from "./LoginForm";
 
-// Mock useAuth hook
+// Mock useAuthActions hook
 const loginMock = vi.fn();
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		login: loginMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		login: { mutateAsync: loginMock },
 	}),
 }));
 

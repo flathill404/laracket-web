@@ -6,9 +6,9 @@ import { renderWithRouter } from "@/test/utils";
 import { TwoFactorChallengeForm } from "./TwoFactorChallengeForm";
 
 const twoFactorChallengeMock = vi.fn();
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		twoFactorChallenge: twoFactorChallengeMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		twoFactorChallenge: { mutateAsync: twoFactorChallengeMock },
 	}),
 }));
 

@@ -12,8 +12,7 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { userQueryOptions } from "@/features/auth/utils/queries";
+import { authQueries } from "@/features/auth/utils/queries";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
 import { TicketList } from "@/features/tickets/components/TicketList";
 
@@ -25,7 +24,7 @@ const userTicketsQuery = (userId: string) =>
 
 export const Route = createFileRoute("/_authenticated/my-work")({
 	loader: async ({ context: { queryClient } }) => {
-		const user = await queryClient.ensureQueryData(userQueryOptions);
+		const user = await queryClient.ensureQueryData(authQueries.user());
 		if (user) {
 			await queryClient.ensureQueryData(userTicketsQuery(user.id));
 		}
@@ -35,7 +34,7 @@ export const Route = createFileRoute("/_authenticated/my-work")({
 
 function MyWork() {
 	const navigate = useNavigate();
-	const { user } = useAuth();
+	const { data: user } = useSuspenseQuery(authQueries.user());
 	if (!user) {
 		throw new Error("User must be defined in authenticated route");
 	}

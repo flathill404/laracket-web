@@ -1,10 +1,10 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { userQueryOptions } from "@/features/auth/utils/queries";
+import { authQueries } from "@/features/auth/utils/queries";
 
 export const Route = createFileRoute("/_guest")({
 	beforeLoad: async ({ context }) => {
 		const queryClient = context.queryClient;
-		const user = await queryClient.ensureQueryData(userQueryOptions);
+		const user = await queryClient.ensureQueryData(authQueries.user());
 		if (user) {
 			throw redirect({
 				to: "/dashboard",

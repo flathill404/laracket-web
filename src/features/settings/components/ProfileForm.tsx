@@ -1,5 +1,9 @@
 import { revalidateLogic } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -29,13 +33,13 @@ import {
 	updateAvatar,
 	updateProfileInformation,
 } from "@/features/auth/api";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { authQueries } from "@/features/auth/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
 import { queryKeys } from "@/lib/queryKeys";
 import { ImageCropDialog } from "./ImageCropDialog";
 
 export function ProfileForm() {
-	const { user } = useAuth();
+	const { data: user } = useSuspenseQuery(authQueries.user());
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [cropDialogOpen, setCropDialogOpen] = useState(false);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

@@ -10,7 +10,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const loginFormSchema = z.object({
@@ -25,7 +25,7 @@ interface LoginFormProps {
 
 export function LoginForm({ redirect }: LoginFormProps) {
 	const router = useRouter();
-	const { login } = useAuth();
+	const { login } = useAuthActions();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -38,7 +38,7 @@ export function LoginForm({ redirect }: LoginFormProps) {
 			onDynamic: loginFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			const res = await login(value);
+			const res = await login.mutateAsync(value);
 			if (res.twoFactor) {
 				await router.navigate({ to: "/two-factor-challenge" });
 			} else {

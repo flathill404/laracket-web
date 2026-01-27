@@ -5,19 +5,32 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithRouter } from "@/test/utils";
 import { VerifyEmail } from "./VerifyEmail";
 
-// Mock useAuth
-const logoutMock = vi.fn();
-const userMock = {
-	email: "test@example.com",
-	displayName: "Test User",
-};
+// Mock useAuthActions
+const { logoutMock, resendEmailMock, userMock } = vi.hoisted(() => ({
+	logoutMock: vi.fn(),
+	resendEmailMock: vi.fn(),
+	userMock: {
+		email: "test@example.com",
+		displayName: "Test User",
+	},
+}));
 
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		user: userMock,
-		logout: logoutMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		logout: { mutate: logoutMock },
+		sendVerificationEmail: { mutate: resendEmailMock, isPending: false },
 	}),
 }));
+
+// Mock fetchUser
+vi.mock("@/features/auth/api", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("@/features/auth/api")>();
+	return {
+		...actual,
+		fetchUser: vi.fn().mockResolvedValue(userMock),
+		updateProfileInformation: vi.fn(),
+	};
+});
 
 // To properly mock multiple calls to useMutationWithToast, we need better control.
 // Let's just verify rendering mostly.

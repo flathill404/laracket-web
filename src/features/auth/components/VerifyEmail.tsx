@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -13,28 +17,19 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-	sendVerificationEmail,
-	updateProfileInformation,
-} from "@/features/auth/api";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { updateProfileInformation } from "@/features/auth/api";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
+import { authQueries } from "@/features/auth/utils/queries";
 import { queryKeys } from "@/lib/queryKeys";
 
 export function VerifyEmail() {
-	const { user, logout } = useAuth();
+	const { data: user } = useSuspenseQuery(authQueries.user());
+	const { logout, sendVerificationEmail: resendEmail } = useAuthActions();
 	const queryClient = useQueryClient();
 	const [isEditing, setIsEditing] = useState(false);
 	const [email, setEmail] = useState(user?.email ?? "");
 
-	const { mutate: resendEmail, isPending: isResending } = useMutation({
-		mutationFn: sendVerificationEmail,
-		onSuccess: () => {
-			toast.success("Verification link sent!");
-		},
-		onError: () => {
-			toast.error("Failed to send verification link.");
-		},
-	});
+	const isResending = resendEmail.isPending;
 
 	const { mutate: updateEmail, isPending: isUpdating } = useMutation({
 		mutationFn: updateProfileInformation,
@@ -130,12 +125,21 @@ export function VerifyEmail() {
 				<CardFooter className="flex flex-col gap-2">
 					<Button
 						className="w-full"
-						onClick={() => resendEmail()}
+						onClick={() =>
+							resendEmail.mutate(undefined, {
+								onSuccess: () => toast.success("Verification link sent!"),
+								onError: () => toast.error("Failed to send verification link."),
+							})
+						}
 						disabled={isResending}
 					>
 						{isResending ? "Sending..." : "Resend Verification Email"}
 					</Button>
-					<Button variant="ghost" className="w-full" onClick={() => logout()}>
+					<Button
+						variant="ghost"
+						className="w-full"
+						onClick={() => logout.mutate()}
+					>
 						Log Out
 					</Button>
 				</CardFooter>

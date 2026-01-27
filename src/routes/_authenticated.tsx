@@ -3,8 +3,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AuthenticatedNotFound } from "@/components/common/AuthenticatedNotFound";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { useAuth } from "@/features/auth/hooks/useAuth";
-import { userQueryOptions } from "@/features/auth/utils/queries";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
+import { authQueries } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { projectQueries } from "@/features/projects/utils/queries";
 import { teamQueries } from "@/features/teams/utils/queries";
@@ -12,7 +12,7 @@ import { teamQueries } from "@/features/teams/utils/queries";
 export const Route = createFileRoute("/_authenticated")({
 	beforeLoad: async ({ context, location }) => {
 		const queryClient = context.queryClient;
-		const user = await queryClient.ensureQueryData(userQueryOptions);
+		const user = await queryClient.ensureQueryData(authQueries.user());
 
 		// If the user is not logged in, redirect to the login page
 		if (!user) {
@@ -44,7 +44,8 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthLayout() {
-	const { user, logout } = useAuth();
+	const { data: user } = useSuspenseQuery(authQueries.user());
+	const { logout } = useAuthActions();
 	const userId = user?.id ?? "";
 	const isVerified = !!user?.emailVerifiedAt; // Derived state
 
@@ -58,7 +59,7 @@ function AuthLayout() {
 
 	return (
 		<div className="flex h-screen flex-col bg-background">
-			<Header user={user} isVerified={isVerified} logout={logout} />
+			<Header user={user} isVerified={isVerified} logout={logout.mutate} />
 
 			<div className="flex flex-1 overflow-hidden">
 				{isVerified && (

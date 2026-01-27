@@ -11,7 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const registerSchema = z
@@ -29,7 +29,7 @@ const registerSchema = z
 
 export function RegisterForm() {
 	const router = useRouter();
-	const { register } = useAuth();
+	const { register } = useAuthActions();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -44,7 +44,7 @@ export function RegisterForm() {
 			onDynamic: registerSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await register(value);
+			await register.mutateAsync(value);
 			toast.success("Account created successfully");
 			// Redirect to dashboard (or verification notice if needed)
 			await router.navigate({ to: "/dashboard" });

@@ -11,7 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const forgotPasswordSchema = z.object({
@@ -20,7 +20,7 @@ const forgotPasswordSchema = z.object({
 
 export function ForgotPasswordForm() {
 	const router = useRouter();
-	const { forgotPassword } = useAuth();
+	const { forgotPassword } = useAuthActions();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -31,7 +31,7 @@ export function ForgotPasswordForm() {
 			onDynamic: forgotPasswordSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await forgotPassword(value);
+			await forgotPassword.mutateAsync(value);
 			toast.success("Password reset link sent to your email");
 			await router.navigate({ to: "/login" });
 		},

@@ -5,11 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithRouter } from "@/test/utils";
 import { ForgotPasswordForm } from "./ForgotPasswordForm";
 
-// Mock useAuth hook
+// Mock useAuthActions hook
 const forgotPasswordMock = vi.fn();
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		forgotPassword: forgotPasswordMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		forgotPassword: { mutateAsync: forgotPasswordMock },
 	}),
 }));
 

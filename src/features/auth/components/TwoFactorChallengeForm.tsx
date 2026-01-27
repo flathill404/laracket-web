@@ -15,7 +15,7 @@ import {
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const twoFactorFormSchema = z.object({
@@ -24,7 +24,7 @@ const twoFactorFormSchema = z.object({
 
 export function TwoFactorChallengeForm() {
 	const router = useRouter();
-	const { twoFactorChallenge } = useAuth();
+	const { twoFactorChallenge } = useAuthActions();
 
 	const otpForm = useAppForm({
 		defaultValues: {
@@ -36,7 +36,7 @@ export function TwoFactorChallengeForm() {
 		},
 		onSubmit: async ({ value }) => {
 			try {
-				await twoFactorChallenge({ code: value.code });
+				await twoFactorChallenge.mutateAsync({ code: value.code });
 				await router.navigate({ to: "/dashboard" });
 			} catch {
 				toast.error("Failed to verify two-factor authentication code.");

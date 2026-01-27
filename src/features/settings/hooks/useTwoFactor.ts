@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQuery,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -9,12 +14,12 @@ import {
 	fetchTwoFactorQrCode,
 	fetchTwoFactorRecoveryCodes,
 } from "@/features/auth/api";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { authQueries } from "@/features/auth/utils/queries";
 
 type PendingAction = "enable" | "show-recovery-codes" | null;
 
 export function useTwoFactor() {
-	const { user } = useAuth();
+	const { data: user } = useSuspenseQuery(authQueries.user());
 	const queryClient = useQueryClient();
 
 	const [confirmationCode, setConfirmationCode] = useState("");

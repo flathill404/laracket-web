@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { UnauthorizedError } from "@/lib/errors";
 import { queryKeys } from "@/lib/queryKeys";
 import { fetchUser } from "../api";
-import { userQueryOptions } from "./queries";
+import { authQueries } from "./queries";
 
 vi.mock("../api", () => ({
 	fetchUser: vi.fn(),
@@ -21,24 +21,27 @@ describe("auth queries", () => {
 			mockUser as unknown as Awaited<ReturnType<typeof fetchUser>>,
 		);
 
-		expect(userQueryOptions.queryKey).toEqual(queryKeys.user());
+		const options = authQueries.user();
+		expect(options.queryKey).toEqual(queryKeys.user());
 		// @ts-expect-error
-		const result = await userQueryOptions.queryFn();
+		const result = await options.queryFn();
 		expect(result).toEqual(mockUser);
 		expect(fetchUser).toHaveBeenCalled();
 	});
 
 	it("userQueryOptions unauthorized", async () => {
 		mockFetchUser.mockRejectedValue(new UnauthorizedError());
+		const options = authQueries.user();
 		// @ts-expect-error
-		const result = await userQueryOptions.queryFn();
+		const result = await options.queryFn();
 		expect(result).toBeNull();
 	});
 
 	it("userQueryOptions other error", async () => {
 		const error = new Error("Boom");
 		mockFetchUser.mockRejectedValue(error);
+		const options = authQueries.user();
 		// @ts-expect-error
-		await expect(userQueryOptions.queryFn()).rejects.toThrow("Boom");
+		await expect(options.queryFn()).rejects.toThrow("Boom");
 	});
 });

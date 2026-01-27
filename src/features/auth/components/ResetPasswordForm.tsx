@@ -11,7 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const resetPasswordSchema = z
@@ -31,7 +31,7 @@ interface ResetPasswordFormProps {
 
 export function ResetPasswordForm({ email, token }: ResetPasswordFormProps) {
 	const navigate = useNavigate();
-	const { resetPassword } = useAuth();
+	const { resetPassword } = useAuthActions();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -43,7 +43,7 @@ export function ResetPasswordForm({ email, token }: ResetPasswordFormProps) {
 			onDynamic: resetPasswordSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await resetPassword({
+			await resetPassword.mutateAsync({
 				email,
 				token,
 				password: value.password,

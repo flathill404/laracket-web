@@ -6,9 +6,9 @@ import { renderWithRouter as baseRenderWithRouter } from "@/test/utils";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 
 const resetPasswordMock = vi.fn();
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		resetPassword: resetPasswordMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		resetPassword: { mutateAsync: resetPasswordMock },
 	}),
 }));
 

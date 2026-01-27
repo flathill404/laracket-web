@@ -5,11 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithRouter } from "@/test/utils";
 import { RegisterForm } from "./RegisterForm";
 
-// Mock useAuth hook
+// Mock useAuthActions hook
 const registerMock = vi.fn();
-vi.mock("@/features/auth/hooks/useAuth", () => ({
-	useAuth: () => ({
-		register: registerMock,
+vi.mock("@/features/auth/hooks/useAuthActions", () => ({
+	useAuthActions: () => ({
+		register: { mutateAsync: registerMock },
 	}),
 }));
 
