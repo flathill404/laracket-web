@@ -3,7 +3,7 @@ import {
 	addOrganizationMember,
 	removeOrganizationMember,
 	updateOrganizationMember,
-} from "../api/organizations";
+} from "../api";
 import type {
 	OrganizationMemberInput,
 	UpdateOrganizationMemberInput,

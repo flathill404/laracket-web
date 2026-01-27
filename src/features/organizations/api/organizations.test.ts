@@ -2,22 +2,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getMockClient } from "@/test/utils";
 import { organizationSchema } from "../types/schemas";
 import {
-	addOrganizationMember,
 	createOrganization,
-	createOrganizationProject,
-	createOrganizationTeam,
 	deleteOrganization,
 	fetchOrganization,
-	fetchOrganizationMembers,
-	fetchOrganizationProjects,
 	fetchOrganizations,
-	fetchOrganizationTeams,
-	removeOrganizationMember,
 	updateOrganization,
-	updateOrganizationMember,
 } from "./organizations";
 
-vi.mock("@/lib/client");
+vi.mock("@/lib/client", () => ({
+	client: {
+		get: vi.fn(),
+		post: vi.fn(),
+		put: vi.fn(),
+		patch: vi.fn(),
+		delete: vi.fn(),
+	},
+}));
 
 const mockClient = getMockClient();
 
@@ -25,29 +25,6 @@ const mockOrganization = {
 	id: "org-123",
 	name: "test-org",
 	displayName: "Test Org",
-};
-
-const mockMember = {
-	id: "user-123",
-	name: "john",
-	displayName: "John Doe",
-	avatarUrl: "https://example.com/avatar.jpg",
-	role: "member",
-};
-
-const mockProject = {
-	id: "project-123",
-	name: "test-project",
-	displayName: "Test Project",
-	description: "Test description",
-	createdAt: "2024-01-01T00:00:00Z",
-	updatedAt: "2024-01-01T00:00:00Z",
-};
-
-const mockTeam = {
-	id: "team-123",
-	name: "test-team",
-	displayName: "Test Team",
 };
 
 describe("organizations API", () => {
@@ -137,144 +114,6 @@ describe("organizations API", () => {
 			await deleteOrganization("org-123");
 
 			expect(mockClient.delete).toHaveBeenCalledWith("/organizations/org-123");
-		});
-	});
-
-	describe("members", () => {
-		describe("fetchOrganizationMembers", () => {
-			it("should fetch members", async () => {
-				mockClient.get.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: [mockMember] }),
-				});
-
-				const result = await fetchOrganizationMembers("org-123");
-
-				expect(mockClient.get).toHaveBeenCalledWith(
-					"/organizations/org-123/members",
-				);
-				expect(result).toEqual([mockMember]);
-			});
-		});
-
-		describe("addOrganizationMember", () => {
-			it("should add member", async () => {
-				mockClient.post.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: mockMember }),
-				});
-
-				const result = await addOrganizationMember("org-123", {
-					userId: "user-123",
-				});
-
-				expect(mockClient.post).toHaveBeenCalledWith(
-					"/organizations/org-123/members",
-					{ userId: "user-123" },
-				);
-				expect(result).toEqual(mockMember);
-			});
-		});
-
-		describe("updateOrganizationMember", () => {
-			it("should update member", async () => {
-				const updated = { ...mockMember, role: "owner" };
-				mockClient.patch.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: updated }),
-				});
-
-				const result = await updateOrganizationMember("org-123", "user-123", {
-					role: "owner",
-				});
-
-				expect(mockClient.patch).toHaveBeenCalledWith(
-					"/organizations/org-123/members/user-123",
-					{ role: "owner" },
-				);
-				expect(result).toEqual(updated);
-			});
-		});
-
-		describe("removeOrganizationMember", () => {
-			it("should remove member", async () => {
-				mockClient.delete.mockResolvedValueOnce({});
-
-				await removeOrganizationMember("org-123", "user-123");
-
-				expect(mockClient.delete).toHaveBeenCalledWith(
-					"/organizations/org-123/members/user-123",
-				);
-			});
-		});
-	});
-
-	describe("projects", () => {
-		describe("fetchOrganizationProjects", () => {
-			it("should fetch projects", async () => {
-				mockClient.get.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: [mockProject] }),
-				});
-
-				const result = await fetchOrganizationProjects("org-123");
-
-				expect(mockClient.get).toHaveBeenCalledWith(
-					"/organizations/org-123/projects",
-				);
-				expect(result).toEqual([mockProject]);
-			});
-		});
-
-		describe("createOrganizationProject", () => {
-			it("should create project", async () => {
-				mockClient.post.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: mockProject }),
-				});
-
-				const data = {
-					name: "test",
-					displayName: "Test Project",
-					description: "desc",
-				};
-				const result = await createOrganizationProject("org-123", data);
-
-				expect(mockClient.post).toHaveBeenCalledWith(
-					"/organizations/org-123/projects",
-					data,
-				);
-				expect(result).toEqual(mockProject);
-			});
-		});
-	});
-
-	describe("teams", () => {
-		describe("fetchOrganizationTeams", () => {
-			it("should fetch teams", async () => {
-				mockClient.get.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: [mockTeam] }),
-				});
-
-				const result = await fetchOrganizationTeams("org-123");
-
-				expect(mockClient.get).toHaveBeenCalledWith(
-					"/organizations/org-123/teams",
-				);
-				expect(result).toEqual([mockTeam]);
-			});
-		});
-
-		describe("createOrganizationTeam", () => {
-			it("should create team", async () => {
-				mockClient.post.mockResolvedValueOnce({
-					json: () => Promise.resolve({ data: mockTeam }),
-				});
-
-				const data = { name: "test", displayName: "desc" };
-				const result = await createOrganizationTeam("org-123", data);
-
-				expect(mockClient.post).toHaveBeenCalledWith(
-					"/organizations/org-123/teams",
-					data,
-				);
-				expect(result).toEqual(mockTeam);
-			});
 		});
 	});
 });

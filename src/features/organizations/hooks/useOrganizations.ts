@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOrganization, deleteOrganization } from "../api/organizations";
+import { createOrganization, deleteOrganization } from "../api";
 import { organizationQueries } from "../utils";
 
 export const useOrganizations = () => {

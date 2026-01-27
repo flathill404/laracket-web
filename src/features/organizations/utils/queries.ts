@@ -6,7 +6,7 @@ import {
 	fetchOrganizationProjects,
 	fetchOrganizations,
 	fetchOrganizationTeams,
-} from "../api/organizations";
+} from "../api";
 
 export const organizationQueries = {
 	list: () =>
