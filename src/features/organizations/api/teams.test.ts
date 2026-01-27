@@ -2,15 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getMockClient } from "@/test/utils";
 import { createOrganizationTeam, fetchOrganizationTeams } from "./teams";
 
-vi.mock("@/lib/client", () => ({
-	client: {
-		get: vi.fn(),
-		post: vi.fn(),
-		put: vi.fn(),
-		patch: vi.fn(),
-		delete: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
 const mockClient = getMockClient();
 

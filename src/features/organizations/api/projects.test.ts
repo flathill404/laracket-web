@@ -5,15 +5,7 @@ import {
 	fetchOrganizationProjects,
 } from "./projects";
 
-vi.mock("@/lib/client", () => ({
-	client: {
-		get: vi.fn(),
-		post: vi.fn(),
-		put: vi.fn(),
-		patch: vi.fn(),
-		delete: vi.fn(),
-	},
-}));
+vi.mock("@/lib/client");
 
 const mockClient = getMockClient();
 
