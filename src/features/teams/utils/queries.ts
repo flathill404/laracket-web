@@ -1,6 +1,11 @@
 import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
-import { fetchTeam, fetchTeamMembers, fetchTeams } from "../api/teams";
+import {
+	fetchTeam,
+	fetchTeamMembers,
+	fetchTeams,
+	fetchTeamTickets,
+} from "../api";
 
 export const teamQueries = {
 	list: (userId: string) =>
@@ -21,6 +26,13 @@ export const teamQueries = {
 		queryOptions({
 			queryKey: queryKeys.teams.members(teamId),
 			queryFn: () => fetchTeamMembers(teamId),
+			enabled: !!teamId,
+		}),
+
+	tickets: (teamId: string) =>
+		queryOptions({
+			queryKey: queryKeys.teams.tickets(teamId),
+			queryFn: () => fetchTeamTickets(teamId),
 			enabled: !!teamId,
 		}),
 };

@@ -37,9 +37,9 @@ import {
 } from "@/components/ui/sheet";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
-import { teamQueries } from "../api/queries";
 import { useTeam } from "../hooks/useTeam";
 import { useTeamMembers } from "../hooks/useTeamMembers";
+import { teamQueries } from "../utils/queries";
 import { AddTeamMemberDialog } from "./AddTeamMemberDialog";
 
 interface TeamDetailSheetProps {

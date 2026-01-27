@@ -27,8 +27,8 @@ import {
 } from "@/components/ui/popover";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { cn } from "@/lib/cn";
-import { teamQueries } from "../api/queries";
 import { useTeamMembers } from "../hooks/useTeamMembers";
+import { teamQueries } from "../utils/queries";
 
 interface AddTeamMemberDialogProps {
 	organizationId: string;

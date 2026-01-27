@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/queryKeys";
-import { fetchTeam, fetchTeamMembers, fetchTeams } from "../api/teams";
+import { fetchTeam, fetchTeamMembers, fetchTeams } from "../api";
 import { teamQueries } from "./queries";
 
-vi.mock("../api/teams", () => ({
+vi.mock("../api", () => ({
 	fetchTeams: vi.fn(),
 	fetchTeam: vi.fn(),
 	fetchTeamMembers: vi.fn(),

@@ -18,7 +18,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { queryKeys } from "@/lib/queryKeys";
-import { createTeam } from "../api/teams";
+import { createTeam } from "../api";
 
 const createTeamSchema = z.object({
 	name: z

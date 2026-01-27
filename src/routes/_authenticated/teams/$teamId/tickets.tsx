@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { Input } from "@/components/ui/input";
-import { fetchTeam, fetchTeamTickets } from "@/features/teams/api/teams";
+import { fetchTeam, fetchTeamTickets } from "@/features/teams/api";
 import { TicketList } from "@/features/tickets/components/TicketList";
 
 const teamTicketsQuery = (teamId: string) =>
