@@ -1,12 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/queryKeys";
-import * as api from "../api/projects";
+import * as membersApi from "../api/members";
+import * as projectsApi from "../api/projects";
 import { projectQueries } from "./queries";
 
 vi.mock("../api/projects", () => ({
 	fetchProjects: vi.fn(),
-	fetchProjectMembers: vi.fn(),
 	fetchProject: vi.fn(),
+}));
+
+vi.mock("../api/members", () => ({
+	fetchProjectMembers: vi.fn(),
 }));
 
 describe("projects queries", () => {
@@ -16,7 +20,7 @@ describe("projects queries", () => {
 		expect(options.queryKey).toEqual(queryKeys.projects.list(userId));
 		// @ts-expect-error
 		await options.queryFn();
-		expect(api.fetchProjects).toHaveBeenCalledWith(userId);
+		expect(projectsApi.fetchProjects).toHaveBeenCalledWith(userId);
 	});
 
 	it("projectQueries.members", () => {
@@ -25,7 +29,7 @@ describe("projects queries", () => {
 		expect(options.queryKey).toEqual(queryKeys.projects.members(projectId));
 		// @ts-expect-error
 		options.queryFn();
-		expect(api.fetchProjectMembers).toHaveBeenCalledWith(projectId);
+		expect(membersApi.fetchProjectMembers).toHaveBeenCalledWith(projectId);
 	});
 
 	it("projectQueries.detail", () => {
@@ -34,6 +38,6 @@ describe("projects queries", () => {
 		expect(options.queryKey).toEqual(queryKeys.projects.detail(projectId));
 		// @ts-expect-error
 		options.queryFn();
-		expect(api.fetchProject).toHaveBeenCalledWith(projectId);
+		expect(projectsApi.fetchProject).toHaveBeenCalledWith(projectId);
 	});
 });

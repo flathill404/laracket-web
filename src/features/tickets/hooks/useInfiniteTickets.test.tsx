@@ -2,11 +2,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { fetchProjectTickets } from "@/features/projects/api/projects";
+import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import { createTestQueryClient } from "@/test/utils";
 import { useInfiniteTickets } from "./useInfiniteTickets";
 
-vi.mock("@/features/projects/api/projects", () => ({
+vi.mock("@/features/projects/api/tickets", () => ({
 	fetchProjectTickets: vi.fn(),
 }));
 

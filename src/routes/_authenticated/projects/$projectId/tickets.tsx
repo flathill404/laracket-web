@@ -14,7 +14,7 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
-import { fetchProjectTickets } from "@/features/projects/api/projects";
+import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
 import { useInfiniteTickets } from "@/features/tickets/hooks/useInfiniteTickets";

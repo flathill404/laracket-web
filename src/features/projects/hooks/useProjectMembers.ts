@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addProjectMember, removeProjectMember } from "../api/projects";
+import { addProjectMember, removeProjectMember } from "../api/members";
 import type { ProjectMemberInput } from "../types";
 import { projectQueries } from "../utils/queries";
 

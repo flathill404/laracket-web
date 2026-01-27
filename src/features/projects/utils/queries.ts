@@ -1,10 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
-import {
-	fetchProject,
-	fetchProjectMembers,
-	fetchProjects,
-} from "../api/projects";
+import { fetchProjectMembers } from "../api/members";
+import { fetchProject, fetchProjects } from "../api/projects";
 
 export const projectQueries = {
 	list: (userId: string) =>
