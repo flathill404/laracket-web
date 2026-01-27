@@ -1,8 +1,4 @@
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,31 +13,19 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { updateProfileInformation } from "@/features/auth/api";
 import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { authQueries } from "@/features/auth/utils/queries";
-import { queryKeys } from "@/lib/queryKeys";
+import { useProfileActions } from "@/features/settings/hooks/useProfileActions";
 
 export function VerifyEmail() {
 	const { data: user } = useSuspenseQuery(authQueries.user());
 	const { logout, sendVerificationEmail: resendEmail } = useAuthActions();
-	const queryClient = useQueryClient();
+	const { updateProfile } = useProfileActions();
 	const [isEditing, setIsEditing] = useState(false);
 	const [email, setEmail] = useState(user?.email ?? "");
 
 	const isResending = resendEmail.isPending;
-
-	const { mutate: updateEmail, isPending: isUpdating } = useMutation({
-		mutationFn: updateProfileInformation,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
-			toast.success("Email updated and verification link sent!");
-			setIsEditing(false);
-		},
-		onError: () => {
-			toast.error("Failed to update email.");
-		},
-	});
+	const isUpdating = updateProfile.isPending;
 
 	const handleUpdateEmail = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -54,10 +38,21 @@ export function VerifyEmail() {
 			return;
 		}
 
-		updateEmail({
-			displayName: user.displayName ?? "",
-			email: email,
-		});
+		updateProfile.mutate(
+			{
+				displayName: user.displayName ?? "",
+				email: email,
+			},
+			{
+				onSuccess: () => {
+					toast.success("Email updated and verification link sent!");
+					setIsEditing(false);
+				},
+				onError: () => {
+					toast.error("Failed to update email.");
+				},
+			},
+		);
 	};
 
 	return (

@@ -1,9 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -28,14 +24,9 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldGroup, FieldLabel } from "@/components/ui/field";
-import {
-	deleteAvatar,
-	updateAvatar,
-	updateProfileInformation,
-} from "@/features/auth/api";
 import { authQueries } from "@/features/auth/utils/queries";
+import { useProfileActions } from "@/features/settings/hooks/useProfileActions";
 import { useAppForm } from "@/hooks/useAppForm";
-import { queryKeys } from "@/lib/queryKeys";
 import { ImageCropDialog } from "./ImageCropDialog";
 
 export function ProfileForm() {
@@ -45,48 +36,7 @@ export function ProfileForm() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
 
-	const queryClient = useQueryClient();
-
-	const updateProfileMutation = useMutation({
-		mutationFn: updateProfileInformation,
-		onSuccess: async (_, variables) => {
-			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
-			const message =
-				variables.email !== user?.email
-					? "Profile updated. We've sent a verification link to your new email address."
-					: "Profile updated";
-			toast.success(message);
-		},
-		onError: () => {
-			toast.error("Failed to update profile");
-		},
-	});
-
-	const updateAvatarMutation = useMutation({
-		mutationFn: updateAvatar,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
-			toast.success("Avatar updated");
-		},
-		onError: () => {
-			toast.error("Failed to update avatar");
-		},
-	});
-
-	const deleteAvatarMutation = useMutation({
-		mutationFn: deleteAvatar,
-		onSuccess: async () => {
-			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
-			toast.success("Avatar deleted");
-			setDeleteDialogOpen(false);
-			if (fileInputRef.current) {
-				fileInputRef.current.value = "";
-			}
-		},
-		onError: () => {
-			toast.error("Failed to delete avatar");
-		},
-	});
+	const { updateProfile, updateAvatar, deleteAvatar } = useProfileActions();
 
 	const profileFormSchema = z.object({
 		displayName: z.string().min(1),
@@ -103,7 +53,7 @@ export function ProfileForm() {
 			onDynamic: profileFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await updateProfileMutation.mutateAsync(value);
+			await updateProfile.mutateAsync(value);
 		},
 	});
 
@@ -126,7 +76,18 @@ export function ProfileForm() {
 	};
 
 	const handleCropComplete = async (croppedFile: File) => {
-		await updateAvatarMutation.mutateAsync(croppedFile);
+		await updateAvatar.mutateAsync(croppedFile);
+	};
+
+	const handleDeleteAvatar = () => {
+		deleteAvatar.mutate(undefined, {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				if (fileInputRef.current) {
+					fileInputRef.current.value = "";
+				}
+			},
+		});
 	};
 
 	return (
@@ -176,12 +137,10 @@ export function ProfileForm() {
 										</DialogClose>
 										<Button
 											variant="destructive"
-											onClick={() => deleteAvatarMutation.mutate()}
-											disabled={deleteAvatarMutation.isPending}
+											onClick={handleDeleteAvatar}
+											disabled={deleteAvatar.isPending}
 										>
-											{deleteAvatarMutation.isPending
-												? "Deleting..."
-												: "Delete"}
+											{deleteAvatar.isPending ? "Deleting..." : "Delete"}
 										</Button>
 									</DialogFooter>
 								</DialogContent>
@@ -195,11 +154,9 @@ export function ProfileForm() {
 								variant="outline"
 								size="sm"
 								onClick={() => fileInputRef.current?.click()}
-								disabled={updateAvatarMutation.isPending}
+								disabled={updateAvatar.isPending}
 							>
-								{updateAvatarMutation.isPending
-									? "Uploading..."
-									: "Select New Photo"}
+								{updateAvatar.isPending ? "Uploading..." : "Select New Photo"}
 							</Button>
 							<input
 								ref={fileInputRef}

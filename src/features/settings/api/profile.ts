@@ -1,5 +1,5 @@
+import type { UpdateProfileInformationInput } from "@/features/auth/types";
 import { client } from "@/lib/client";
-import type { UpdateProfileInformationInput } from "../types";
 
 /**
  * Updates the user's profile information.
