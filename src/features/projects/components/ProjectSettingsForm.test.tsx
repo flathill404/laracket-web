@@ -3,12 +3,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { useProject } from "@/features/projects/hooks/useProject";
+import { useProjectActions } from "@/features/projects/hooks/useProjectActions";
 import { createTestQueryClient } from "@/test/utils";
 import { ProjectSettingsForm } from "./ProjectSettingsForm";
 
-vi.mock("@/features/projects/hooks/useProject", () => ({
-	useProject: vi.fn(),
+vi.mock("@/features/projects/hooks/useProjectActions", () => ({
+	useProjectActions: vi.fn(),
 }));
 
 vi.mock("@/features/projects/api/projects", () => ({
@@ -16,24 +16,25 @@ vi.mock("@/features/projects/api/projects", () => ({
 	fetchProject: vi.fn(),
 }));
 
-const mockUseProject = vi.mocked(useProject);
+const mockUseProjectActions = vi.mocked(useProjectActions);
 
 describe("ProjectSettingsForm", () => {
 	it("calls mutate on submit", async () => {
 		const mutate = vi.fn();
-		mockUseProject.mockReturnValue({
-			data: { id: "p1", name: "Old Name" },
-			actions: {
-				update: {
-					mutate,
-					isPending: false,
-				},
-				delete: {
-					mutate: vi.fn(),
-					isPending: false,
-				},
+		mockUseProjectActions.mockReturnValue({
+			create: {
+				mutate: vi.fn(),
+				isPending: false,
 			},
-		} as unknown as ReturnType<typeof useProject>);
+			update: {
+				mutate,
+				isPending: false,
+			},
+			delete: {
+				mutate: vi.fn(),
+				isPending: false,
+			},
+		} as unknown as ReturnType<typeof useProjectActions>);
 
 		const queryClient = createTestQueryClient();
 		const Wrapper = ({ children }: { children: ReactNode }) => (
@@ -58,7 +59,10 @@ describe("ProjectSettingsForm", () => {
 		await waitFor(() =>
 			expect(mutate).toHaveBeenCalledWith(
 				expect.objectContaining({
-					name: "New Name",
+					id: "p1",
+					data: expect.objectContaining({
+						name: "New Name",
+					}),
 				}),
 				expect.anything(),
 			),

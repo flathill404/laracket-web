@@ -1,11 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { useProject } from "@/features/projects/hooks/useProject";
+import { useProjectActions } from "@/features/projects/hooks/useProjectActions";
 import type { Project } from "@/features/projects/types";
-import { projectQueries } from "@/features/projects/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const updateProjectSchema = z.object({
@@ -18,30 +16,19 @@ interface ProjectSettingsFormProps {
 }
 
 export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
-	const queryClient = useQueryClient();
-
-	const { actions } = useProject(project.id);
-	const { mutate, isPending } = actions.update;
+	const { update } = useProjectActions();
 
 	const handleSubmit = (values: z.infer<typeof updateProjectSchema>) => {
-		mutate(
+		update.mutate(
 			{
-				...values,
-				description: values.description || "",
+				id: project.id,
+				data: {
+					...values,
+					description: values.description || "",
+				},
 			},
 			{
-				onSuccess: (updatedProject) => {
-					// Manually update cache if needed, though useProject hook handles invalidation.
-					// The original code used queryClient.setQueryData.
-					// useProject hook invalidates detail. Invalidation triggers refetch.
-					// setQueryData is instant.
-					// If user wants instant update, setQueryData is better.
-					// But useProject hook does invalidation.
-					// I can keep setQueryData here if I want.
-					queryClient.setQueryData(
-						projectQueries.detail(project.id).queryKey,
-						updatedProject,
-					);
+				onSuccess: () => {
 					toast.success("Project updated");
 				},
 				onError: () => {
@@ -92,8 +79,8 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 				/>
 			</FieldGroup>
 
-			<Button type="submit" disabled={isPending}>
-				{isPending ? "Saving..." : "Save Changes"}
+			<Button type="submit" disabled={update.isPending}>
+				{update.isPending ? "Saving..." : "Save Changes"}
 			</Button>
 		</form>
 	);

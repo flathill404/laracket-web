@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { organizationQueries } from "@/features/organizations/utils/queries";
-import { useProject } from "@/features/projects/hooks/useProject";
+import { useProjectActions } from "@/features/projects/hooks/useProjectActions";
 import { useAppForm } from "@/hooks/useAppForm";
 import { formatDate } from "@/lib/date";
 import { projectQueries } from "../utils/queries";
@@ -58,9 +58,8 @@ export function ProjectDetailSheet({
 	const queryClient = useQueryClient();
 
 	// Mutations
-	const { actions } = useProject(projectId);
-	const updateMutation = actions.update;
-	const deleteMutation = actions.delete;
+	const { update: updateMutation, delete: deleteMutation } =
+		useProjectActions();
 
 	// Local State
 	const [isEditingName, setIsEditingName] = useState(false);
@@ -80,7 +79,7 @@ export function ProjectDetailSheet({
 				return;
 			}
 			updateMutation.mutate(
-				{ name: value.name },
+				{ id: projectId, data: { name: value.name } },
 				{
 					onSuccess: () => {
 						setIsEditingName(false);
@@ -105,7 +104,7 @@ export function ProjectDetailSheet({
 		onSubmit: async ({ value }) => {
 			if (value.description !== project.description) {
 				updateMutation.mutate(
-					{ description: value.description },
+					{ id: projectId, data: { description: value.description } },
 					{
 						onSuccess: () => {
 							toast.success("Project updated");
@@ -126,7 +125,7 @@ export function ProjectDetailSheet({
 	}, [project, nameForm, descriptionForm]);
 
 	const handleDelete = () => {
-		deleteMutation.mutate(undefined, {
+		deleteMutation.mutate(projectId, {
 			onSuccess: () => {
 				if (organizationId) {
 					queryClient.invalidateQueries(
