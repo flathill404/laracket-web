@@ -12,10 +12,12 @@ import {
 	Settings as SettingsIcon,
 	Users as UsersIcon,
 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { organizationQueries } from "@/features/organizations/utils/queries";
+import { CreateProjectDrawer } from "@/features/projects/components/CreateProjectDrawer";
 
 export const Route = createFileRoute(
 	"/_authenticated/organizations/$organizationId",
@@ -34,6 +36,8 @@ function OrganizationLayout() {
 	const { data: organization } = useSuspenseQuery(
 		organizationQueries.detail(params.organizationId),
 	);
+
+	const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
 
 	const navItems = [
 		{
@@ -115,7 +119,7 @@ function OrganizationLayout() {
 				{/* Projects Actions */}
 				{currentTab === "projects" && (
 					<div className="flex items-center gap-2">
-						<Button onClick={() => toast.info("Create Project is coming soon")}>
+						<Button onClick={() => setIsCreateProjectOpen(true)}>
 							<Plus className="mr-2 h-4 w-4" />
 							New Project
 						</Button>
@@ -140,6 +144,12 @@ function OrganizationLayout() {
 			>
 				<Outlet />
 			</TabsContent>
+
+			<CreateProjectDrawer
+				organizationId={params.organizationId}
+				open={isCreateProjectOpen}
+				onOpenChange={setIsCreateProjectOpen}
+			/>
 		</Tabs>
 	);
 }

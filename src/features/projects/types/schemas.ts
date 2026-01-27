@@ -23,7 +23,7 @@ export const createProjectInputSchema = z.object({
 	description: z.string(),
 });
 
-export const updateProjectInputSchema = createProjectInputSchema;
+export const updateProjectInputSchema = createProjectInputSchema.partial();
 
 export const projectMemberInputSchema = z.object({
 	userId: z.string(),

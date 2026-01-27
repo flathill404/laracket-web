@@ -1,0 +1,149 @@
+import { ChevronRight } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetTitle,
+} from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { useCreateProjectMutation } from "@/features/projects/api/mutations";
+import type { CreateProjectInput } from "@/features/projects/types";
+import { createProjectInputSchema } from "@/features/projects/types/schemas";
+import { useAppForm } from "@/hooks/useAppForm";
+
+interface CreateProjectDrawerProps {
+	organizationId: string;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+}
+
+export function CreateProjectDrawer({
+	organizationId,
+	open,
+	onOpenChange,
+}: CreateProjectDrawerProps) {
+	const mutation = useCreateProjectMutation(organizationId);
+
+	const form = useAppForm({
+		defaultValues: {
+			name: "",
+			description: "",
+		} as CreateProjectInput,
+		validators: {
+			onSubmit: createProjectInputSchema,
+		},
+		onSubmit: async ({ value }) => {
+			mutation.mutate(value, {
+				onSuccess: () => {
+					onOpenChange(false);
+					form.reset();
+				},
+			});
+		},
+	});
+
+	return (
+		<Sheet open={open} onOpenChange={onOpenChange}>
+			<SheetContent
+				side="right"
+				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-2xl"
+			>
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						form.handleSubmit();
+					}}
+					className="flex h-full flex-col"
+				>
+					{/* Header */}
+					<div className="z-10 flex shrink-0 items-center justify-between gap-4 border-b bg-background px-6 py-3">
+						<div className="flex min-w-0 flex-1 items-center gap-4">
+							<SheetClose asChild>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="text-muted-foreground hover:text-foreground"
+								>
+									<ChevronRight className="h-5 w-5" />
+								</Button>
+							</SheetClose>
+							<div className="flex min-w-0 flex-1 items-center gap-3">
+								<span className="shrink-0 font-medium text-muted-foreground text-sm">
+									[New Project]
+								</span>
+								<Separator orientation="vertical" className="h-4" />
+								<SheetTitle className="font-semibold text-base">
+									Create Project
+								</SheetTitle>
+							</div>
+						</div>
+						<div className="flex items-center gap-2">
+							<Button type="submit" disabled={mutation.isPending} size="sm">
+								{mutation.isPending ? "Creating..." : "Create"}
+							</Button>
+						</div>
+					</div>
+
+					{/* Body */}
+					<div className="flex-1 overflow-y-auto p-6">
+						<div className="space-y-6">
+							<form.Field name="name">
+								{(field) => (
+									<div className="space-y-2">
+										<label
+											htmlFor={field.name}
+											className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+										>
+											Name
+										</label>
+										<Input
+											id={field.name}
+											placeholder="Project Name"
+											value={field.state.value}
+											onChange={(e) => field.handleChange(e.target.value)}
+										/>
+										{field.state.meta.errors.length > 0 && (
+											<p className="font-medium text-destructive text-sm">
+												{field.state.meta.errors.join(", ")}
+											</p>
+										)}
+									</div>
+								)}
+							</form.Field>
+
+							<form.Field name="description">
+								{(field) => (
+									<div className="space-y-2">
+										<label
+											htmlFor={field.name}
+											className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+										>
+											Description
+										</label>
+										<Textarea
+											id={field.name}
+											placeholder="Describe the project..."
+											className="min-h-[120px] resize-none"
+											value={field.state.value}
+											onChange={(e) => field.handleChange(e.target.value)}
+										/>
+										{field.state.meta.errors.length > 0 && (
+											<p className="font-medium text-destructive text-sm">
+												{field.state.meta.errors.join(", ")}
+											</p>
+										)}
+									</div>
+								)}
+							</form.Field>
+						</div>
+					</div>
+				</form>
+			</SheetContent>
+		</Sheet>
+	);
+}
