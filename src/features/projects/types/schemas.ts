@@ -33,3 +33,17 @@ export const projectMemberInputSchema = z.object({
 export const projectTeamInputSchema = z.object({
 	teamId: z.string(),
 });
+
+export const fetchTicketsOptionsSchema = z.object({
+	filters: z
+		.object({
+			status: z.array(z.string()).optional(),
+		})
+		.optional(),
+	sort: z.string().optional(),
+	pagination: z
+		.object({
+			cursor: z.string().optional(),
+		})
+		.optional(),
+});

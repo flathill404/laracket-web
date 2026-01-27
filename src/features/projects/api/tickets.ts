@@ -1,11 +1,7 @@
 import { paginatedTicketsSchema } from "@/features/tickets/types/schemas";
 import { client } from "@/lib/client";
 
-export type FetchTicketsOptions = {
-	filters?: { status?: string[] };
-	sort?: string;
-	pagination?: { cursor?: string };
-};
+import type { FetchTicketsOptions } from "../types";
 
 export const fetchProjectTickets = async (
 	projectId: string,
