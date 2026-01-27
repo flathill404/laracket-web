@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Folder } from "lucide-react";
+import { Folder, LayoutList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -63,7 +63,7 @@ export function ProjectsList({ projects, onProjectClick }: ProjectsListProps) {
 								params={{ projectId: project.id }}
 								onClick={(e) => e.stopPropagation()}
 							>
-								<Folder className="h-4 w-4" />
+								<LayoutList className="h-4 w-4" />
 								<span className="sr-only">Go to Project</span>
 							</Link>
 						</Button>
