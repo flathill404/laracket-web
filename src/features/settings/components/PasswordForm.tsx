@@ -1,4 +1,6 @@
 import { revalidateLogic } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import z from "zod";
 import {
 	Card,
@@ -10,7 +12,6 @@ import {
 import { FieldGroup } from "@/components/ui/field";
 import { updatePassword } from "@/features/auth/api";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 
 const passwordSchema = z
 	.string()
@@ -28,10 +29,14 @@ export const updatePasswordSchema = z
 	});
 
 export function PasswordForm() {
-	const updatePasswordMutation = useMutationWithToast({
+	const updatePasswordMutation = useMutation({
 		mutationFn: updatePassword,
-		successMessage: "Password updated",
-		errorMessage: "Failed to update password",
+		onSuccess: () => {
+			toast.success("Password updated");
+		},
+		onError: () => {
+			toast.error("Failed to update password");
+		},
 	});
 
 	const form = useAppForm({

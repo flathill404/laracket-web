@@ -1,4 +1,5 @@
 import { revalidateLogic } from "@tanstack/react-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -30,7 +31,6 @@ import {
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 import { ImageCropDialog } from "./ImageCropDialog";
 
@@ -41,35 +41,46 @@ export function ProfileForm() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
 
-	const updateProfileMutation = useMutationWithToast({
+	const queryClient = useQueryClient();
+
+	const updateProfileMutation = useMutation({
 		mutationFn: updateProfileInformation,
-		successMessage: (_, variables) => {
-			if (variables.email !== user?.email) {
-				return "Profile updated. We've sent a verification link to your new email address.";
-			}
-			return "Profile updated";
+		onSuccess: async (_, variables) => {
+			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
+			const message =
+				variables.email !== user?.email
+					? "Profile updated. We've sent a verification link to your new email address."
+					: "Profile updated";
+			toast.success(message);
 		},
-		errorMessage: "Failed to update profile",
-		invalidateKeys: [queryKeys.user()],
+		onError: () => {
+			toast.error("Failed to update profile");
+		},
 	});
 
-	const updateAvatarMutation = useMutationWithToast({
+	const updateAvatarMutation = useMutation({
 		mutationFn: updateAvatar,
-		successMessage: "Avatar updated",
-		errorMessage: "Failed to update avatar",
-		invalidateKeys: [queryKeys.user()],
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
+			toast.success("Avatar updated");
+		},
+		onError: () => {
+			toast.error("Failed to update avatar");
+		},
 	});
 
-	const deleteAvatarMutation = useMutationWithToast({
+	const deleteAvatarMutation = useMutation({
 		mutationFn: deleteAvatar,
-		successMessage: "Avatar deleted",
-		errorMessage: "Failed to delete avatar",
-		invalidateKeys: [queryKeys.user()],
-		onSuccess: () => {
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
+			toast.success("Avatar deleted");
 			setDeleteDialogOpen(false);
 			if (fileInputRef.current) {
 				fileInputRef.current.value = "";
 			}
+		},
+		onError: () => {
+			toast.error("Failed to delete avatar");
 		},
 	});
 

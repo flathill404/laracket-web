@@ -1,6 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 import { createProject } from "../api/projects";
 
@@ -37,23 +38,25 @@ export function CreateProjectDialog({
 }: CreateProjectDialogProps) {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const isControlled = controlledOpen !== undefined;
 	const open = isControlled ? controlledOpen : uncontrolledOpen;
 	const setOpen = isControlled ? setControlledOpen : setUncontrolledOpen;
 
-	const mutation = useMutationWithToast({
+	const mutation = useMutation({
 		mutationFn: createProject,
-		successMessage: (data) =>
-			`Project ${data.name} has been created successfully.`,
-		errorMessage: "Failed to create project. Please try again.",
-		invalidateKeys: [queryKeys.projects.all()],
 		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: queryKeys.projects.all() });
+			toast.success(`Project ${data.name} has been created successfully.`);
 			setOpen?.(false);
 			router.navigate({
 				to: "/projects/$projectId/tickets",
 				params: { projectId: data.id },
 			});
+		},
+		onError: () => {
+			toast.error("Failed to create project. Please try again.");
 		},
 	});
 

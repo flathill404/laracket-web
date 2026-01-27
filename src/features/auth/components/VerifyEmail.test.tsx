@@ -19,30 +19,6 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
 	}),
 }));
 
-// Mock useMutationWithToast
-// Mocks for useMutationWithToast (removed if not used)
-
-vi.mock("@/hooks/useMutationWithToast", () => ({
-	// biome-ignore lint/suspicious/noExplicitAny: mock needs flexible options
-	useMutationWithToast: (_options: any) => {
-		// Note: In real app, we check mutationFn identity or name, but here we just return generic mocks
-		// Ideally we should distinguish between resend and update.
-		// We can infer from arguments or return different mocks if needed.
-		// For now, let's just return success mocks.
-
-		// We can use a factory if needed, but the component calls useMutationWithToast multiple times.
-		// Vitest mock factory runs once.
-		// We can mock the hook implementation to return different values based on call order or ...
-		// But testing library `render` runs the component.
-
-		// Let's rely on standard mocking.
-		return {
-			mutate: vi.fn(),
-			isPending: false,
-		};
-	},
-}));
-
 // To properly mock multiple calls to useMutationWithToast, we need better control.
 // Let's just verify rendering mostly.
 

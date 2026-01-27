@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	ChevronRight,
 	MoreHorizontal,
@@ -7,6 +7,7 @@ import {
 	UserPlus,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
 	AlertDialog,
@@ -34,13 +35,11 @@ import {
 	SheetContent,
 	SheetTitle,
 } from "@/components/ui/sheet";
+import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
-import {
-	useDeleteTeamMutation,
-	useRemoveTeamMemberMutation,
-	useUpdateTeamMutation,
-} from "../api/mutations";
 import { teamQueries } from "../api/queries";
+import { useTeam } from "../hooks/useTeam";
+import { useTeamMembers } from "../hooks/useTeamMembers";
 import { AddTeamMemberDialog } from "./AddTeamMemberDialog";
 
 interface TeamDetailSheetProps {
@@ -59,11 +58,15 @@ export function TeamDetailSheet({
 	// Query
 	const { data: team } = useSuspenseQuery(teamQueries.detail(teamId));
 	const { data: members } = useSuspenseQuery(teamQueries.members(teamId));
+	const queryClient = useQueryClient();
 
 	// Mutations
-	const updateMutation = useUpdateTeamMutation(teamId);
-	const deleteMutation = useDeleteTeamMutation(organizationId);
-	const removeMemberMutation = useRemoveTeamMemberMutation(teamId);
+	const { actions: teamActions } = useTeam(teamId);
+	const { actions: memberActions } = useTeamMembers(teamId);
+
+	const updateMutation = teamActions.update;
+	const deleteMutation = teamActions.delete;
+	const removeMemberMutation = memberActions.remove;
 
 	// Local State
 	const [isEditingName, setIsEditingName] = useState(false);
@@ -86,7 +89,13 @@ export function TeamDetailSheet({
 			updateMutation.mutate(
 				{ name: team.name, displayName: value.displayName },
 				{
-					onSuccess: () => setIsEditingName(false),
+					onSuccess: () => {
+						setIsEditingName(false);
+						toast.success("Team updated");
+					},
+					onError: () => {
+						toast.error("Failed to update team");
+					},
 				},
 			);
 		},
@@ -98,16 +107,30 @@ export function TeamDetailSheet({
 	}, [team, nameForm]);
 
 	const handleDelete = () => {
-		deleteMutation.mutate(teamId, {
+		deleteMutation.mutate(undefined, {
 			onSuccess: () => {
+				queryClient.invalidateQueries(
+					organizationQueries.teams(organizationId),
+				);
+				toast.success("Team deleted");
 				setShowDeleteDialog(false);
 				onOpenChange(false);
+			},
+			onError: () => {
+				toast.error("Failed to delete team");
 			},
 		});
 	};
 
 	const handleRemoveMember = (userId: string) => {
-		removeMemberMutation.mutate(userId);
+		removeMemberMutation.mutate(userId, {
+			onSuccess: () => {
+				toast.success("Member removed");
+			},
+			onError: () => {
+				toast.error("Failed to remove member");
+			},
+		});
 	};
 
 	return (

@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Check, Loader2, Search } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,8 +27,8 @@ import {
 } from "@/components/ui/popover";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { cn } from "@/lib/cn";
-import { useAddTeamMemberMutation } from "../api/mutations";
 import { teamQueries } from "../api/queries";
+import { useTeamMembers } from "../hooks/useTeamMembers";
 
 interface AddTeamMemberDialogProps {
 	organizationId: string;
@@ -47,7 +48,8 @@ export function AddTeamMemberDialog({
 	);
 	const { data: teamMembers } = useSuspenseQuery(teamQueries.members(teamId));
 
-	const addMemberMutation = useAddTeamMemberMutation(teamId);
+	const { actions } = useTeamMembers(teamId);
+	const addMemberMutation = actions.add;
 
 	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 	const [openCombobox, setOpenCombobox] = useState(false);
@@ -67,8 +69,12 @@ export function AddTeamMemberDialog({
 			{ userId: selectedUserId },
 			{
 				onSuccess: () => {
+					toast.success("Member added");
 					onOpenChange(false);
 					setSelectedUserId(null);
+				},
+				onError: () => {
+					toast.error("Failed to add member");
 				},
 			},
 		);

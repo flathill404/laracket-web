@@ -1,7 +1,9 @@
 import { useForm } from "@tanstack/react-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 import { createTeam } from "../api/teams";
 
@@ -48,22 +49,25 @@ export function CreateTeamDialog({
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 	const router = useRouter();
 
+	const queryClient = useQueryClient();
+
 	const isControlled = controlledOpen !== undefined;
 	const open = isControlled ? controlledOpen : uncontrolledOpen;
 	const setOpen = isControlled ? setControlledOpen : setUncontrolledOpen;
 
-	const mutation = useMutationWithToast({
+	const mutation = useMutation({
 		mutationFn: createTeam,
-		successMessage: (data) =>
-			`Team ${data.displayName} has been created successfully.`,
-		errorMessage: "Failed to create team. Please try again.",
-		invalidateKeys: [queryKeys.teams.all()],
 		onSuccess: (data) => {
+			queryClient.invalidateQueries({ queryKey: queryKeys.teams.all() });
+			toast.success(`Team ${data.displayName} has been created successfully.`);
 			setOpen?.(false);
 			router.navigate({
 				to: "/teams/$teamId/tickets",
 				params: { teamId: data.id },
 			});
+		},
+		onError: () => {
+			toast.error("Failed to create team. Please try again.");
 		},
 	});
 

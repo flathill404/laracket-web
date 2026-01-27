@@ -1,12 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { updateProject } from "@/features/projects/api/projects";
+import { useProject } from "@/features/projects/hooks/useProject";
 import type { Project } from "@/features/projects/types";
 import { projectQueries } from "@/features/projects/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 
 const updateProjectSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -20,21 +20,36 @@ interface ProjectSettingsFormProps {
 export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 	const queryClient = useQueryClient();
 
-	const { mutate, isPending } = useMutationWithToast({
-		mutationFn: (values: z.infer<typeof updateProjectSchema>) =>
-			updateProject(project.id, {
+	const { actions } = useProject(project.id);
+	const { mutate, isPending } = actions.update;
+
+	const handleSubmit = (values: z.infer<typeof updateProjectSchema>) => {
+		mutate(
+			{
 				...values,
 				description: values.description || "",
-			}),
-		successMessage: "Project updated",
-		errorMessage: "Failed to update project",
-		onSuccess: (updatedProject) => {
-			queryClient.setQueryData(
-				projectQueries.detail(project.id).queryKey,
-				updatedProject,
-			);
-		},
-	});
+			},
+			{
+				onSuccess: (updatedProject) => {
+					// Manually update cache if needed, though useProject hook handles invalidation.
+					// The original code used queryClient.setQueryData.
+					// useProject hook invalidates detail. Invalidation triggers refetch.
+					// setQueryData is instant.
+					// If user wants instant update, setQueryData is better.
+					// But useProject hook does invalidation.
+					// I can keep setQueryData here if I want.
+					queryClient.setQueryData(
+						projectQueries.detail(project.id).queryKey,
+						updatedProject,
+					);
+					toast.success("Project updated");
+				},
+				onError: () => {
+					toast.error("Failed to update project");
+				},
+			},
+		);
+	};
 
 	const form = useAppForm({
 		defaultValues: {
@@ -45,7 +60,7 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 			onSubmit: updateProjectSchema,
 		},
 		onSubmit: async ({ value }) => {
-			mutate(value);
+			handleSubmit(value);
 		},
 	});
 

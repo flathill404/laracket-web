@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
 	Calendar as CalendarIcon,
 	ChevronRight,
@@ -31,7 +31,6 @@ import type { TicketStatus } from "@/features/tickets/types";
 import { ticketStatusSchema } from "@/features/tickets/types/schemas";
 import { useAppForm } from "@/hooks/useAppForm";
 import { useArrayField } from "@/hooks/useArrayField";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { cn } from "@/lib";
 import { formatDate } from "@/lib/date";
 import { queryKeys } from "@/lib/queryKeys";
@@ -82,14 +81,20 @@ export function CreateTicketDrawer({
 		},
 	});
 
-	const { mutate, isPending } = useMutationWithToast({
+	const queryClient = useQueryClient();
+
+	const { mutate, isPending } = useMutation({
 		mutationFn: createTicket,
-		successMessage: "Ticket created",
-		errorMessage: "Failed to create ticket",
-		invalidateKeys: [queryKeys.projects.tickets(projectId)],
 		onSuccess: () => {
+			toast.success("Ticket created");
+			queryClient.invalidateQueries({
+				queryKey: queryKeys.projects.tickets(projectId),
+			});
 			onOpenChange(false);
 			form.reset();
+		},
+		onError: () => {
+			toast.error("Failed to create ticket");
 		},
 	});
 

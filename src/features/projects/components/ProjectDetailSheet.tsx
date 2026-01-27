@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
 	Calendar as CalendarIcon,
 	ChevronRight,
@@ -6,6 +6,7 @@ import {
 	Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
 	AlertDialog,
@@ -33,12 +34,10 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
+import { organizationQueries } from "@/features/organizations/utils/queries";
+import { useProject } from "@/features/projects/hooks/useProject";
 import { useAppForm } from "@/hooks/useAppForm";
 import { formatDate } from "@/lib/date";
-import {
-	useDeleteProjectMutation,
-	useUpdateProjectMutation,
-} from "../api/mutations";
 import { projectQueries } from "../utils/queries";
 
 interface ProjectDetailSheetProps {
@@ -56,10 +55,12 @@ export function ProjectDetailSheet({
 }: ProjectDetailSheetProps) {
 	// Query
 	const { data: project } = useSuspenseQuery(projectQueries.detail(projectId));
+	const queryClient = useQueryClient();
 
 	// Mutations
-	const updateMutation = useUpdateProjectMutation(projectId);
-	const deleteMutation = useDeleteProjectMutation(organizationId || "");
+	const { actions } = useProject(projectId);
+	const updateMutation = actions.update;
+	const deleteMutation = actions.delete;
 
 	// Local State
 	const [isEditingName, setIsEditingName] = useState(false);
@@ -81,7 +82,13 @@ export function ProjectDetailSheet({
 			updateMutation.mutate(
 				{ name: value.name },
 				{
-					onSuccess: () => setIsEditingName(false),
+					onSuccess: () => {
+						setIsEditingName(false);
+						toast.success("Project updated");
+					},
+					onError: () => {
+						toast.error("Failed to update project");
+					},
 				},
 			);
 		},
@@ -97,7 +104,17 @@ export function ProjectDetailSheet({
 		},
 		onSubmit: async ({ value }) => {
 			if (value.description !== project.description) {
-				updateMutation.mutate({ description: value.description });
+				updateMutation.mutate(
+					{ description: value.description },
+					{
+						onSuccess: () => {
+							toast.success("Project updated");
+						},
+						onError: () => {
+							toast.error("Failed to update project");
+						},
+					},
+				);
 			}
 		},
 	});
@@ -109,10 +126,19 @@ export function ProjectDetailSheet({
 	}, [project, nameForm, descriptionForm]);
 
 	const handleDelete = () => {
-		deleteMutation.mutate(projectId, {
+		deleteMutation.mutate(undefined, {
 			onSuccess: () => {
+				if (organizationId) {
+					queryClient.invalidateQueries(
+						organizationQueries.projects(organizationId),
+					);
+				}
+				toast.success("Project deleted");
 				setShowDeleteDialog(false);
 				onOpenChange(false);
+			},
+			onError: () => {
+				toast.error("Failed to delete project");
 			},
 		});
 	};

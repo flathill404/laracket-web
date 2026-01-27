@@ -9,7 +9,7 @@ import {
 	SheetContent,
 	SheetTitle,
 } from "@/components/ui/sheet";
-import { useCreateTeamMutation } from "@/features/teams/api/mutations";
+import { useOrganizationTeams } from "@/features/organizations/hooks/useOrganizationTeams";
 import type { CreateTeamInput } from "@/features/teams/types";
 import { createTeamInputSchema } from "@/features/teams/types/schemas";
 import { useAppForm } from "@/hooks/useAppForm";
@@ -25,7 +25,8 @@ export function CreateTeamDrawer({
 	open,
 	onOpenChange,
 }: CreateTeamDrawerProps) {
-	const mutation = useCreateTeamMutation(organizationId);
+	const { actions } = useOrganizationTeams(organizationId);
+	const mutation = actions.create;
 
 	const form = useAppForm({
 		defaultValues: {

@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,27 +18,33 @@ import {
 	updateProfileInformation,
 } from "@/features/auth/api";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import { queryKeys } from "@/lib/queryKeys";
 
 export function VerifyEmail() {
 	const { user, logout } = useAuth();
+	const queryClient = useQueryClient();
 	const [isEditing, setIsEditing] = useState(false);
 	const [email, setEmail] = useState(user?.email ?? "");
 
-	const { mutate: resendEmail, isPending: isResending } = useMutationWithToast({
+	const { mutate: resendEmail, isPending: isResending } = useMutation({
 		mutationFn: sendVerificationEmail,
-		successMessage: "Verification link sent!",
-		errorMessage: "Failed to send verification link.",
+		onSuccess: () => {
+			toast.success("Verification link sent!");
+		},
+		onError: () => {
+			toast.error("Failed to send verification link.");
+		},
 	});
 
-	const { mutate: updateEmail, isPending: isUpdating } = useMutationWithToast({
+	const { mutate: updateEmail, isPending: isUpdating } = useMutation({
 		mutationFn: updateProfileInformation,
-		successMessage: "Email updated and verification link sent!",
-		errorMessage: "Failed to update email.",
-		invalidateKeys: [queryKeys.user()],
-		onSuccess: () => {
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: queryKeys.user() });
+			toast.success("Email updated and verification link sent!");
 			setIsEditing(false);
+		},
+		onError: () => {
+			toast.error("Failed to update email.");
 		},
 	});
 

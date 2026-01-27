@@ -2,6 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
-import { queryKeys } from "@/lib/queryKeys";
-import { createOrganization } from "../api/organizations";
+import { useOrganizations } from "../hooks/useOrganizations";
 
 const createOrganizationSchema = z.object({
 	name: z
@@ -52,21 +51,10 @@ export function CreateOrganizationDialog({
 	const open = isControlled ? controlledOpen : uncontrolledOpen;
 	const setOpen = isControlled ? setControlledOpen : setUncontrolledOpen;
 
-	const mutation = useMutationWithToast({
-		mutationFn: createOrganization,
-		successMessage: (data) =>
-			`Organization ${data.displayName} has been created successfully.`,
-		errorMessage: "Failed to create organization. Please try again.",
-		invalidateKeys: [queryKeys.organizations.all()],
-		onSuccess: (data) => {
-			setOpen?.(false);
-			router.navigate({
-				to: "/organizations/$organizationId/overview",
-				params: { organizationId: data.id },
-			});
-		},
-	});
+	const { actions } = useOrganizations();
+	const createMutation = actions.create;
 
+	// Form handling
 	const form = useForm({
 		defaultValues: {
 			name: "",
@@ -76,7 +64,21 @@ export function CreateOrganizationDialog({
 			onChange: createOrganizationSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await mutation.mutateAsync(value);
+			createMutation.mutate(value, {
+				onSuccess: (data) => {
+					toast.success(
+						`Organization ${data.displayName} has been created successfully.`,
+					);
+					setOpen?.(false);
+					router.navigate({
+						to: "/organizations/$organizationId/overview",
+						params: { organizationId: data.id },
+					});
+				},
+				onError: () => {
+					toast.error("Failed to create organization. Please try again.");
+				},
+			});
 		},
 	});
 
@@ -143,8 +145,8 @@ export function CreateOrganizationDialog({
 						/>
 					</div>
 					<DialogFooter>
-						<Button type="submit" disabled={mutation.isPending}>
-							{mutation.isPending && (
+						<Button type="submit" disabled={createMutation.isPending}>
+							{createMutation.isPending && (
 								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 							)}
 							Create Organization

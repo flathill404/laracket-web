@@ -1,12 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { updateOrganization } from "@/features/organizations/api/organizations";
+import { useOrganization } from "@/features/organizations/hooks/useOrganization";
 import type { Organization } from "@/features/organizations/types";
 import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
-import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 
 const updateOrganizationSchema = z.object({
 	name: z
@@ -32,18 +32,23 @@ export function OrganizationSettingsForm({
 }: OrganizationSettingsFormProps) {
 	const queryClient = useQueryClient();
 
-	const { mutate, isPending } = useMutationWithToast({
-		mutationFn: (values: z.infer<typeof updateOrganizationSchema>) =>
-			updateOrganization(organization.id, values),
-		successMessage: "Organization updated",
-		errorMessage: "Failed to update organization",
-		onSuccess: (updatedOrganization) => {
-			queryClient.setQueryData(
-				organizationQueries.detail(organization.id).queryKey,
-				updatedOrganization,
-			);
-		},
-	});
+	const { actions } = useOrganization(organization.id);
+	const { mutate, isPending } = actions.update;
+
+	const handleSubmit = (values: z.infer<typeof updateOrganizationSchema>) => {
+		mutate(values, {
+			onSuccess: (updatedOrganization) => {
+				queryClient.setQueryData(
+					organizationQueries.detail(organization.id).queryKey,
+					updatedOrganization,
+				);
+				toast.success("Organization updated");
+			},
+			onError: () => {
+				toast.error("Failed to update organization");
+			},
+		});
+	};
 
 	const form = useAppForm({
 		defaultValues: {
@@ -54,7 +59,7 @@ export function OrganizationSettingsForm({
 			onSubmit: updateOrganizationSchema,
 		},
 		onSubmit: async ({ value }) => {
-			mutate(value);
+			handleSubmit(value);
 		},
 	});
 
