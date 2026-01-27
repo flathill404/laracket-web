@@ -2,6 +2,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import * as React from "react";
+import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -11,7 +12,6 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
-import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { authQueries } from "@/features/auth/utils/queries";
 import { fetchUserTickets } from "@/features/tickets/api/tickets";
 import { TicketList } from "@/features/tickets/components/TicketList";

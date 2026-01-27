@@ -4,6 +4,7 @@ import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
+import { RocketMascot } from "@/components/illustrations/rocket-mascot";
 import { Button } from "@/components/ui/button";
 import {
 	Empty,
@@ -13,7 +14,6 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
-import { RocketMascot } from "@/components/ui/illustrations/rocket-mascot";
 import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
