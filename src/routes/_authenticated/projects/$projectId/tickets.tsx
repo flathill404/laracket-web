@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
@@ -17,7 +17,7 @@ import {
 import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
-import { useInfiniteTickets } from "@/features/tickets/hooks/useInfiniteTickets";
+import { ticketQueries } from "@/features/tickets/utils/queries";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
 
 const ticketsQuery = (
@@ -59,10 +59,12 @@ function ProjectDetail() {
 
 	// Use infinite query hook
 	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-		useInfiniteTickets(projectId, {
-			status: search.status,
-			sort: search.sort,
-		});
+		useInfiniteQuery(
+			ticketQueries.infinite(projectId, {
+				status: search.status,
+				sort: search.sort,
+			}),
+		);
 
 	const handleStatusChange = (status: string[]) => {
 		navigate({

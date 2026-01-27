@@ -1,14 +1,15 @@
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib";
-import { useInfiniteTickets } from "../../hooks/useInfiniteTickets";
 import {
 	STATUS_BG_COLORS,
 	STATUS_LABELS,
 	type TicketStatus,
 } from "../../utils/constants";
+import { ticketQueries } from "../../utils/queries";
 import { BoardTicketCard } from "./BoardTicketCard";
 
 interface BoardColumnProps {
@@ -21,9 +22,11 @@ export function BoardColumn({ projectId, status }: BoardColumnProps) {
 	const [isDraggedOver, setIsDraggedOver] = useState(false);
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-		useInfiniteTickets(projectId, {
-			status: [status],
-		});
+		useInfiniteQuery(
+			ticketQueries.infinite(projectId, {
+				status: [status],
+			}),
+		);
 
 	const tickets = useMemo(() => {
 		return data?.pages.flatMap((page) => page.data) ?? [];
