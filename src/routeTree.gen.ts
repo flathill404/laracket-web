@@ -213,6 +213,7 @@ const AuthenticatedProjectsProjectIdTicketsTicketIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof GuestIndexRoute
   '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
@@ -220,7 +221,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
-  '/': typeof GuestIndexRoute
   '/organizations/$organizationId': typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRouteWithChildren
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
@@ -243,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/teams/$teamId/tickets/$ticketId': typeof AuthenticatedTeamsTeamIdTicketsTicketIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof GuestIndexRoute
   '/tickets': typeof AuthenticatedTicketsRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/my-work': typeof AuthenticatedMyWorkRoute
@@ -250,7 +251,6 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/verify-email': typeof AuthenticatedVerifyEmailRoute
   '/wip': typeof GuestWipRoute
-  '/': typeof GuestIndexRoute
   '/organizations/$organizationId': typeof AuthenticatedOrganizationsOrganizationIdRouteWithChildren
   '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRouteWithChildren
   '/tickets/$ticketId': typeof AuthenticatedTicketsTicketIdRoute
@@ -309,6 +309,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/tickets'
     | '/dashboard'
     | '/my-work'
@@ -316,7 +317,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/verify-email'
     | '/wip'
-    | '/'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/tickets/$ticketId'
@@ -339,6 +339,7 @@ export interface FileRouteTypes {
     | '/teams/$teamId/tickets/$ticketId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/tickets'
     | '/dashboard'
     | '/my-work'
@@ -346,7 +347,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/verify-email'
     | '/wip'
-    | '/'
     | '/organizations/$organizationId'
     | '/projects/$projectId'
     | '/tickets/$ticketId'
@@ -412,14 +412,14 @@ declare module '@tanstack/react-router' {
     '/_guest': {
       id: '/_guest'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof GuestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -440,7 +440,7 @@ declare module '@tanstack/react-router' {
     '/_guest/_form': {
       id: '/_guest/_form'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof GuestFormRouteImport
       parentRoute: typeof GuestRoute
     }
