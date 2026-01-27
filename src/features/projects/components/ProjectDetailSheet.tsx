@@ -90,7 +90,7 @@ export function ProjectDetailSheet({
 	// Description Form
 	const descriptionForm = useAppForm({
 		defaultValues: {
-			description: project.description,
+			description: project.description ?? "",
 		},
 		validators: {
 			onSubmit: z.object({ description: z.string() }),
@@ -105,7 +105,7 @@ export function ProjectDetailSheet({
 	// Sync forms with data
 	useEffect(() => {
 		nameForm.setFieldValue("name", project.name);
-		descriptionForm.setFieldValue("description", project.description);
+		descriptionForm.setFieldValue("description", project.description ?? "");
 	}, [project, nameForm, descriptionForm]);
 
 	const handleDelete = () => {

@@ -10,7 +10,7 @@ import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 
 const updateProjectSchema = z.object({
 	name: z.string().min(1, "Name is required"),
-	description: z.string(),
+	description: z.string().optional(),
 });
 
 interface ProjectSettingsFormProps {
@@ -22,7 +22,10 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 
 	const { mutate, isPending } = useMutationWithToast({
 		mutationFn: (values: z.infer<typeof updateProjectSchema>) =>
-			updateProject(project.id, values),
+			updateProject(project.id, {
+				...values,
+				description: values.description || "",
+			}),
 		successMessage: "Project updated",
 		errorMessage: "Failed to update project",
 		onSuccess: (updatedProject) => {
@@ -36,8 +39,8 @@ export function ProjectSettingsForm({ project }: ProjectSettingsFormProps) {
 	const form = useAppForm({
 		defaultValues: {
 			name: project.name,
-			description: project.description,
-		},
+			description: project.description ?? "",
+		} as { name: string; description?: string },
 		validators: {
 			onSubmit: updateProjectSchema,
 		},

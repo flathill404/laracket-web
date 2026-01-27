@@ -38,7 +38,7 @@ export const updateOrganizationMemberInputSchema = z.object({
 export const createOrganizationProjectInputSchema = z.object({
 	name: z.string().min(1),
 	displayName: z.string().min(1),
-	description: z.string(),
+	description: z.string().optional(),
 });
 
 export const createOrganizationTeamInputSchema = z.object({

@@ -28,7 +28,6 @@ export function CreateProjectDrawer({
 }: CreateProjectDrawerProps) {
 	const mutation = useCreateProjectMutation(organizationId);
 
-	// Form
 	const form = useAppForm({
 		defaultValues: {
 			name: "",
@@ -39,12 +38,9 @@ export function CreateProjectDrawer({
 			onSubmit: createProjectInputSchema,
 		},
 		onSubmit: async ({ value }) => {
-			mutation.mutate(value, {
-				onSuccess: () => {
-					onOpenChange(false);
-					form.reset();
-				},
-			});
+			await mutation.mutateAsync(value);
+			onOpenChange(false);
+			form.reset();
 		},
 	});
 

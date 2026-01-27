@@ -6,7 +6,7 @@ export const projectSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	displayName: z.string(),
-	description: z.string(),
+	description: z.string().nullable(),
 	createdAt: z.iso.datetime(),
 	updatedAt: z.iso.datetime(),
 });
@@ -21,7 +21,7 @@ export const projectMembersSchema = z.array(projectMemberSchema);
 export const createProjectInputSchema = z.object({
 	name: z.string().min(1),
 	displayName: z.string().min(1),
-	description: z.string(),
+	description: z.string().optional(),
 });
 
 export const updateProjectInputSchema = createProjectInputSchema.partial();

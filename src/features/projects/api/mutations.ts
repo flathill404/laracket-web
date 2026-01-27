@@ -1,37 +1,30 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { createOrganizationProject } from "@/features/organizations/api/organizations";
 import type { CreateOrganizationProjectInput } from "@/features/organizations/types";
 import { organizationQueries } from "@/features/organizations/utils/queries";
+import { useMutationWithToast } from "@/hooks/useMutationWithToast";
 import type { UpdateProjectInput } from "../types";
 import { projectQueries } from "../utils/queries";
 import { deleteProject, updateProject } from "./projects";
 
 export const useCreateProjectMutation = (organizationId: string) => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
+	return useMutationWithToast({
 		mutationFn: (input: CreateOrganizationProjectInput) =>
 			createOrganizationProject(organizationId, input),
-		onSuccess: () => {
-			toast.success("Project created");
-			queryClient.invalidateQueries(
-				organizationQueries.projects(organizationId),
-			);
-		},
-		onError: () => {
-			toast.error("Failed to create project");
-		},
+		successMessage: "Project created",
+		errorMessage: "Failed to create project",
+		invalidateKeys: [organizationQueries.projects(organizationId).queryKey],
 	});
 };
 
 export const useUpdateProjectMutation = (projectId: string) => {
 	const queryClient = useQueryClient();
 
-	return useMutation({
+	return useMutationWithToast({
 		mutationFn: (input: UpdateProjectInput) => updateProject(projectId, input),
+		successMessage: "Project updated",
+		errorMessage: "Failed to update project",
 		onSuccess: (_data) => {
-			toast.success("Project updated");
 			// Invalidate specific project detail
 			queryClient.invalidateQueries(projectQueries.detail(projectId));
 			// Also invalidate lists where this project might appear
@@ -39,25 +32,14 @@ export const useUpdateProjectMutation = (projectId: string) => {
 			// For now, detail update is most important.
 			// Ideally we would invalidate organizationQueries.projects(data.organizationId) if we had it.
 		},
-		onError: () => {
-			toast.error("Failed to update project");
-		},
 	});
 };
 
 export const useDeleteProjectMutation = (organizationId: string) => {
-	const queryClient = useQueryClient();
-
-	return useMutation({
+	return useMutationWithToast({
 		mutationFn: deleteProject,
-		onSuccess: () => {
-			toast.success("Project deleted");
-			queryClient.invalidateQueries(
-				organizationQueries.projects(organizationId),
-			);
-		},
-		onError: () => {
-			toast.error("Failed to delete project");
-		},
+		successMessage: "Project deleted",
+		errorMessage: "Failed to delete project",
+		invalidateKeys: [organizationQueries.projects(organizationId).queryKey],
 	});
 };
