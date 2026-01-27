@@ -1,8 +1,7 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-
 import { TicketList } from "@/features/tickets/components/TicketList";
-import { useInfiniteSearchTickets } from "@/features/tickets/hooks/useInfiniteSearchTickets";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 
 const searchParamsSchema = z.object({
@@ -30,7 +29,7 @@ function SearchRoute() {
 		isFetchingNextPage,
 		fetchNextPage,
 		isLoading,
-	} = useInfiniteSearchTickets(q || "");
+	} = useInfiniteQuery({ ...ticketQueries.search(q || "") });
 
 	if (!q) {
 		return (
