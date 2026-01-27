@@ -7,6 +7,19 @@ import { fetchTicket, searchTickets } from "../api/tickets";
 import type { TicketListOptions } from "../types";
 
 export const ticketQueries = {
+	list: (projectId: string, options?: TicketListOptions) =>
+		infiniteQueryOptions({
+			queryKey: queryKeys.projects.ticketsInfinite(projectId, options),
+			queryFn: ({ pageParam }) =>
+				fetchProjectTickets(projectId, {
+					status: options?.status,
+					sort: options?.sort,
+					cursor: pageParam,
+				}),
+			initialPageParam: undefined as string | undefined,
+			getNextPageParam: (lastPage) => lastPage.meta.nextCursor ?? undefined,
+		}),
+
 	detail: (ticketId: string) =>
 		queryOptions({
 			queryKey: queryKeys.tickets.detail(ticketId),
@@ -35,18 +48,5 @@ export const ticketQueries = {
 			initialPageParam: null as string | null,
 			getNextPageParam: (lastPage) => lastPage.meta.nextCursor,
 			enabled: !!q,
-		}),
-
-	list: (projectId: string, options?: TicketListOptions) =>
-		infiniteQueryOptions({
-			queryKey: queryKeys.projects.ticketsInfinite(projectId, options),
-			queryFn: ({ pageParam }) =>
-				fetchProjectTickets(projectId, {
-					status: options?.status,
-					sort: options?.sort,
-					cursor: pageParam,
-				}),
-			initialPageParam: undefined as string | undefined,
-			getNextPageParam: (lastPage) => lastPage.meta.nextCursor ?? undefined,
 		}),
 };
