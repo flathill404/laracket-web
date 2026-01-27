@@ -1,11 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useOrganization } from "@/features/organizations/hooks/useOrganization";
+import { useOrganizationActions } from "@/features/organizations/hooks/useOrganizationActions";
 import type { Organization } from "@/features/organizations/types";
-import { organizationQueries } from "@/features/organizations/utils/queries";
 import { useAppForm } from "@/hooks/useAppForm";
 
 const updateOrganizationSchema = z.object({
@@ -30,24 +28,20 @@ interface OrganizationSettingsFormProps {
 export function OrganizationSettingsForm({
 	organization,
 }: OrganizationSettingsFormProps) {
-	const queryClient = useQueryClient();
-
-	const { actions } = useOrganization(organization.id);
-	const { mutate, isPending } = actions.update;
+	const { update } = useOrganizationActions();
 
 	const handleSubmit = (values: z.infer<typeof updateOrganizationSchema>) => {
-		mutate(values, {
-			onSuccess: (updatedOrganization) => {
-				queryClient.setQueryData(
-					organizationQueries.detail(organization.id).queryKey,
-					updatedOrganization,
-				);
-				toast.success("Organization updated");
+		update.mutate(
+			{ id: organization.id, data: values },
+			{
+				onSuccess: () => {
+					toast.success("Organization updated");
+				},
+				onError: () => {
+					toast.error("Failed to update organization");
+				},
 			},
-			onError: () => {
-				toast.error("Failed to update organization");
-			},
-		});
+		);
 	};
 
 	const form = useAppForm({
@@ -120,8 +114,8 @@ export function OrganizationSettingsForm({
 				</form.Field>
 			</div>
 
-			<Button type="submit" disabled={isPending}>
-				{isPending ? "Saving..." : "Save Changes"}
+			<Button type="submit" disabled={update.isPending}>
+				{update.isPending ? "Saving..." : "Save Changes"}
 			</Button>
 		</form>
 	);

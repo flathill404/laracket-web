@@ -10,7 +10,7 @@ import {
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { useOrganizationProjects } from "@/features/organizations/hooks/useOrganizationProjects";
+import { useOrganizationProjectActions } from "@/features/organizations/hooks/useOrganizationProjectActions";
 import type { CreateProjectInput } from "@/features/projects/types";
 import { createProjectInputSchema } from "@/features/projects/types/schemas";
 import { useAppForm } from "@/hooks/useAppForm";
@@ -26,8 +26,7 @@ export function CreateProjectDrawer({
 	open,
 	onOpenChange,
 }: CreateProjectDrawerProps) {
-	const { actions } = useOrganizationProjects(organizationId);
-	const mutation = actions.create;
+	const { createProject: mutation } = useOrganizationProjectActions();
 
 	const form = useAppForm({
 		defaultValues: {
@@ -39,7 +38,7 @@ export function CreateProjectDrawer({
 			onSubmit: createProjectInputSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await mutation.mutateAsync(value);
+			await mutation.mutateAsync({ orgId: organizationId, data: value });
 			onOpenChange(false);
 			form.reset();
 		},

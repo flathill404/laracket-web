@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useOrganizations } from "../hooks/useOrganizations";
+import { useOrganizationActions } from "@/features/organizations/hooks/useOrganizationActions";
 
 const createOrganizationSchema = z.object({
 	name: z
@@ -51,8 +51,7 @@ export function CreateOrganizationDialog({
 	const open = isControlled ? controlledOpen : uncontrolledOpen;
 	const setOpen = isControlled ? setControlledOpen : setUncontrolledOpen;
 
-	const { actions } = useOrganizations();
-	const createMutation = actions.create;
+	const { create: createMutation } = useOrganizationActions();
 
 	// Form handling
 	const form = useForm({
