@@ -1,3 +1,4 @@
+import { useLocation } from "@tanstack/react-router";
 import {
 	Building2,
 	Files,
@@ -7,7 +8,7 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { CreateOrganizationDialog } from "@/features/organizations/components/CreateOrganizationDialog";
 import type { Organization } from "@/features/organizations/types";
@@ -25,9 +26,39 @@ interface SidebarProps {
 }
 
 export function Sidebar({ projects, teams, organizations }: SidebarProps) {
+	const location = useLocation();
 	const [createProjectOpen, setCreateProjectOpen] = useState(false);
 	const [createTeamOpen, setCreateTeamOpen] = useState(false);
 	const [createOrganizationOpen, setCreateOrganizationOpen] = useState(false);
+
+	const [openSections, setOpenSections] = useState<string[]>([]);
+
+	useEffect(() => {
+		const path = location.pathname;
+
+		setOpenSections((prev) => {
+			const newSections = new Set(prev);
+			let changed = false;
+
+			if (path.includes("/projects") && !newSections.has("projects")) {
+				newSections.add("projects");
+				changed = true;
+			}
+			if (path.includes("/teams") && !newSections.has("teams")) {
+				newSections.add("teams");
+				changed = true;
+			}
+			if (
+				path.includes("/organizations") &&
+				!newSections.has("organizations")
+			) {
+				newSections.add("organizations");
+				changed = true;
+			}
+
+			return changed ? Array.from(newSections) : prev;
+		});
+	}, [location.pathname]);
 
 	return (
 		<aside className="hidden w-64 flex-col border-r bg-muted/10 md:flex">
@@ -43,7 +74,12 @@ export function Sidebar({ projects, teams, organizations }: SidebarProps) {
 						All Tickets
 					</SidebarLink>
 
-					<Accordion type="multiple" className="w-full">
+					<Accordion
+						type="multiple"
+						className="w-full"
+						value={openSections}
+						onValueChange={setOpenSections}
+					>
 						<SidebarSection
 							value="projects"
 							icon={Folder}
