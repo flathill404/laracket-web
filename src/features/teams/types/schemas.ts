@@ -21,7 +21,13 @@ export const teamMembersSchema = z.array(teamMemberSchema);
 /* Inputs */
 
 export const createTeamInputSchema = z.object({
-	name: z.string().min(1),
+	name: z
+		.string()
+		.min(1)
+		.regex(
+			/^[a-zA-Z0-9_-]+$/,
+			"Name can only contain letters, numbers, dashes, and underscores",
+		),
 	displayName: z.string().min(1),
 });
 

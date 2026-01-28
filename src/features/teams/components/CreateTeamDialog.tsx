@@ -1,10 +1,8 @@
-import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -15,25 +13,11 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useAppForm } from "@/hooks/useAppForm";
 import { queryKeys } from "@/lib/queryKeys";
 import { createTeam } from "../api";
-
-const createTeamSchema = z.object({
-	name: z
-		.string()
-		.min(1, "Name is required")
-		.max(30, "Name must be 30 characters or less")
-		.regex(
-			/^[a-zA-Z0-9_-]+$/,
-			"Name can only contain letters, numbers, dashes, and underscores",
-		),
-	displayName: z
-		.string()
-		.min(1, "Display name is required")
-		.max(50, "Display name must be 50 characters or less"),
-});
+import { createTeamInputSchema } from "../types/schemas";
 
 interface CreateTeamDialogProps {
 	trigger?: React.ReactNode;
@@ -48,7 +32,6 @@ export function CreateTeamDialog({
 }: CreateTeamDialogProps) {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
 	const router = useRouter();
-
 	const queryClient = useQueryClient();
 
 	const isControlled = controlledOpen !== undefined;
@@ -71,13 +54,13 @@ export function CreateTeamDialog({
 		},
 	});
 
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: {
 			name: "",
 			displayName: "",
 		},
 		validators: {
-			onChange: createTeamSchema,
+			onSubmit: createTeamInputSchema,
 		},
 		onSubmit: async ({ value }) => {
 			await mutation.mutateAsync(value);
@@ -102,46 +85,72 @@ export function CreateTeamDialog({
 					}}
 					className="flex flex-col gap-4 py-4"
 				>
-					<form.Field
-						name="name"
-						children={(field) => (
-							<Field data-invalid={!!field.state.meta.errors?.length}>
-								<FieldLabel htmlFor={field.name}>Name</FieldLabel>
+					<form.Field name="name">
+						{(field) => (
+							<div className="space-y-2">
+								<label
+									htmlFor={field.name}
+									className="font-medium text-sm leading-none"
+								>
+									Name
+								</label>
 								<Input
 									id={field.name}
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
 									placeholder="e.g. engineering-team"
-								/>
-								<FieldError
-									errors={field.state.meta.errors?.map((e) => ({
-										message: String(e),
-									}))}
-								/>
-							</Field>
-						)}
-					/>
-					<form.Field
-						name="displayName"
-						children={(field) => (
-							<Field data-invalid={!!field.state.meta.errors?.length}>
-								<FieldLabel htmlFor={field.name}>Display Name</FieldLabel>
-								<Input
-									id={field.name}
 									value={field.state.value}
 									onBlur={field.handleBlur}
 									onChange={(e) => field.handleChange(e.target.value)}
-									placeholder="e.g. Engineering Team"
 								/>
-								<FieldError
-									errors={field.state.meta.errors?.map((e) => ({
-										message: String(e),
-									}))}
-								/>
-							</Field>
+								{field.state.meta.errors.length > 0 && (
+									<p
+										className="font-medium text-destructive text-sm"
+										data-testid="error-name"
+									>
+										{field.state.meta.errors
+											.map((e: unknown) =>
+												typeof e === "object" && e !== null && "message" in e
+													? (e as { message: string }).message
+													: String(e),
+											)
+											.join(", ")}
+									</p>
+								)}
+							</div>
 						)}
-					/>
+					</form.Field>
+					<form.Field name="displayName">
+						{(field) => (
+							<div className="space-y-2">
+								<label
+									htmlFor={field.name}
+									className="font-medium text-sm leading-none"
+								>
+									Display Name
+								</label>
+								<Input
+									id={field.name}
+									placeholder="e.g. Engineering Team"
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+								/>
+								{field.state.meta.errors.length > 0 && (
+									<p
+										className="font-medium text-destructive text-sm"
+										data-testid="error-displayName"
+									>
+										{field.state.meta.errors
+											.map((e: unknown) =>
+												typeof e === "object" && e !== null && "message" in e
+													? (e as { message: string }).message
+													: String(e),
+											)
+											.join(", ")}
+									</p>
+								)}
+							</div>
+						)}
+					</form.Field>
 					<DialogFooter>
 						<Button type="submit" disabled={mutation.isPending}>
 							{mutation.isPending && (
