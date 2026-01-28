@@ -27,7 +27,7 @@
         "@tailwindcss/vite": "^4.0.6",
         "@tanstack/match-sorter-utils": "^8.19.4",
         "@tanstack/query-db-collection": "^1.0.20",
-        "@tanstack/react-db": "^0.1.67",
+        "@tanstack/react-db": "^0.1.68",
         "@tanstack/react-devtools": "^0.9.3",
         "@tanstack/react-form": "^1.28.0",
         "@tanstack/react-query": "^5.90.20",
@@ -488,7 +488,7 @@
 
     "@tanstack/query-devtools": ["@tanstack/query-devtools@5.92.0", "", {}, "sha512-N8D27KH1vEpVacvZgJL27xC6yPFUy0Zkezn5gnB3L3gRCxlDeSuiya7fKge8Y91uMTnC8aSxBQhcK6ocY7alpQ=="],
 
-    "@tanstack/react-db": ["@tanstack/react-db@0.1.67", "", { "dependencies": { "@tanstack/db": "0.5.23", "use-sync-external-store": "^1.6.0" }, "peerDependencies": { "react": ">=16.8.0" } }, "sha512-MLvvAKdPhQP7ozp6fPF7JezN5kv6phsy1g2z6Qfo/sw8RB9hOj4l/bCL0OCMdAkAueCTm0zsC1gtF7WgGw6L+Q=="],
+    "@tanstack/react-db": ["@tanstack/react-db@0.1.68", "", { "dependencies": { "@tanstack/db": "0.5.24", "use-sync-external-store": "^1.6.0" }, "peerDependencies": { "react": ">=16.8.0" } }, "sha512-VCHZ6CyX/YVt+fQzUH86SgdMzD7UCzDXRztq8cwODX9rwSvXbMTk6J6R4bJtklUF48QeqBxR3No/qEUJUaMg6Q=="],
 
     "@tanstack/react-devtools": ["@tanstack/react-devtools@0.9.3", "", { "dependencies": { "@tanstack/devtools": "0.10.4" }, "peerDependencies": { "@types/react": ">=16.8", "@types/react-dom": ">=16.8", "react": ">=16.8", "react-dom": ">=16.8" } }, "sha512-SJTYWXWZkbWznwUwZ11awinPGB5StVIVyJXT0BFM1zUgjuajRwT8xRHl1oXVzVqqjJP5kfj89jkbFrcQPpq7Ng=="],
 
@@ -1119,6 +1119,8 @@
     "@tanstack/form-core/@tanstack/pacer-lite": ["@tanstack/pacer-lite@0.1.1", "", {}, "sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w=="],
 
     "@tanstack/form-core/@tanstack/store": ["@tanstack/store@0.7.7", "", {}, "sha512-xa6pTan1bcaqYDS9BDpSiS63qa6EoDkPN9RsRaxHuDdVDNntzq3xNwR5YKTU/V3SkSyC9T4YVOPh2zRQN0nhIQ=="],
+
+    "@tanstack/react-db/@tanstack/db": ["@tanstack/db@0.5.24", "", { "dependencies": { "@standard-schema/spec": "^1.1.0", "@tanstack/db-ivm": "0.1.17", "@tanstack/pacer-lite": "^0.2.0" }, "peerDependencies": { "typescript": ">=4.7" } }, "sha512-hlmTG3k9e1NE8pzIQgwV9e/W/Nwe36aENrXJ+KhTuy6jLJ6F+PmnOzfc2z7Vx9YUz1jepRQ61rxnIuq5w0bxmQ=="],
 
     "@tanstack/react-query/@tanstack/query-core": ["@tanstack/query-core@5.90.20", "", {}, "sha512-OMD2HLpNouXEfZJWcKeVKUgQ5n+n3A2JFmBaScpNDUqSrQSjiveC7dKMe53uJUg1nDG16ttFPz2xfilz6i2uVg=="],
 
