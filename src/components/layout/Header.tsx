@@ -1,7 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Bell, HelpCircle, LogOut, Search } from "lucide-react";
 import { useState } from "react";
-import type { z } from "zod";
 import { UserAvatar } from "@/components/common/UserAvatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +12,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import type { userSchema } from "@/features/auth/types";
-
-type User = z.infer<typeof userSchema>;
+import type { User } from "@/features/auth/types";
 
 interface HeaderProps {
 	user: User;
