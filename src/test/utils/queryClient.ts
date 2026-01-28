@@ -5,6 +5,9 @@ export function createTestQueryClient() {
 		defaultOptions: {
 			queries: {
 				retry: false,
+				gcTime: 0,
+				refetchOnWindowFocus: false,
+				refetchOnReconnect: false,
 			},
 			mutations: {
 				retry: false,
