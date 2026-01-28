@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import type { Ticket } from "@/features/tickets/types";
 import { render, screen } from "@/test/utils";
 import { TicketList } from "./TicketList";
 
@@ -8,7 +9,7 @@ vi.mock("./columns", () => ({
 		{
 			accessorKey: "title",
 			header: "Title",
-			cell: (info: any) => info.getValue(),
+			cell: (info: { getValue: () => unknown }) => info.getValue(),
 		},
 	],
 }));
@@ -38,7 +39,7 @@ describe("TicketList", () => {
 	const mockTickets = [
 		{ id: "1", title: "Ticket 1" },
 		{ id: "2", title: "Ticket 2" },
-	] as any[];
+	] as unknown as Ticket[];
 
 	it("should render tickets in simple mode", () => {
 		render(<TicketList tickets={mockTickets} onTicketClick={vi.fn()} />);

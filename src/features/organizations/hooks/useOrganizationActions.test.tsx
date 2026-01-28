@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, type Mock, vi } from "vitest";
 import { renderHook } from "@/test/utils";
 
 import {
@@ -26,7 +26,7 @@ vi.mock("../utils/queries", () => ({
 describe("useOrganizationActions", () => {
 	it("should handle create organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
-		(createOrganization as any).mockResolvedValue({});
+		(createOrganization as Mock).mockResolvedValue({});
 
 		result.current.create.mutate({
 			name: "New Org",
@@ -45,7 +45,7 @@ describe("useOrganizationActions", () => {
 
 	it("should handle update organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
-		(updateOrganization as any).mockResolvedValue({});
+		(updateOrganization as Mock).mockResolvedValue({});
 
 		result.current.update.mutate({
 			id: "1",
@@ -61,7 +61,7 @@ describe("useOrganizationActions", () => {
 
 	it("should handle delete organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
-		(deleteOrganization as any).mockResolvedValue({});
+		(deleteOrganization as Mock).mockResolvedValue({});
 
 		result.current.delete.mutate("1");
 

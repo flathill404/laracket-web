@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, type Mock, vi } from "vitest";
 import { login, logout } from "@/features/auth/api";
 import { renderHook } from "@/test/utils";
 import { useAuthActions } from "./useAuthActions";
@@ -33,7 +33,7 @@ describe("useAuthActions", () => {
 	it("should handle login success", async () => {
 		const { result } = renderHook(() => useAuthActions());
 
-		(login as any).mockResolvedValue({});
+		(login as Mock).mockResolvedValue({});
 
 		result.current.login.mutate({
 			email: "test@example.com",
@@ -55,7 +55,7 @@ describe("useAuthActions", () => {
 	it("should handle logout success", async () => {
 		const { result } = renderHook(() => useAuthActions());
 
-		(logout as any).mockResolvedValue({});
+		(logout as Mock).mockResolvedValue({});
 
 		result.current.logout.mutate();
 
