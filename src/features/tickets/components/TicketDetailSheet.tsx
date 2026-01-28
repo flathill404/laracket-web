@@ -30,7 +30,6 @@ import {
 	SheetContent,
 	SheetTitle,
 } from "@/components/ui/sheet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/useAppForm";
 import { cn } from "@/lib";
@@ -41,6 +40,7 @@ import { ticketQueries } from "../utils/queries";
 import { ActivityTimeline } from "./ActivityTimeline";
 import { TicketStatusSelect } from "./TicketStatusSelect";
 import { TicketUserSelector } from "./TicketUserSelector";
+import { UserSelectorSkeleton } from "./UserSelectorSkeleton";
 
 export interface TicketDetailSheetProps {
 	ticketId: string;
@@ -429,16 +429,5 @@ export function TicketDetailSheet({
 				</div>
 			</SheetContent>
 		</Sheet>
-	);
-}
-
-function UserSelectorSkeleton({ label }: { label: string }) {
-	return (
-		<div className="space-y-2">
-			<span className="font-medium text-muted-foreground text-xs">{label}</span>
-			<div className="flex min-h-[2.5rem] items-center gap-2">
-				<Skeleton className="h-8 w-24 rounded-md" />
-			</div>
-		</div>
 	);
 }

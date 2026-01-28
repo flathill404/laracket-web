@@ -3,8 +3,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { AuthenticatedNotFound } from "@/components/common/AuthenticatedNotFound";
 import { Header } from "@/components/layout/Header";
-import { Sidebar } from "@/components/layout/Sidebar";
 import { SidebarSkeleton } from "@/components/layout/SidebarSkeleton";
+import { SuspenseSidebar } from "@/components/layout/SuspenseSidebar";
 import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { authQueries } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
@@ -65,15 +65,5 @@ function AuthLayout() {
 				</main>
 			</div>
 		</div>
-	);
-}
-
-function SuspenseSidebar({ userId }: { userId: string }) {
-	const { data: projects } = useSuspenseQuery(projectQueries.list(userId));
-	const { data: teams } = useSuspenseQuery(teamQueries.list(userId));
-	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
-
-	return (
-		<Sidebar projects={projects} teams={teams} organizations={organizations} />
 	);
 }
