@@ -12,7 +12,7 @@ import {
 	Send,
 	Smile,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
 	SheetContent,
 	SheetTitle,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppForm } from "@/hooks/useAppForm";
 import { cn } from "@/lib";
@@ -269,24 +270,28 @@ export function TicketDetailSheet({
 								</h4>
 
 								<div className="space-y-5">
-									<TicketUserSelector
-										ticketId={ticket.id}
-										projectId={ticket.projectId}
-										users={ticket.assignees}
-										label="Assignees"
-										addButtonLabel="+ Add Assignee"
-										addButtonVariant="outline"
-										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(user) =>
-											actions.addAssignee.mutate({
-												id: ticketId,
-												data: { userId: user.id },
-											})
-										}
-										onRemove={(userId) =>
-											actions.removeAssignee.mutate({ id: ticketId, userId })
-										}
-									/>
+									<Suspense
+										fallback={<UserSelectorSkeleton label="Assignees" />}
+									>
+										<TicketUserSelector
+											ticketId={ticket.id}
+											projectId={ticket.projectId}
+											users={ticket.assignees}
+											label="Assignees"
+											addButtonLabel="+ Add Assignee"
+											addButtonVariant="outline"
+											addButtonClassName="h-8 text-muted-foreground border-dashed"
+											onAdd={(user) =>
+												actions.addAssignee.mutate({
+													id: ticketId,
+													data: { userId: user.id },
+												})
+											}
+											onRemove={(userId) =>
+												actions.removeAssignee.mutate({ id: ticketId, userId })
+											}
+										/>
+									</Suspense>
 
 									{/* Due Date */}
 									<div className="space-y-2">
@@ -333,24 +338,28 @@ export function TicketDetailSheet({
 										</Popover>
 									</div>
 
-									<TicketUserSelector
-										ticketId={ticket.id}
-										projectId={ticket.projectId}
-										users={ticket.reviewers}
-										label="Reviewers"
-										addButtonLabel="+ Add Reviewer"
-										addButtonVariant="outline"
-										addButtonClassName="h-8 text-muted-foreground border-dashed"
-										onAdd={(user) =>
-											actions.addReviewer.mutate({
-												id: ticketId,
-												data: { userId: user.id },
-											})
-										}
-										onRemove={(userId) =>
-											actions.removeReviewer.mutate({ id: ticketId, userId })
-										}
-									/>
+									<Suspense
+										fallback={<UserSelectorSkeleton label="Reviewers" />}
+									>
+										<TicketUserSelector
+											ticketId={ticket.id}
+											projectId={ticket.projectId}
+											users={ticket.reviewers}
+											label="Reviewers"
+											addButtonLabel="+ Add Reviewer"
+											addButtonVariant="outline"
+											addButtonClassName="h-8 text-muted-foreground border-dashed"
+											onAdd={(user) =>
+												actions.addReviewer.mutate({
+													id: ticketId,
+													data: { userId: user.id },
+												})
+											}
+											onRemove={(userId) =>
+												actions.removeReviewer.mutate({ id: ticketId, userId })
+											}
+										/>
+									</Suspense>
 								</div>
 							</div>
 
@@ -420,5 +429,16 @@ export function TicketDetailSheet({
 				</div>
 			</SheetContent>
 		</Sheet>
+	);
+}
+
+function UserSelectorSkeleton({ label }: { label: string }) {
+	return (
+		<div className="space-y-2">
+			<span className="font-medium text-muted-foreground text-xs">{label}</span>
+			<div className="flex min-h-[2.5rem] items-center gap-2">
+				<Skeleton className="h-8 w-24 rounded-md" />
+			</div>
+		</div>
 	);
 }

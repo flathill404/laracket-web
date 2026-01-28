@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,7 +45,7 @@ export function TicketUserSelector({
 }: TicketUserSelectorProps) {
 	const [open, setOpen] = useState(false);
 
-	const { data: members = [] } = useQuery(projectQueries.members(projectId));
+	const { data: members } = useSuspenseQuery(projectQueries.members(projectId));
 
 	const userIds = new Set(users.map((u) => u.id));
 	const availableMembers = members.filter((m) => !userIds.has(m.id));
