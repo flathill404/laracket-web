@@ -31,3 +31,16 @@ class ResizeObserverMock {
 }
 
 window.ResizeObserver = ResizeObserverMock;
+
+// Mock Element methods for radix-ui primitives (Command, Dialog, Sheet, etc.)
+Object.assign(window.Element.prototype, {
+	scrollIntoView: vi.fn(),
+	setPointerCapture: vi.fn(),
+	releasePointerCapture: vi.fn(),
+	hasPointerCapture: vi.fn(() => false),
+});
+
+// Mock HTMLElement methods for radix-ui
+Object.assign(window.HTMLElement.prototype, {
+	scrollIntoView: vi.fn(),
+});

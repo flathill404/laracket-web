@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@/test/utils";
 import type { Ticket } from "../types";
 import { ActionsCell } from "./ActionsCell";
@@ -21,5 +21,15 @@ describe("ActionsCell", () => {
 		render(<ActionsCell ticket={mockTicket} />);
 		expect(screen.getByRole("button")).toBeInTheDocument();
 		expect(screen.getByText("Open menu")).toBeInTheDocument();
+	});
+
+	it("renders with correct ticket prop", () => {
+		const onDeleteTicket = vi.fn();
+		render(<ActionsCell ticket={mockTicket} onDeleteTicket={onDeleteTicket} />);
+
+		// Menu trigger should be present
+		const button = screen.getByRole("button");
+		expect(button).toHaveAttribute("aria-haspopup", "menu");
+		expect(button).toHaveAttribute("aria-expanded", "false");
 	});
 });
