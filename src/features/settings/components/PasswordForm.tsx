@@ -50,8 +50,12 @@ export function PasswordForm() {
 			onDynamic: updatePasswordSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await updatePasswordMutation.mutateAsync(value);
-			form.reset();
+			try {
+				await updatePasswordMutation.mutateAsync(value);
+				form.reset();
+			} catch (_e) {
+				// Error handled by mutation onError
+			}
 		},
 	});
 
