@@ -28,7 +28,6 @@ function SearchRoute() {
 		hasNextPage,
 		isFetchingNextPage,
 		fetchNextPage,
-		isLoading,
 	} = useInfiniteQuery({ ...ticketQueries.search(q || "") });
 
 	if (!q) {
@@ -55,7 +54,6 @@ function SearchRoute() {
 				hasNextPage={hasNextPage}
 				isFetchingNextPage={isFetchingNextPage}
 				fetchNextPage={fetchNextPage}
-				isLoading={isLoading}
 				onTicketClick={(ticket) => {
 					navigate({
 						to: "/projects/$projectId/tickets/$ticketId",

@@ -1,4 +1,4 @@
-import { queryOptions, useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import type { OnChangeFn, SortingState } from "@tanstack/react-table";
 import { Plus } from "lucide-react";
@@ -14,26 +14,12 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "@/components/ui/empty";
-import { fetchProjectTickets } from "@/features/projects/api/tickets";
 import type { FetchTicketsSort } from "@/features/projects/types";
 import { fetchTicketsSortSchema } from "@/features/projects/types/schemas";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
-
-const ticketsQuery = (
-	projectId: string,
-	filters?: { status?: string[]; sort?: FetchTicketsSort },
-) =>
-	queryOptions({
-		queryKey: ["projects", projectId, "tickets", filters],
-		queryFn: () =>
-			fetchProjectTickets(projectId, {
-				filters: { status: filters?.status },
-				sort: filters?.sort,
-			}),
-	});
 
 const searchSchema = z.object({
 	status: z.array(z.string()).optional(),
@@ -50,9 +36,12 @@ export const Route = createFileRoute(
 		params: { projectId },
 		deps: { status, sort },
 	}) => {
-		await Promise.all([
-			queryClient.ensureQueryData(ticketsQuery(projectId, { status, sort })),
-		]);
+		await queryClient.ensureInfiniteQueryData(
+			ticketQueries.list(projectId, {
+				filters: { status },
+				sort,
+			}),
+		);
 	},
 	component: ProjectDetail,
 });
@@ -63,8 +52,8 @@ function ProjectDetail() {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 
-	const { data, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading } =
-		useInfiniteQuery(
+	const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+		useSuspenseInfiniteQuery(
 			ticketQueries.list(projectId, {
 				filters: { status: search.status },
 				sort: search.sort,
@@ -98,13 +87,12 @@ function ProjectDetail() {
 		});
 	};
 
-	const pages = data?.pages ?? [];
+	const pages = data.pages;
 
 	return (
 		<div className="flex h-full flex-col bg-background">
 			<TicketList
 				pages={pages}
-				isLoading={isLoading}
 				selectedStatuses={search.status}
 				onStatusChange={handleStatusChange}
 				sorting={sorting}
