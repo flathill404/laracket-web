@@ -8,14 +8,14 @@ export const useOrganizationTeamActions = () => {
 
 	const createTeam = useMutation({
 		mutationFn: ({
-			orgId,
+			organizationId,
 			data,
 		}: {
-			orgId: string;
+			organizationId: string;
 			data: CreateOrganizationTeamInput;
-		}) => createOrganizationTeam(orgId, data),
-		onSuccess: (_, { orgId }) => {
-			queryClient.invalidateQueries(organizationQueries.teams(orgId));
+		}) => createOrganizationTeam(organizationId, data),
+		onSuccess: (_, { organizationId }) => {
+			queryClient.invalidateQueries(organizationQueries.teams(organizationId));
 		},
 	});
 

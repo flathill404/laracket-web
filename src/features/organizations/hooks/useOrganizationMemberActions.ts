@@ -15,37 +15,48 @@ export const useOrganizationMemberActions = () => {
 
 	const addMember = useMutation({
 		mutationFn: ({
-			orgId,
+			organizationId,
 			data,
 		}: {
-			orgId: string;
+			organizationId: string;
 			data: OrganizationMemberInput;
-		}) => addOrganizationMember(orgId, data),
-		onSuccess: (_, { orgId }) => {
-			queryClient.invalidateQueries(organizationQueries.members(orgId));
+		}) => addOrganizationMember(organizationId, data),
+		onSuccess: (_, { organizationId }) => {
+			queryClient.invalidateQueries(
+				organizationQueries.members(organizationId),
+			);
 		},
 	});
 
 	const updateMember = useMutation({
 		mutationFn: ({
-			orgId,
+			organizationId,
 			userId,
 			data,
 		}: {
-			orgId: string;
+			organizationId: string;
 			userId: string;
 			data: UpdateOrganizationMemberInput;
-		}) => updateOrganizationMember(orgId, userId, data),
-		onSuccess: (_, { orgId }) => {
-			queryClient.invalidateQueries(organizationQueries.members(orgId));
+		}) => updateOrganizationMember(organizationId, userId, data),
+		onSuccess: (_, { organizationId }) => {
+			queryClient.invalidateQueries(
+				organizationQueries.members(organizationId),
+			);
 		},
 	});
 
 	const removeMember = useMutation({
-		mutationFn: ({ orgId, userId }: { orgId: string; userId: string }) =>
-			removeOrganizationMember(orgId, userId),
-		onSuccess: (_, { orgId }) => {
-			queryClient.invalidateQueries(organizationQueries.members(orgId));
+		mutationFn: ({
+			organizationId,
+			userId,
+		}: {
+			organizationId: string;
+			userId: string;
+		}) => removeOrganizationMember(organizationId, userId),
+		onSuccess: (_, { organizationId }) => {
+			queryClient.invalidateQueries(
+				organizationQueries.members(organizationId),
+			);
 		},
 	});
 

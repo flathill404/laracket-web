@@ -36,7 +36,10 @@ export function CreateTeamDrawer({
 			onSubmit: createTeamInputSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await mutation.mutateAsync({ orgId: organizationId, data: value });
+			await mutation.mutateAsync({
+				organizationId: organizationId,
+				data: value,
+			});
 			onOpenChange(false);
 			form.reset();
 		},

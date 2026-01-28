@@ -8,14 +8,16 @@ export const useOrganizationProjectActions = () => {
 
 	const createProject = useMutation({
 		mutationFn: ({
-			orgId,
+			organizationId,
 			data,
 		}: {
-			orgId: string;
+			organizationId: string;
 			data: CreateOrganizationProjectInput;
-		}) => createOrganizationProject(orgId, data),
-		onSuccess: (_, { orgId }) => {
-			queryClient.invalidateQueries(organizationQueries.projects(orgId));
+		}) => createOrganizationProject(organizationId, data),
+		onSuccess: (_, { organizationId }) => {
+			queryClient.invalidateQueries(
+				organizationQueries.projects(organizationId),
+			);
 		},
 	});
 
