@@ -15,10 +15,10 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { fetchProjectTickets } from "@/features/projects/api/tickets";
+import type { FetchTicketsSort } from "@/features/projects/types";
+import { fetchTicketsSortSchema } from "@/features/projects/types/schemas";
 import { CreateTicketDrawer } from "@/features/tickets/components/CreateTicketDrawer";
 import { TicketList } from "@/features/tickets/components/TicketList";
-import { fetchTicketsSortSchema } from "@/features/projects/types/schemas";
-import type { FetchTicketsSort } from "@/features/projects/types";
 import { ticketQueries } from "@/features/tickets/utils/queries";
 import { parseSortParam, toSortParam } from "@/lib/sorting";
 
