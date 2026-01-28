@@ -114,7 +114,13 @@ export function CreateOrganizationDialog({
 									/>
 									{field.state.meta.errors ? (
 										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
+											{field.state.meta.errors
+												.map((e: unknown) =>
+													typeof e === "object" && e !== null && "message" in e
+														? (e as { message: string }).message
+														: String(e),
+												)
+												.join(", ")}
 										</p>
 									) : null}
 								</>
@@ -136,7 +142,13 @@ export function CreateOrganizationDialog({
 									/>
 									{field.state.meta.errors ? (
 										<p className="text-destructive text-sm">
-											{field.state.meta.errors.join(", ")}
+											{field.state.meta.errors
+												.map((e: unknown) =>
+													typeof e === "object" && e !== null && "message" in e
+														? (e as { message: string }).message
+														: String(e),
+												)
+												.join(", ")}
 										</p>
 									) : null}
 								</>
