@@ -1,8 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { AuthenticatedNotFound } from "@/components/common/AuthenticatedNotFound";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { SidebarSkeleton } from "@/components/layout/SidebarSkeleton";
 import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { authQueries } from "@/features/auth/utils/queries";
 import { organizationQueries } from "@/features/organizations/utils/queries";
@@ -31,13 +33,10 @@ export const Route = createFileRoute("/_authenticated")({
 			}
 		}
 
-		// Load projects, teams, and organizations for sidebar
-		const promises = [
-			context.queryClient.ensureQueryData(projectQueries.list(user.id)),
-			context.queryClient.ensureQueryData(teamQueries.list(user.id)),
-			context.queryClient.ensureQueryData(organizationQueries.list()),
-		];
-		await Promise.all(promises);
+		// Secondary: Start fetching sidebar data, but don't block navigation
+		queryClient.prefetchQuery(projectQueries.list(user.id));
+		queryClient.prefetchQuery(teamQueries.list(user.id));
+		queryClient.prefetchQuery(organizationQueries.list());
 	},
 	component: AuthLayout,
 	notFoundComponent: AuthenticatedNotFound,
@@ -46,15 +45,8 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthLayout() {
 	const { data: user } = useSuspenseQuery(authQueries.user());
 	const { logout } = useAuthActions();
-	const userId = user?.id ?? "";
-	const isVerified = !!user?.emailVerifiedAt; // Derived state
+	const isVerified = !!user?.emailVerifiedAt;
 
-	const { data: projects } = useSuspenseQuery(projectQueries.list(userId));
-	const { data: teams } = useSuspenseQuery(teamQueries.list(userId));
-	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
-
-	// We can safely assume user is not null here because of beforeLoad check
-	// But typescript might complain if type includes null (and useAuth returns user | undefined)
 	if (!user) return null;
 
 	return (
@@ -63,11 +55,9 @@ function AuthLayout() {
 
 			<div className="flex flex-1 overflow-hidden">
 				{isVerified && (
-					<Sidebar
-						projects={projects}
-						teams={teams}
-						organizations={organizations}
-					/>
+					<Suspense fallback={<SidebarSkeleton />}>
+						<SuspenseSidebar userId={user.id} />
+					</Suspense>
 				)}
 
 				<main className="flex flex-1 flex-col overflow-hidden">
@@ -75,5 +65,15 @@ function AuthLayout() {
 				</main>
 			</div>
 		</div>
+	);
+}
+
+function SuspenseSidebar({ userId }: { userId: string }) {
+	const { data: projects } = useSuspenseQuery(projectQueries.list(userId));
+	const { data: teams } = useSuspenseQuery(teamQueries.list(userId));
+	const { data: organizations } = useSuspenseQuery(organizationQueries.list());
+
+	return (
+		<Sidebar projects={projects} teams={teams} organizations={organizations} />
 	);
 }
