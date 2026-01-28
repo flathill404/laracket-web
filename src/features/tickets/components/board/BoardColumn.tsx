@@ -1,5 +1,5 @@
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -21,15 +21,15 @@ export function BoardColumn({ projectId, status }: BoardColumnProps) {
 	const ref = useRef<HTMLDivElement>(null);
 	const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-		useInfiniteQuery(
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+		useSuspenseInfiniteQuery(
 			ticketQueries.list(projectId, {
 				filters: { status: [status] },
 			}),
 		);
 
 	const tickets = useMemo(() => {
-		return data?.pages.flatMap((page) => page.data) ?? [];
+		return data.pages.flatMap((page) => page.data);
 	}, [data]);
 
 	useEffect(() => {
@@ -102,40 +102,34 @@ export function BoardColumn({ projectId, status }: BoardColumnProps) {
 				ref={parentRef}
 				className="scrollbar-hide flex-1 overflow-y-auto p-2"
 			>
-				{isLoading ? (
-					<div className="flex justify-center p-4">
-						<Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-					</div>
-				) : (
-					<div
-						style={{
-							height: `${virtualizer.getTotalSize()}px`,
-							position: "relative",
-							width: "100%",
-						}}
-					>
-						{virtualizer.getVirtualItems().map((virtualRow) => {
-							const ticket = tickets[virtualRow.index];
-							return (
-								<div
-									key={ticket.id}
-									ref={virtualizer.measureElement}
-									data-index={virtualRow.index}
-									style={{
-										position: "absolute",
-										top: 0,
-										left: 0,
-										width: "100%",
-										transform: `translateY(${virtualRow.start}px)`,
-									}}
-									className="p-1"
-								>
-									<BoardTicketCard ticket={ticket} />
-								</div>
-							);
-						})}
-					</div>
-				)}
+				<div
+					style={{
+						height: `${virtualizer.getTotalSize()}px`,
+						position: "relative",
+						width: "100%",
+					}}
+				>
+					{virtualizer.getVirtualItems().map((virtualRow) => {
+						const ticket = tickets[virtualRow.index];
+						return (
+							<div
+								key={ticket.id}
+								ref={virtualizer.measureElement}
+								data-index={virtualRow.index}
+								style={{
+									position: "absolute",
+									top: 0,
+									left: 0,
+									width: "100%",
+									transform: `translateY(${virtualRow.start}px)`,
+								}}
+								className="p-1"
+							>
+								<BoardTicketCard ticket={ticket} />
+							</div>
+						);
+					})}
+				</div>
 				{isFetchingNextPage && (
 					<div className="flex justify-center py-2">
 						<Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
