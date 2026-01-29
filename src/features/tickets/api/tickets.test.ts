@@ -49,7 +49,7 @@ const mockTicket = {
 describe("tickets API", () => {
 	describe("schemas", () => {
 		describe("ticketStatusSchema", () => {
-			it("should validate all status values", () => {
+			it("validates all status values", () => {
 				for (const status of [
 					"open",
 					"in_progress",
@@ -61,39 +61,39 @@ describe("tickets API", () => {
 				}
 			});
 
-			it("should reject invalid status", () => {
+			it("rejects an invalid status", () => {
 				expect(() => ticketStatusSchema.parse("invalid")).toThrow();
 			});
 		});
 
 		describe("ticketSchema", () => {
-			it("should validate a valid ticket", () => {
+			it("validates a valid ticket", () => {
 				expect(() => ticketSchema.parse(mockTicket)).not.toThrow();
 			});
 
-			it("should allow null dueDate", () => {
+			it("allows a null dueDate", () => {
 				const ticket = { ...mockTicket, dueDate: null };
 				expect(() => ticketSchema.parse(ticket)).not.toThrow();
 			});
 
-			it("should reject invalid status", () => {
+			it("rejects an invalid status", () => {
 				const ticket = { ...mockTicket, status: "invalid" };
 				expect(() => ticketSchema.parse(ticket)).toThrow();
 			});
 		});
 
 		describe("ticketsSchema", () => {
-			it("should validate array of tickets", () => {
+			it("validates an array of tickets", () => {
 				expect(() => ticketsSchema.parse([mockTicket])).not.toThrow();
 			});
 
-			it("should allow empty array", () => {
+			it("allows an empty array", () => {
 				expect(() => ticketsSchema.parse([])).not.toThrow();
 			});
 		});
 
 		describe("paginatedTicketsSchema", () => {
-			it("should validate paginated response", () => {
+			it("validates a paginated response", () => {
 				const paginatedResponse = {
 					data: [mockTicket],
 					links: {
@@ -117,7 +117,7 @@ describe("tickets API", () => {
 	});
 
 	describe("fetchTicket", () => {
-		it("should fetch and parse ticket data", async () => {
+		it("fetches and parses ticket data", async () => {
 			const result = await fetchTicket("ticket-123");
 
 			expect(result.id).toBe("ticket-123");
@@ -126,7 +126,7 @@ describe("tickets API", () => {
 	});
 
 	describe("fetchUserTickets", () => {
-		it("should fetch user tickets", async () => {
+		it("fetches user tickets", async () => {
 			const result = await fetchUserTickets("user-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -135,7 +135,7 @@ describe("tickets API", () => {
 	});
 
 	describe("createTicket", () => {
-		it("should create a ticket", async () => {
+		it("creates a ticket", async () => {
 			const data = {
 				title: "New Ticket",
 				description: "Description",
@@ -149,7 +149,7 @@ describe("tickets API", () => {
 	});
 
 	describe("updateTicket", () => {
-		it("should update a ticket", async () => {
+		it("updates a ticket", async () => {
 			server.use(
 				http.put(`${BASE_URL}/tickets/:ticketId`, async ({ request }) => {
 					const body = (await request.json()) as { title: string };
@@ -168,7 +168,7 @@ describe("tickets API", () => {
 	});
 
 	describe("updateTicketStatus", () => {
-		it("should update ticket status", async () => {
+		it("updates the ticket status", async () => {
 			await expect(
 				updateTicketStatus("ticket-123", { status: "in_progress" }),
 			).resolves.not.toThrow();
@@ -176,13 +176,13 @@ describe("tickets API", () => {
 	});
 
 	describe("assignee management", () => {
-		it("should add ticket assignee", async () => {
+		it("adds a ticket assignee", async () => {
 			await expect(
 				addTicketAssignee("ticket-123", { userId: "user-456" }),
 			).resolves.not.toThrow();
 		});
 
-		it("should remove ticket assignee", async () => {
+		it("removes a ticket assignee", async () => {
 			await expect(
 				removeTicketAssignee("ticket-123", "user-456"),
 			).resolves.not.toThrow();
@@ -190,13 +190,13 @@ describe("tickets API", () => {
 	});
 
 	describe("reviewer management", () => {
-		it("should add ticket reviewer", async () => {
+		it("adds a ticket reviewer", async () => {
 			await expect(
 				addTicketReviewer("ticket-123", { userId: "user-789" }),
 			).resolves.not.toThrow();
 		});
 
-		it("should remove ticket reviewer", async () => {
+		it("removes a ticket reviewer", async () => {
 			await expect(
 				removeTicketReviewer("ticket-123", "user-789"),
 			).resolves.not.toThrow();
@@ -204,13 +204,13 @@ describe("tickets API", () => {
 	});
 
 	describe("deleteTicket", () => {
-		it("should delete a ticket", async () => {
+		it("deletes a ticket", async () => {
 			await expect(deleteTicket("ticket-123")).resolves.not.toThrow();
 		});
 	});
 
 	describe("searchTickets", () => {
-		it("should search tickets", async () => {
+		it("searches tickets", async () => {
 			const result = await searchTickets("test");
 
 			expect(result.data).toBeInstanceOf(Array);
@@ -220,7 +220,7 @@ describe("tickets API", () => {
 	});
 
 	describe("updateTicketOrder", () => {
-		it("should update ticket order", async () => {
+		it("updates the ticket order", async () => {
 			await expect(
 				updateTicketOrder("ticket-123", { order: 10 }),
 			).resolves.not.toThrow();
