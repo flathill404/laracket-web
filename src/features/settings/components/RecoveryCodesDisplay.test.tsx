@@ -15,7 +15,7 @@ const mockRecoveryCodes = [
 ];
 
 describe("RecoveryCodesDisplay", () => {
-	it("should render all recovery codes", () => {
+	it("renders all recovery codes", () => {
 		const onDone = vi.fn();
 		render(
 			<RecoveryCodesDisplay
@@ -29,7 +29,7 @@ describe("RecoveryCodesDisplay", () => {
 		}
 	});
 
-	it("should render title", () => {
+	it("renders the title", () => {
 		const onDone = vi.fn();
 		render(
 			<RecoveryCodesDisplay
@@ -41,7 +41,7 @@ describe("RecoveryCodesDisplay", () => {
 		expect(screen.getByText("Recovery Codes")).toBeInTheDocument();
 	});
 
-	it("should render description text", () => {
+	it("renders the description text", () => {
 		const onDone = vi.fn();
 		render(
 			<RecoveryCodesDisplay
@@ -57,7 +57,7 @@ describe("RecoveryCodesDisplay", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render Done button", () => {
+	it("renders the Done button", () => {
 		const onDone = vi.fn();
 		render(
 			<RecoveryCodesDisplay
@@ -69,7 +69,7 @@ describe("RecoveryCodesDisplay", () => {
 		expect(screen.getByRole("button", { name: "Done" })).toBeInTheDocument();
 	});
 
-	it("should call onDone when Done button is clicked", async () => {
+	it("calls onDone when the Done button is clicked", async () => {
 		const user = userEvent.setup();
 		const onDone = vi.fn();
 		render(
@@ -84,7 +84,7 @@ describe("RecoveryCodesDisplay", () => {
 		expect(onDone).toHaveBeenCalledTimes(1);
 	});
 
-	it("should render empty state when no recovery codes", () => {
+	it("renders an empty state when there are no recovery codes", () => {
 		const onDone = vi.fn();
 		render(<RecoveryCodesDisplay recoveryCodes={[]} onDone={onDone} />);
 
@@ -92,7 +92,7 @@ describe("RecoveryCodesDisplay", () => {
 		expect(screen.getByRole("button", { name: "Done" })).toBeInTheDocument();
 	});
 
-	it("should render codes in monospace font", () => {
+	it("renders codes in a monospace font", () => {
 		const onDone = vi.fn();
 		render(
 			<RecoveryCodesDisplay
