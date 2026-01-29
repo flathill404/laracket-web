@@ -58,13 +58,13 @@ describe("TwoFactorForm", () => {
 		);
 	});
 
-	it("renders DisabledState when 2FA is not confirmed", () => {
+	it("renders the DisabledState when 2FA is not confirmed", () => {
 		render(<TwoFactorForm />);
 		expect(screen.getByTestId("disabled-state")).toBeInTheDocument();
 		expect(screen.queryByTestId("enabled-state")).not.toBeInTheDocument();
 	});
 
-	it("renders EnabledState when 2FA is confirmed", () => {
+	it("renders the EnabledState when 2FA is confirmed", () => {
 		vi.mocked(useTwoFactor).mockReturnValue({
 			...mockUseTwoFactor,
 			isConfirmed: true,
