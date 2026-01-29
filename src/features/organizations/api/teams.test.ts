@@ -4,7 +4,7 @@ import { createOrganizationTeam, fetchOrganizationTeams } from "./teams";
 
 describe("teams API", () => {
 	describe("fetchOrganizationTeams", () => {
-		it("should fetch teams", async () => {
+		it("fetches the organization teams", async () => {
 			const result = await fetchOrganizationTeams("org-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -13,7 +13,7 @@ describe("teams API", () => {
 	});
 
 	describe("createOrganizationTeam", () => {
-		it("should create team", async () => {
+		it("creates a new team", async () => {
 			const data = { name: "test", displayName: "Test Team" };
 			const result = await createOrganizationTeam("org-123", data);
 
