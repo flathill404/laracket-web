@@ -10,25 +10,25 @@ describe("date utils", () => {
 	const testDate = new Date("2023-01-15T12:00:00Z");
 
 	describe("formatDate", () => {
-		it("formats short date correctly", () => {
+		it("formats the short date correctly", () => {
 			expect(formatDate(testDate, "short")).toBe("Jan 15");
 		});
 
-		it("formats medium date correctly", () => {
+		it("formats the medium date correctly", () => {
 			expect(formatDate(testDate, "medium")).toBe("Jan 15, 2023");
 		});
 
-		it("formats long date correctly", () => {
+		it("formats the long date correctly", () => {
 			expect(formatDate(testDate, "long")).toBe("January 15th, 2023");
 		});
 
-		it("handles string input", () => {
+		it("handles a string input", () => {
 			expect(formatDate("2023-01-15T12:00:00Z", "short")).toBe("Jan 15");
 		});
 	});
 
 	describe("formatDateLocale", () => {
-		it("formats with default options", () => {
+		it("formats with the default options", () => {
 			// Depending on the test environment locale, this might vary.
 			// Assuming EN locale for node/vitest environment as is common.
 			expect(formatDateLocale(testDate)).toBe("Jan 15, 2023");
