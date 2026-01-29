@@ -18,19 +18,19 @@ describe("cookie utilities", () => {
 	});
 
 	describe("getCookie", () => {
-		it("should return cookie value when cookie exists", () => {
+		it("returns the cookie value when the cookie exists", () => {
 			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "testCookie=testValue";
 			expect(getCookie("testCookie")).toBe("testValue");
 		});
 
-		it("should return null when cookie does not exist", () => {
+		it("returns null when the cookie does not exist", () => {
 			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "otherCookie=otherValue";
 			expect(getCookie("nonExistent")).toBeNull();
 		});
 
-		it("should handle multiple cookies", () => {
+		it("handles multiple cookies", () => {
 			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "first=1";
 			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
@@ -40,13 +40,13 @@ describe("cookie utilities", () => {
 			expect(getCookie("second")).toBe("2");
 		});
 
-		it("should decode URI-encoded values", () => {
+		it("decodes URI-encoded values", () => {
 			// biome-ignore lint/suspicious/noDocumentCookie: Allowed for testing purposes
 			document.cookie = "encoded=hello%20world";
 			expect(getCookie("encoded")).toBe("hello world");
 		});
 
-		it("should return null when document is undefined (SSR)", () => {
+		it("returns null when the document is undefined (SSR)", () => {
 			const originalDocument = global.document;
 			// @ts-expect-error - Testing undefined document for SSR
 			global.document = undefined;
@@ -56,23 +56,23 @@ describe("cookie utilities", () => {
 	});
 
 	describe("setCookie", () => {
-		it("should set a cookie and be retrievable", () => {
+		it("sets a cookie and retrieving it returns the value", () => {
 			setCookie("test", "value");
 			expect(getCookie("test")).toBe("value");
 		});
 
-		it("should handle special characters by encoding", () => {
+		it("handles special characters by encoding", () => {
 			setCookie("test", "hello world");
 			expect(getCookie("test")).toBe("hello world");
 		});
 
-		it("should set cookie with max-age", () => {
+		it("sets a cookie with max-age", () => {
 			setCookie("test", "value", 3600);
 			// Cookie is set - we verify by retrieving it
 			expect(getCookie("test")).toBe("value");
 		});
 
-		it("should not throw when document is undefined (SSR)", () => {
+		it("does not throw when the document is undefined (SSR)", () => {
 			const originalDocument = global.document;
 			// @ts-expect-error - Testing undefined document for SSR
 			global.document = undefined;
@@ -82,14 +82,14 @@ describe("cookie utilities", () => {
 	});
 
 	describe("deleteCookie", () => {
-		it("should delete a cookie", () => {
+		it("deletes a cookie", () => {
 			setCookie("toDelete", "value");
 			expect(getCookie("toDelete")).toBe("value");
 			deleteCookie("toDelete");
 			expect(getCookie("toDelete")).toBeNull();
 		});
 
-		it("should not throw when deleting non-existent cookie", () => {
+		it("does not throw when deleting a non-existent cookie", () => {
 			expect(() => deleteCookie("nonExistent")).not.toThrow();
 		});
 	});
