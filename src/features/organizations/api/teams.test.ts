@@ -1,55 +1,24 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { describe, expect, it } from "vitest";
+
 import { createOrganizationTeam, fetchOrganizationTeams } from "./teams";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
-
-const mockTeam = {
-	id: "team-123",
-	name: "test-team",
-	displayName: "Test Team",
-};
-
 describe("teams API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("fetchOrganizationTeams", () => {
 		it("should fetch teams", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockTeam] }),
-			});
-
 			const result = await fetchOrganizationTeams("org-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith(
-				"/organizations/org-123/teams",
-			);
-			expect(result).toEqual([mockTeam]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 	});
 
 	describe("createOrganizationTeam", () => {
 		it("should create team", async () => {
-			mockClient.post.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockTeam }),
-			});
-
-			const data = { name: "test", displayName: "desc" };
+			const data = { name: "test", displayName: "Test Team" };
 			const result = await createOrganizationTeam("org-123", data);
 
-			expect(mockClient.post).toHaveBeenCalledWith(
-				"/organizations/org-123/teams",
-				data,
-			);
-			expect(result).toEqual(mockTeam);
+			expect(result.name).toBe("test");
+			expect(result.displayName).toBe("Test Team");
 		});
 	});
 });

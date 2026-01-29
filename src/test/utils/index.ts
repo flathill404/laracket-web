@@ -1,5 +1,5 @@
 export * from "./form";
-export * from "./getMockClient";
+export * from "./msw";
 export * from "./queryClient";
 export * from "./render";
 export * from "./renderWithRouter";

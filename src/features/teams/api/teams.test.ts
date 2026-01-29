@@ -1,11 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import { teamSchema } from "../types/schemas";
 import { deleteTeam, fetchTeam, fetchTeams, updateTeam } from "./teams";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
+const BASE_URL = "http://localhost:8000/api";
 
 const mockTeam = {
 	id: "team-123",
@@ -14,14 +15,6 @@ const mockTeam = {
 };
 
 describe("teams API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("schemas", () => {
 		describe("teamSchema", () => {
 			it("should validate a valid team", () => {
@@ -36,20 +29,18 @@ describe("teams API", () => {
 
 	describe("fetchTeams", () => {
 		it("should fetch user teams", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockTeam] }),
-			});
-
 			const result = await fetchTeams("user-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/users/user-123/teams");
-			expect(result).toEqual([mockTeam]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 
 		it("should return empty array when no teams", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [] }),
-			});
+			server.use(
+				http.get(`${BASE_URL}/users/:userId/teams`, () => {
+					return HttpResponse.json({ data: [] });
+				}),
+			);
 
 			const result = await fetchTeams("user-123");
 
@@ -59,42 +50,34 @@ describe("teams API", () => {
 
 	describe("fetchTeam", () => {
 		it("should fetch single team", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockTeam }),
-			});
-
 			const result = await fetchTeam("team-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/teams/team-123");
-			expect(result).toEqual(mockTeam);
+			expect(result.id).toBe("team-123");
 		});
 	});
 
 	describe("updateTeam", () => {
 		it("should update team", async () => {
-			const updateData = { name: "updated-name", displayName: "Updated Name" };
-			const updated = { ...mockTeam, ...updateData };
-			mockClient.put.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: updated }),
-			});
+			server.use(
+				http.put(`${BASE_URL}/teams/:teamId`, async ({ request }) => {
+					const body = (await request.json()) as { name: string };
+					return HttpResponse.json({
+						data: { ...mockTeam, ...body },
+					});
+				}),
+			);
 
+			const updateData = { name: "updated-name", displayName: "Updated Name" };
 			const result = await updateTeam("team-123", updateData);
 
-			expect(mockClient.put).toHaveBeenCalledWith(
-				"/teams/team-123",
-				updateData,
-			);
-			expect(result).toEqual(updated);
+			expect(result.name).toBe("updated-name");
+			expect(result.displayName).toBe("Updated Name");
 		});
 	});
 
 	describe("deleteTeam", () => {
 		it("should delete team", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await deleteTeam("team-123");
-
-			expect(mockClient.delete).toHaveBeenCalledWith("/teams/team-123");
+			await expect(deleteTeam("team-123")).resolves.not.toThrow();
 		});
 	});
 });

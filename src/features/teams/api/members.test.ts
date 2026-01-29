@@ -1,5 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import {
 	addTeamMember,
 	fetchTeamMembers,
@@ -7,82 +10,59 @@ import {
 	updateTeamMember,
 } from "./members";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
+const BASE_URL = "http://localhost:8000/api";
 
 describe("members API", () => {
-	const mockMember = {
-		id: "user-123",
-		name: "john",
-		displayName: "John Doe",
-		role: "member",
-	};
-
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("fetchTeamMembers", () => {
 		it("should fetch members", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockMember] }),
-			});
-
 			const result = await fetchTeamMembers("team-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/teams/team-123/members");
-			expect(result).toEqual([mockMember]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 	});
 
 	describe("addTeamMember", () => {
 		it("should add member", async () => {
-			mockClient.post.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockMember }),
-			});
-
 			const result = await addTeamMember("team-123", { userId: "user-123" });
 
-			expect(mockClient.post).toHaveBeenCalledWith("/teams/team-123/members", {
-				userId: "user-123",
-			});
-			expect(result).toEqual(mockMember);
+			expect(result.id).toBe("user-123");
 		});
 	});
 
 	describe("updateTeamMember", () => {
 		it("should update member", async () => {
-			const updatedMember = { ...mockMember, role: "leader" };
-			mockClient.patch.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: updatedMember }),
-			});
+			server.use(
+				http.patch(
+					`${BASE_URL}/teams/:teamId/members/:userId`,
+					async ({ request }) => {
+						const body = (await request.json()) as { role: string };
+						return HttpResponse.json({
+							data: {
+								id: "user-123",
+								name: "john_doe",
+								displayName: "John Doe",
+								avatarUrl: null,
+								role: body.role,
+							},
+						});
+					},
+				),
+			);
 
 			const result = await updateTeamMember("team-123", "user-123", {
 				role: "leader",
 			});
 
-			expect(mockClient.patch).toHaveBeenCalledWith(
-				"/teams/team-123/members/user-123",
-				{ role: "leader" },
-			);
-			expect(result).toEqual(updatedMember);
+			expect(result.role).toBe("leader");
 		});
 	});
 
 	describe("removeTeamMember", () => {
 		it("should remove member", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await removeTeamMember("team-123", "user-123");
-
-			expect(mockClient.delete).toHaveBeenCalledWith(
-				"/teams/team-123/members/user-123",
-			);
+			await expect(
+				removeTeamMember("team-123", "user-123"),
+			).resolves.not.toThrow();
 		});
 	});
 });

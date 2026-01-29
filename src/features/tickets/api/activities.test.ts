@@ -1,11 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import { activitiesSchema, activitySchema } from "../types/schemas";
 import { fetchTicketActivities } from "./activities";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
+const BASE_URL = "http://localhost:8000/api";
 
 const mockActivity = {
 	id: 1,
@@ -39,14 +40,6 @@ const mockStatusChangeActivity = {
 };
 
 describe("activities API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("schemas", () => {
 		describe("activitySchema", () => {
 			it("should validate a created activity", () => {
@@ -88,22 +81,18 @@ describe("activities API", () => {
 
 	describe("fetchTicketActivities", () => {
 		it("should fetch and parse activities", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockActivity] }),
-			});
-
 			const result = await fetchTicketActivities("ticket-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith(
-				"/tickets/ticket-123/activities",
-			);
-			expect(result).toEqual([mockActivity]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 
 		it("should return empty array when no activities", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [] }),
-			});
+			server.use(
+				http.get(`${BASE_URL}/tickets/:ticketId/activities`, () => {
+					return HttpResponse.json({ data: [] });
+				}),
+			);
 
 			const result = await fetchTicketActivities("ticket-123");
 

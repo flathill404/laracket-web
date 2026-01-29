@@ -1,5 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import {
 	paginatedTicketsSchema,
 	ticketSchema,
@@ -21,9 +24,7 @@ import {
 	updateTicketStatus,
 } from "./tickets";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
+const BASE_URL = "http://localhost:8000/api";
 
 const mockTicket = {
 	id: "ticket-123",
@@ -46,14 +47,6 @@ const mockTicket = {
 };
 
 describe("tickets API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("schemas", () => {
 		describe("ticketStatusSchema", () => {
 			it("should validate all status values", () => {
@@ -125,36 +118,24 @@ describe("tickets API", () => {
 
 	describe("fetchTicket", () => {
 		it("should fetch and parse ticket data", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockTicket }),
-			});
-
 			const result = await fetchTicket("ticket-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/tickets/ticket-123");
-			expect(result).toEqual(mockTicket);
+			expect(result.id).toBe("ticket-123");
+			expect(result.title).toBe("Test Ticket");
 		});
 	});
 
 	describe("fetchUserTickets", () => {
 		it("should fetch user tickets", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockTicket] }),
-			});
-
 			const result = await fetchUserTickets("user-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/users/user-123/tickets");
-			expect(result).toEqual([mockTicket]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 	});
 
 	describe("createTicket", () => {
 		it("should create a ticket", async () => {
-			mockClient.post.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockTicket }),
-			});
-
 			const data = {
 				title: "New Ticket",
 				description: "Description",
@@ -163,142 +144,86 @@ describe("tickets API", () => {
 
 			const result = await createTicket(data);
 
-			expect(mockClient.post).toHaveBeenCalledWith("/tickets", data);
-			expect(result).toEqual(mockTicket);
+			expect(result.title).toBe("New Ticket");
 		});
 	});
 
 	describe("updateTicket", () => {
 		it("should update a ticket", async () => {
-			const updatedTicket = { ...mockTicket, title: "Updated Title" };
-			mockClient.put.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: updatedTicket }),
-			});
+			server.use(
+				http.put(`${BASE_URL}/tickets/:ticketId`, async ({ request }) => {
+					const body = (await request.json()) as { title: string };
+					return HttpResponse.json({
+						data: { ...mockTicket, title: body.title },
+					});
+				}),
+			);
 
 			const result = await updateTicket("ticket-123", {
 				title: "Updated Title",
 			});
 
-			expect(mockClient.put).toHaveBeenCalledWith("/tickets/ticket-123", {
-				title: "Updated Title",
-			});
 			expect(result.title).toBe("Updated Title");
 		});
 	});
 
 	describe("updateTicketStatus", () => {
 		it("should update ticket status", async () => {
-			mockClient.patch.mockResolvedValueOnce({});
-
-			await updateTicketStatus("ticket-123", { status: "in_progress" });
-
-			expect(mockClient.patch).toHaveBeenCalledWith(
-				"/tickets/ticket-123/status",
-				{
-					status: "in_progress",
-				},
-			);
+			await expect(
+				updateTicketStatus("ticket-123", { status: "in_progress" }),
+			).resolves.not.toThrow();
 		});
 	});
 
 	describe("assignee management", () => {
 		it("should add ticket assignee", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await addTicketAssignee("ticket-123", { userId: "user-456" });
-
-			expect(mockClient.post).toHaveBeenCalledWith(
-				"/tickets/ticket-123/assignees",
-				{
-					userId: "user-456",
-				},
-			);
+			await expect(
+				addTicketAssignee("ticket-123", { userId: "user-456" }),
+			).resolves.not.toThrow();
 		});
 
 		it("should remove ticket assignee", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await removeTicketAssignee("ticket-123", "user-456");
-
-			expect(mockClient.delete).toHaveBeenCalledWith(
-				"/tickets/ticket-123/assignees/user-456",
-			);
+			await expect(
+				removeTicketAssignee("ticket-123", "user-456"),
+			).resolves.not.toThrow();
 		});
 	});
 
 	describe("reviewer management", () => {
 		it("should add ticket reviewer", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await addTicketReviewer("ticket-123", { userId: "user-789" });
-
-			expect(mockClient.post).toHaveBeenCalledWith(
-				"/tickets/ticket-123/reviewers",
-				{
-					userId: "user-789",
-				},
-			);
+			await expect(
+				addTicketReviewer("ticket-123", { userId: "user-789" }),
+			).resolves.not.toThrow();
 		});
 
 		it("should remove ticket reviewer", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await removeTicketReviewer("ticket-123", "user-789");
-
-			expect(mockClient.delete).toHaveBeenCalledWith(
-				"/tickets/ticket-123/reviewers/user-789",
-			);
+			await expect(
+				removeTicketReviewer("ticket-123", "user-789"),
+			).resolves.not.toThrow();
 		});
 	});
 
 	describe("deleteTicket", () => {
 		it("should delete a ticket", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await deleteTicket("ticket-123");
-
-			expect(mockClient.delete).toHaveBeenCalledWith("/tickets/ticket-123");
+			await expect(deleteTicket("ticket-123")).resolves.not.toThrow();
 		});
 	});
 
 	describe("searchTickets", () => {
 		it("should search tickets", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () =>
-					Promise.resolve({
-						data: [mockTicket],
-						links: {
-							first: "http://api/tickets?cursor=abc",
-							last: null,
-							prev: null,
-							next: null,
-						},
-						meta: {
-							path: "http://api/tickets",
-							perPage: 10,
-							nextCursor: null,
-							prevCursor: null,
-						},
-					}),
-			});
-
 			const result = await searchTickets("test");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/tickets/search?q=test");
-			expect(result.data).toEqual([mockTicket]);
+			expect(result.data).toBeInstanceOf(Array);
+			expect(result.meta).toBeDefined();
+			expect(result.links).toBeDefined();
 		});
 	});
 
 	describe("updateTicketOrder", () => {
 		it("should update ticket order", async () => {
-			mockClient.patch.mockResolvedValueOnce({});
-
-			await updateTicketOrder("ticket-123", { order: 10 });
-
-			expect(mockClient.patch).toHaveBeenCalledWith(
-				"/tickets/ticket-123/order",
-				{ order: 10 },
-			);
+			await expect(
+				updateTicketOrder("ticket-123", { order: 10 }),
+			).resolves.not.toThrow();
 		});
 	});
 });

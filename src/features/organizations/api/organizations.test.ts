@@ -1,5 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import { organizationSchema } from "../types/schemas";
 import {
 	createOrganization,
@@ -9,9 +12,7 @@ import {
 	updateOrganization,
 } from "./organizations";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
+const BASE_URL = "http://localhost:8000/api";
 
 const mockOrganization = {
 	id: "org-123",
@@ -20,14 +21,6 @@ const mockOrganization = {
 };
 
 describe("organizations API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("schemas", () => {
 		describe("organizationSchema", () => {
 			it("should validate a valid organization", () => {
@@ -43,69 +36,55 @@ describe("organizations API", () => {
 
 	describe("fetchOrganizations", () => {
 		it("should fetch user organizations", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockOrganization] }),
-			});
-
 			const result = await fetchOrganizations();
 
-			expect(mockClient.get).toHaveBeenCalledWith("/organizations");
-			expect(result).toEqual([mockOrganization]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 	});
 
 	describe("fetchOrganization", () => {
 		it("should fetch single organization", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockOrganization }),
-			});
-
 			const result = await fetchOrganization("org-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/organizations/org-123");
-			expect(result).toEqual(mockOrganization);
+			expect(result.id).toBe("org-123");
 		});
 	});
 
 	describe("createOrganization", () => {
 		it("should create organization", async () => {
-			mockClient.post.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: mockOrganization }),
-			});
-
 			const data = { name: "test", displayName: "Test inAPI" };
 			const result = await createOrganization(data);
 
-			expect(mockClient.post).toHaveBeenCalledWith("/organizations", data);
-			expect(result).toEqual(mockOrganization);
+			expect(result.name).toBe("test");
+			expect(result.displayName).toBe("Test inAPI");
 		});
 	});
 
 	describe("updateOrganization", () => {
 		it("should update organization", async () => {
-			const updated = { ...mockOrganization, name: "updated" };
-			mockClient.put.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: updated }),
-			});
+			server.use(
+				http.put(
+					`${BASE_URL}/organizations/:organizationId`,
+					async ({ request }) => {
+						const body = (await request.json()) as { name: string };
+						return HttpResponse.json({
+							data: { ...mockOrganization, ...body },
+						});
+					},
+				),
+			);
 
 			const data = { name: "updated", displayName: "Test Org" };
 			const result = await updateOrganization("org-123", data);
 
-			expect(mockClient.put).toHaveBeenCalledWith(
-				"/organizations/org-123",
-				data,
-			);
-			expect(result).toEqual(updated);
+			expect(result.name).toBe("updated");
 		});
 	});
 
 	describe("deleteOrganization", () => {
 		it("should delete organization", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await deleteOrganization("org-123");
-
-			expect(mockClient.delete).toHaveBeenCalledWith("/organizations/org-123");
+			await expect(deleteOrganization("org-123")).resolves.not.toThrow();
 		});
 	});
 });

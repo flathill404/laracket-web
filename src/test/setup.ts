@@ -1,11 +1,23 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-import { afterEach, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import { server } from "@/mocks/server";
+
+// Start MSW server before all tests
+beforeAll(() => {
+	server.listen({ onUnhandledRequest: "error" });
+});
 
 // Cleanup after each test
 afterEach(() => {
 	cleanup();
 	vi.clearAllMocks();
+	server.resetHandlers();
+});
+
+// Close MSW server after all tests
+afterAll(() => {
+	server.close();
 });
 
 // Mock window.matchMedia for responsive tests

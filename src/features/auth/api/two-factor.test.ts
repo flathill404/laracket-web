@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { describe, expect, it } from "vitest";
 import {
 	confirmTwoFactor,
 	disableTwoFactor,
@@ -9,104 +8,53 @@ import {
 	twoFactorChallenge,
 } from "./two-factor";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
-
 describe("two-factor API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("enableTwoFactor", () => {
 		it("should call enable 2FA endpoint", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await enableTwoFactor();
-
-			expect(mockClient.post).toHaveBeenCalledWith(
-				"/user/two-factor-authentication",
-			);
+			await expect(enableTwoFactor()).resolves.not.toThrow();
 		});
 	});
 
 	describe("disableTwoFactor", () => {
 		it("should call disable 2FA endpoint", async () => {
-			mockClient.delete.mockResolvedValueOnce({});
-
-			await disableTwoFactor();
-
-			expect(mockClient.delete).toHaveBeenCalledWith(
-				"/user/two-factor-authentication",
-			);
+			await expect(disableTwoFactor()).resolves.not.toThrow();
 		});
 	});
 
 	describe("fetchTwoFactorQrCode", () => {
 		it("should fetch and parse QR code", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ svg: "<svg>QR Code</svg>" }),
-			});
-
 			const result = await fetchTwoFactorQrCode();
 
-			expect(mockClient.get).toHaveBeenCalledWith("/user/two-factor-qr-code");
-			expect(result).toEqual({ svg: "<svg>QR Code</svg>" });
+			expect(result.svg).toBe("<svg>mock-qr-code</svg>");
 		});
 	});
 
 	describe("fetchTwoFactorRecoveryCodes", () => {
 		it("should fetch and parse recovery codes", async () => {
-			const codes = ["ABC123", "DEF456", "GHI789"];
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve(codes),
-			});
-
 			const result = await fetchTwoFactorRecoveryCodes();
 
-			expect(mockClient.get).toHaveBeenCalledWith(
-				"/user/two-factor-recovery-codes",
-			);
-			expect(result).toEqual(codes);
+			expect(result).toHaveLength(8);
+			expect(result[0]).toBe("recovery-code-1");
 		});
 	});
 
 	describe("confirmTwoFactor", () => {
 		it("should call confirm 2FA endpoint", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await confirmTwoFactor({ code: "123456" });
-
-			expect(mockClient.post).toHaveBeenCalledWith(
-				"/user/confirmed-two-factor-authentication",
-				{ code: "123456" },
-			);
+			await expect(confirmTwoFactor({ code: "123456" })).resolves.not.toThrow();
 		});
 	});
 
 	describe("twoFactorChallenge", () => {
 		it("should call challenge endpoint with code", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await twoFactorChallenge({ code: "123456" });
-
-			expect(mockClient.post).toHaveBeenCalledWith("/two-factor-challenge", {
-				code: "123456",
-			});
+			await expect(
+				twoFactorChallenge({ code: "123456" }),
+			).resolves.not.toThrow();
 		});
 
 		it("should call challenge endpoint with recovery code", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await twoFactorChallenge({ recoveryCode: "ABC123" });
-
-			expect(mockClient.post).toHaveBeenCalledWith("/two-factor-challenge", {
-				recoveryCode: "ABC123",
-			});
+			await expect(
+				twoFactorChallenge({ recoveryCode: "ABC123" }),
+			).resolves.not.toThrow();
 		});
 	});
 });

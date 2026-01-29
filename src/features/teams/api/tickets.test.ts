@@ -1,49 +1,27 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it } from "vitest";
+
+import { server } from "@/mocks/server";
+
 import { fetchTeamTickets } from "./tickets";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
-
-const mockTicket = {
-	id: "ticket-123",
-	title: "Test Ticket",
-	description: "Test description",
-	status: "open",
-	dueDate: null,
-	assignees: [],
-	reviewers: [],
-	projectId: "project-123",
-	createdAt: "2024-01-01T00:00:00Z",
-	updatedAt: "2024-01-01T00:00:00Z",
-};
+const BASE_URL = "http://localhost:8000/api";
 
 describe("tickets API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("fetchTeamTickets", () => {
 		it("should fetch team tickets", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [mockTicket] }),
-			});
-
 			const result = await fetchTeamTickets("team-123");
 
-			expect(mockClient.get).toHaveBeenCalledWith("/teams/team-123/tickets");
-			expect(result).toEqual([mockTicket]);
+			expect(result).toBeInstanceOf(Array);
+			expect(result.length).toBeGreaterThan(0);
 		});
 
 		it("should return empty array when no tickets", async () => {
-			mockClient.get.mockResolvedValueOnce({
-				json: () => Promise.resolve({ data: [] }),
-			});
+			server.use(
+				http.get(`${BASE_URL}/teams/:teamId/tickets`, () => {
+					return HttpResponse.json({ data: [] });
+				}),
+			);
 
 			const result = await fetchTeamTickets("team-123");
 

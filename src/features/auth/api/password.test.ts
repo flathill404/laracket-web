@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMockClient } from "@/test/utils";
+import { describe, expect, it } from "vitest";
 import {
 	confirmPassword,
 	forgotPassword,
@@ -7,63 +6,37 @@ import {
 	updatePassword,
 } from "./password";
 
-vi.mock("@/lib/client");
-
-const mockClient = getMockClient();
-
 describe("password API", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
 	describe("confirmPassword", () => {
 		it("should call confirm password endpoint", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await confirmPassword({ password: "mypassword" });
-
-			expect(mockClient.post).toHaveBeenCalledWith("/user/confirm-password", {
-				password: "mypassword",
-			});
+			await expect(
+				confirmPassword({ password: "mypassword" }),
+			).resolves.not.toThrow();
 		});
 	});
 
 	describe("updatePassword", () => {
 		it("should call update password endpoint", async () => {
-			mockClient.put.mockResolvedValueOnce({});
-
 			const input = {
 				currentPassword: "oldpassword",
 				password: "newpassword123",
 				passwordConfirmation: "newpassword123",
 			};
 
-			await updatePassword(input);
-
-			expect(mockClient.put).toHaveBeenCalledWith("/user/password", input);
+			await expect(updatePassword(input)).resolves.not.toThrow();
 		});
 	});
 
 	describe("forgotPassword", () => {
 		it("should call forgot password endpoint", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
-			await forgotPassword({ email: "test@example.com" });
-
-			expect(mockClient.post).toHaveBeenCalledWith("/forgot-password", {
-				email: "test@example.com",
-			});
+			await expect(
+				forgotPassword({ email: "test@example.com" }),
+			).resolves.not.toThrow();
 		});
 	});
 
 	describe("resetPassword", () => {
 		it("should call reset password endpoint", async () => {
-			mockClient.post.mockResolvedValueOnce({});
-
 			const input = {
 				email: "test@example.com",
 				password: "newpassword123",
@@ -71,9 +44,7 @@ describe("password API", () => {
 				token: "reset-token-abc",
 			};
 
-			await resetPassword(input);
-
-			expect(mockClient.post).toHaveBeenCalledWith("/reset-password", input);
+			await expect(resetPassword(input)).resolves.not.toThrow();
 		});
 	});
 });

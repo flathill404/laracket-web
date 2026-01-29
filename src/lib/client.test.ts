@@ -1,4 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+} from "vitest";
+
+import { server } from "@/mocks/server";
+
 import { client, request } from "./client";
 import {
 	ForbiddenError,
@@ -7,6 +19,15 @@ import {
 	UnauthorizedError,
 	UnknownError,
 } from "./errors";
+
+// Disable MSW for these tests since we're testing low-level HTTP client behavior
+beforeAll(() => {
+	server.close();
+});
+
+afterAll(() => {
+	server.listen({ onUnhandledRequest: "error" });
+});
 
 // Mock fetch globally
 const mockFetch = vi.fn();
