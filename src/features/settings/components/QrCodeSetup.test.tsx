@@ -13,7 +13,7 @@ describe("QrCodeSetup", () => {
 		isCancelling: false,
 	};
 
-	it("renders QR code image", () => {
+	it("renders the QR code image", () => {
 		render(<QrCodeSetup {...defaultProps} />);
 		const qrImage = screen.getByAltText("2FA QR Code");
 		expect(qrImage).toBeInTheDocument();
@@ -23,14 +23,14 @@ describe("QrCodeSetup", () => {
 		);
 	});
 
-	it("renders instructions", () => {
+	it("renders the instructions", () => {
 		render(<QrCodeSetup {...defaultProps} />);
 		expect(
 			screen.getByText(/To finish enabling two-factor authentication/i),
 		).toBeInTheDocument();
 	});
 
-	it("calls onConfirmationCodeChange when entering OTP", () => {
+	it("calls onConfirmationCodeChange when entering the OTP", () => {
 		render(<QrCodeSetup {...defaultProps} />);
 		// InputOTP slots are rendered as individual inputs or manageable elements
 		// Based on the code, they are slots of InputOTP.
@@ -44,7 +44,7 @@ describe("QrCodeSetup", () => {
 		expect(defaultProps.onConfirmationCodeChange).toHaveBeenCalled();
 	});
 
-	it("enables confirm button only when code is 6 digits", () => {
+	it("enables the confirm button only when the code is 6 digits", () => {
 		const { rerender } = render(
 			<QrCodeSetup {...defaultProps} confirmationCode="12345" />,
 		);
@@ -55,7 +55,7 @@ describe("QrCodeSetup", () => {
 		expect(confirmButton).not.toBeDisabled();
 	});
 
-	it("disables confirm button when isConfirming is true", () => {
+	it("disables the confirm button when isConfirming is true", () => {
 		render(
 			<QrCodeSetup
 				{...defaultProps}
@@ -67,21 +67,21 @@ describe("QrCodeSetup", () => {
 		expect(confirmButton).toBeDisabled();
 	});
 
-	it("calls onConfirm when clicking confirm button", () => {
+	it("calls onConfirm when clicking the confirm button", () => {
 		render(<QrCodeSetup {...defaultProps} confirmationCode="123456" />);
 		const confirmButton = screen.getByRole("button", { name: "Confirm" });
 		fireEvent.click(confirmButton);
 		expect(defaultProps.onConfirm).toHaveBeenCalled();
 	});
 
-	it("calls onCancel when clicking cancel button", () => {
+	it("calls onCancel when clicking the cancel button", () => {
 		render(<QrCodeSetup {...defaultProps} />);
 		const cancelButton = screen.getByRole("button", { name: "Cancel" });
 		fireEvent.click(cancelButton);
 		expect(defaultProps.onCancel).toHaveBeenCalled();
 	});
 
-	it("disables cancel button when isCancelling is true", () => {
+	it("disables the cancel button when isCancelling is true", () => {
 		render(<QrCodeSetup {...defaultProps} isCancelling={true} />);
 		const cancelButton = screen.getByRole("button", { name: "Cancel" });
 		expect(cancelButton).toBeDisabled();
