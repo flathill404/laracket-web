@@ -26,7 +26,7 @@ const baseMockUser = {
 } as const;
 
 describe("useTwoFactor", () => {
-	it("initializes with pending state", async () => {
+	it("initializes with a pending state", async () => {
 		mockApi.fetchUser.mockResolvedValue({
 			...baseMockUser,
 			twoFactorStatus: "pending",
@@ -44,7 +44,7 @@ describe("useTwoFactor", () => {
 		expect(result.current.isConfirmed).toBe(false);
 	});
 
-	it("initializes with confirmed state", async () => {
+	it("initializes with a confirmed state", async () => {
 		mockApi.fetchUser.mockResolvedValue({
 			...baseMockUser,
 			twoFactorStatus: "enabled",
@@ -60,7 +60,7 @@ describe("useTwoFactor", () => {
 		expect(result.current.isConfirmed).toBe(true);
 	});
 
-	it("handleEnableClick opens confirm password dialog", async () => {
+	it("opens the confirm password dialog when handleEnableClick is called", async () => {
 		mockApi.fetchUser.mockResolvedValue({
 			...baseMockUser,
 			twoFactorStatus: "disabled",
@@ -81,7 +81,7 @@ describe("useTwoFactor", () => {
 		expect(result.current.confirmPasswordOpen).toBe(true);
 	});
 
-	it("completes enablement flow", async () => {
+	it("completes the enablement flow", async () => {
 		mockApi.fetchUser.mockResolvedValue({
 			...baseMockUser,
 			twoFactorStatus: "disabled",
