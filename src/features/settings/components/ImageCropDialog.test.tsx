@@ -73,7 +73,7 @@ describe("ImageCropDialog", () => {
 		);
 	});
 
-	it("renders dialog with cropper", () => {
+	it("renders the dialog with the cropper", () => {
 		render(<ImageCropDialog {...defaultProps} />);
 		expect(screen.getByText("Crop Image")).toBeInTheDocument();
 		expect(screen.getByTestId("mock-cropper")).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe("ImageCropDialog", () => {
 		expect(defaultProps.onClose).toHaveBeenCalled();
 	});
 
-	it("handles saving cropped image", async () => {
+	it("handles saving the cropped image", async () => {
 		render(<ImageCropDialog {...defaultProps} />);
 
 		// Trigger crop complete in mock
