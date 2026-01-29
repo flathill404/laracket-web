@@ -30,7 +30,7 @@ vi.mock("../utils/queries", () => ({
 }));
 
 describe("useAuthActions", () => {
-	it("should handle login success", async () => {
+	it("handles login success", async () => {
 		const { result } = renderHook(() => useAuthActions());
 
 		(login as Mock).mockResolvedValue({});
@@ -52,7 +52,7 @@ describe("useAuthActions", () => {
 		);
 	});
 
-	it("should handle logout success", async () => {
+	it("handles logout success", async () => {
 		const { result } = renderHook(() => useAuthActions());
 
 		(logout as Mock).mockResolvedValue({});
