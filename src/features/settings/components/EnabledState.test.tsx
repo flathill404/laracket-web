@@ -12,7 +12,7 @@ const defaultProps = {
 };
 
 describe("EnabledState", () => {
-	it("should render enabled message", () => {
+	it("renders the enabled message", () => {
 		render(<EnabledState {...defaultProps} />);
 
 		expect(
@@ -20,7 +20,7 @@ describe("EnabledState", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render description about Google Authenticator", () => {
+	it("renders the description about Google Authenticator", () => {
 		render(<EnabledState {...defaultProps} />);
 
 		expect(
@@ -28,7 +28,7 @@ describe("EnabledState", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render Show Recovery Codes button when no recovery codes displayed", () => {
+	it("renders the Show Recovery Codes button when no recovery codes are displayed", () => {
 		render(<EnabledState {...defaultProps} recoveryCodes={undefined} />);
 
 		expect(
@@ -36,7 +36,7 @@ describe("EnabledState", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should call onShowRecoveryCodes when button is clicked", async () => {
+	it("calls onShowRecoveryCodes when the button is clicked", async () => {
 		const user = userEvent.setup();
 		const onShowRecoveryCodes = vi.fn();
 		render(
@@ -53,13 +53,13 @@ describe("EnabledState", () => {
 		expect(onShowRecoveryCodes).toHaveBeenCalledTimes(1);
 	});
 
-	it("should render Disable button", () => {
+	it("renders the Disable button", () => {
 		render(<EnabledState {...defaultProps} />);
 
 		expect(screen.getByRole("button", { name: "Disable" })).toBeInTheDocument();
 	});
 
-	it("should render recovery codes when provided", () => {
+	it("renders recovery codes when provided", () => {
 		const recoveryCodes = ["CODE1", "CODE2", "CODE3"];
 		render(<EnabledState {...defaultProps} recoveryCodes={recoveryCodes} />);
 
@@ -68,7 +68,7 @@ describe("EnabledState", () => {
 		expect(screen.getByText("CODE3")).toBeInTheDocument();
 	});
 
-	it("should not render Show Recovery Codes button when recovery codes are displayed", () => {
+	it("does not render the Show Recovery Codes button when recovery codes are displayed", () => {
 		const recoveryCodes = ["CODE1"];
 		render(<EnabledState {...defaultProps} recoveryCodes={recoveryCodes} />);
 
@@ -77,14 +77,14 @@ describe("EnabledState", () => {
 		).not.toBeInTheDocument();
 	});
 
-	it("should render Done button in recovery codes display", () => {
+	it("renders the Done button in the recovery codes display", () => {
 		const recoveryCodes = ["CODE1"];
 		render(<EnabledState {...defaultProps} recoveryCodes={recoveryCodes} />);
 
 		expect(screen.getByRole("button", { name: "Done" })).toBeInTheDocument();
 	});
 
-	it("should call onClearRecoveryCodes when Done is clicked", async () => {
+	it("calls onClearRecoveryCodes when Done is clicked", async () => {
 		const user = userEvent.setup();
 		const onClearRecoveryCodes = vi.fn();
 		render(
