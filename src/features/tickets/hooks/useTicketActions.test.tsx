@@ -44,7 +44,7 @@ describe("useTicketActions", () => {
 		updatedAt: "2024-01-01",
 	} as Ticket;
 
-	it("create mutation calls API and invalidates project tickets", async () => {
+	it("calls the API and invalidates project tickets when creating a ticket", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -66,7 +66,7 @@ describe("useTicketActions", () => {
 		});
 	});
 
-	it("update mutation calls API and invalidates detail and project tickets", async () => {
+	it("calls the API and invalidates detail and project tickets when updating a ticket", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -91,7 +91,7 @@ describe("useTicketActions", () => {
 		});
 	});
 
-	it("updateStatus mutation calls API and invalidates detail and all tickets", async () => {
+	it("calls the API and invalidates detail and all tickets when updating the status", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -116,7 +116,7 @@ describe("useTicketActions", () => {
 		});
 	});
 
-	it("delete mutation calls API, removes detail and invalidates project tickets", async () => {
+	it("calls the API, removes detail, and invalidates project tickets when deleting a ticket", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const removeSpy = vi.spyOn(queryClient, "removeQueries");
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
@@ -135,7 +135,7 @@ describe("useTicketActions", () => {
 		});
 	});
 
-	it("addAssignee mutation calls API and invalidates ticket detail", async () => {
+	it("calls the API and invalidates ticket detail when adding an assignee", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -153,7 +153,7 @@ describe("useTicketActions", () => {
 		);
 	});
 
-	it("removeAssignee mutation calls API and invalidates ticket detail", async () => {
+	it("calls the API and invalidates ticket detail when removing an assignee", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -171,7 +171,7 @@ describe("useTicketActions", () => {
 		);
 	});
 
-	it("addReviewer mutation calls API and invalidates ticket detail", async () => {
+	it("calls the API and invalidates ticket detail when adding a reviewer", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -189,7 +189,7 @@ describe("useTicketActions", () => {
 		);
 	});
 
-	it("removeReviewer mutation calls API and invalidates ticket detail", async () => {
+	it("calls the API and invalidates ticket detail when removing a reviewer", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
@@ -207,7 +207,7 @@ describe("useTicketActions", () => {
 		);
 	});
 
-	it("updateOrder mutation calls API and invalidates project tickets", async () => {
+	it("calls the API and invalidates project tickets when updating the order", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketActions(), { wrapper });
