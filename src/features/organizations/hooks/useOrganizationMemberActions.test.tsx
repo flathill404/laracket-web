@@ -28,7 +28,7 @@ describe("useOrganizationMemberActions", () => {
 	const organizationId = "org-1";
 	const userId = "user-1";
 
-	it("addMember calls api and invalidates queries on success", async () => {
+	it("calls the API and invalidates queries when adding a member succeeds", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const { result } = renderHook(() => useOrganizationMemberActions(), {
 			wrapper,
@@ -60,7 +60,7 @@ describe("useOrganizationMemberActions", () => {
 		);
 	});
 
-	it("updateMember calls api and invalidates queries on success", async () => {
+	it("calls the API and invalidates queries when updating a member succeeds", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const { result } = renderHook(() => useOrganizationMemberActions(), {
 			wrapper,
@@ -97,7 +97,7 @@ describe("useOrganizationMemberActions", () => {
 		);
 	});
 
-	it("removeMember calls api and invalidates queries on success", async () => {
+	it("calls the API and invalidates queries when removing a member succeeds", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const { result } = renderHook(() => useOrganizationMemberActions(), {
 			wrapper,
