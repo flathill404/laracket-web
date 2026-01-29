@@ -4,7 +4,7 @@ import { fetchProjectTickets } from "./tickets";
 
 describe("tickets API", () => {
 	describe("fetchProjectTickets", () => {
-		it("should fetch project tickets without filters", async () => {
+		it("fetches project tickets without filters", async () => {
 			const result = await fetchProjectTickets("project-123");
 
 			expect(result.data).toBeInstanceOf(Array);
@@ -12,7 +12,7 @@ describe("tickets API", () => {
 			expect(result.links).toBeDefined();
 		});
 
-		it("should fetch project tickets with status filter", async () => {
+		it("fetches project tickets with a status filter", async () => {
 			const result = await fetchProjectTickets("project-123", {
 				filters: { status: ["open", "in_progress"] },
 			});
@@ -20,7 +20,7 @@ describe("tickets API", () => {
 			expect(result.data).toBeInstanceOf(Array);
 		});
 
-		it("should fetch project tickets with sort", async () => {
+		it("fetches project tickets with a sort", async () => {
 			const result = await fetchProjectTickets("project-123", {
 				sort: "-dueDate",
 			});
@@ -28,7 +28,7 @@ describe("tickets API", () => {
 			expect(result.data).toBeInstanceOf(Array);
 		});
 
-		it("should fetch project tickets with cursor", async () => {
+		it("fetches project tickets with a cursor", async () => {
 			const result = await fetchProjectTickets("project-123", {
 				pagination: { cursor: "abc123" },
 			});
