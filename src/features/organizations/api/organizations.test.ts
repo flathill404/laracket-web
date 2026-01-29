@@ -23,11 +23,11 @@ const mockOrganization = {
 describe("organizations API", () => {
 	describe("schemas", () => {
 		describe("organizationSchema", () => {
-			it("should validate a valid organization", () => {
+			it("validates a valid organization", () => {
 				expect(() => organizationSchema.parse(mockOrganization)).not.toThrow();
 			});
 
-			it("should reject missing required fields", () => {
+			it("rejects when required fields are missing", () => {
 				const invalid = { id: "123" };
 				expect(() => organizationSchema.parse(invalid)).toThrow();
 			});
@@ -35,7 +35,7 @@ describe("organizations API", () => {
 	});
 
 	describe("fetchOrganizations", () => {
-		it("should fetch user organizations", async () => {
+		it("fetches the user organizations", async () => {
 			const result = await fetchOrganizations();
 
 			expect(result).toBeInstanceOf(Array);
@@ -44,7 +44,7 @@ describe("organizations API", () => {
 	});
 
 	describe("fetchOrganization", () => {
-		it("should fetch single organization", async () => {
+		it("fetches a single organization", async () => {
 			const result = await fetchOrganization("org-123");
 
 			expect(result.id).toBe("org-123");
@@ -52,7 +52,7 @@ describe("organizations API", () => {
 	});
 
 	describe("createOrganization", () => {
-		it("should create organization", async () => {
+		it("creates an organization", async () => {
 			const data = { name: "test", displayName: "Test inAPI" };
 			const result = await createOrganization(data);
 
@@ -62,7 +62,7 @@ describe("organizations API", () => {
 	});
 
 	describe("updateOrganization", () => {
-		it("should update organization", async () => {
+		it("updates an organization", async () => {
 			server.use(
 				http.put(
 					`${BASE_URL}/organizations/:organizationId`,
@@ -83,7 +83,7 @@ describe("organizations API", () => {
 	});
 
 	describe("deleteOrganization", () => {
-		it("should delete organization", async () => {
+		it("deletes an organization", async () => {
 			await expect(deleteOrganization("org-123")).resolves.not.toThrow();
 		});
 	});
