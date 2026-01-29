@@ -14,7 +14,7 @@ const BASE_URL = "http://localhost:8000/api";
 
 describe("members API", () => {
 	describe("fetchTeamMembers", () => {
-		it("should fetch members", async () => {
+		it("fetches team members", async () => {
 			const result = await fetchTeamMembers("team-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -23,7 +23,7 @@ describe("members API", () => {
 	});
 
 	describe("addTeamMember", () => {
-		it("should add member", async () => {
+		it("adds a member", async () => {
 			const result = await addTeamMember("team-123", { userId: "user-123" });
 
 			expect(result.id).toBe("user-123");
@@ -31,7 +31,7 @@ describe("members API", () => {
 	});
 
 	describe("updateTeamMember", () => {
-		it("should update member", async () => {
+		it("updates a member", async () => {
 			server.use(
 				http.patch(
 					`${BASE_URL}/teams/:teamId/members/:userId`,
@@ -59,7 +59,7 @@ describe("members API", () => {
 	});
 
 	describe("removeTeamMember", () => {
-		it("should remove member", async () => {
+		it("removes a member", async () => {
 			await expect(
 				removeTeamMember("team-123", "user-123"),
 			).resolves.not.toThrow();
