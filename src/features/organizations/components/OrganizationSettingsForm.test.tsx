@@ -25,14 +25,14 @@ describe("OrganizationSettingsForm", () => {
 		// The file view didn't show the Organization type definition, assuming standard fields.
 	};
 
-	it("renders form with initial values", () => {
+	it("renders the form with initial values", () => {
 		render(<OrganizationSettingsForm organization={mockOrganization} />);
 
 		expect(screen.getByLabelText("Organization Name")).toHaveValue("test-org");
 		expect(screen.getByLabelText("Display Name")).toHaveValue("Test Org");
 	});
 
-	it("shows validation errors for invalid input", async () => {
+	it("shows validation errors when input is invalid", async () => {
 		const user = userEvent.setup();
 		render(<OrganizationSettingsForm organization={mockOrganization} />);
 
@@ -49,7 +49,7 @@ describe("OrganizationSettingsForm", () => {
 		});
 	});
 
-	it("submits form with valid data", async () => {
+	it("submits the form with valid data", async () => {
 		const user = userEvent.setup();
 		render(<OrganizationSettingsForm organization={mockOrganization} />);
 
