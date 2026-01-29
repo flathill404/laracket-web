@@ -24,7 +24,7 @@ vi.mock("../utils/queries", () => ({
 }));
 
 describe("useOrganizationActions", () => {
-	it("should handle create organization", async () => {
+	it("calls the API to create an organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
 		(createOrganization as Mock).mockResolvedValue({});
 
@@ -43,7 +43,7 @@ describe("useOrganizationActions", () => {
 		);
 	});
 
-	it("should handle update organization", async () => {
+	it("calls the API to update an organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
 		(updateOrganization as Mock).mockResolvedValue({});
 
@@ -59,7 +59,7 @@ describe("useOrganizationActions", () => {
 		});
 	});
 
-	it("should handle delete organization", async () => {
+	it("calls the API to delete an organization", async () => {
 		const { result } = renderHook(() => useOrganizationActions());
 		(deleteOrganization as Mock).mockResolvedValue({});
 
