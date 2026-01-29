@@ -7,6 +7,7 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
+	SheetDescription,
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { useOrganizationTeamActions } from "@/features/organizations/hooks/useOrganizationTeamActions";
@@ -51,6 +52,9 @@ export function CreateTeamDrawer({
 				side="right"
 				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-2xl"
 			>
+				<SheetDescription className="sr-only">
+					Create a new team
+				</SheetDescription>
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();

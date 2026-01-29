@@ -7,6 +7,7 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
+	SheetDescription,
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +54,9 @@ export function CreateProjectDrawer({
 				side="right"
 				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-2xl"
 			>
+				<SheetDescription className="sr-only">
+					Create a new project
+				</SheetDescription>
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();

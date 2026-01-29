@@ -31,6 +31,7 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
+	SheetDescription,
 	SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
@@ -148,6 +149,9 @@ export function ProjectDetailSheet({
 				side="right"
 				className="w-[90%] gap-0 overflow-hidden p-0 sm:max-w-5xl"
 			>
+				<SheetDescription className="sr-only">
+					Project details and management
+				</SheetDescription>
 				<div className="flex h-full flex-col">
 					{/* Header */}
 					<div className="z-10 flex shrink-0 items-center justify-between gap-4 border-b bg-background px-6 py-3">
