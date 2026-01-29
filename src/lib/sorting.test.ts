@@ -8,95 +8,95 @@ import {
 
 describe("sorting utilities", () => {
 	describe("snakeToCamel", () => {
-		it("should convert snake_case to camelCase", () => {
+		it("converts snake_case to camelCase", () => {
 			expect(snakeToCamel("due_date")).toBe("dueDate");
 		});
 
-		it("should handle multiple underscores", () => {
+		it("handles multiple underscores", () => {
 			expect(snakeToCamel("created_at_timestamp")).toBe("createdAtTimestamp");
 		});
 
-		it("should handle single word", () => {
+		it("handles a single word", () => {
 			expect(snakeToCamel("title")).toBe("title");
 		});
 
-		it("should handle empty string", () => {
+		it("handles an empty string", () => {
 			expect(snakeToCamel("")).toBe("");
 		});
 
-		it("should not change already camelCase", () => {
+		it("does not change an already camelCase string", () => {
 			expect(snakeToCamel("alreadyCamel")).toBe("alreadyCamel");
 		});
 	});
 
 	describe("camelToSnake", () => {
-		it("should convert camelCase to snake_case", () => {
+		it("converts camelCase to snake_case", () => {
 			expect(camelToSnake("dueDate")).toBe("due_date");
 		});
 
-		it("should handle multiple uppercase letters", () => {
+		it("handles multiple uppercase letters", () => {
 			expect(camelToSnake("createdAtTimestamp")).toBe("created_at_timestamp");
 		});
 
-		it("should handle single word", () => {
+		it("handles a single word", () => {
 			expect(camelToSnake("title")).toBe("title");
 		});
 
-		it("should handle empty string", () => {
+		it("handles an empty string", () => {
 			expect(camelToSnake("")).toBe("");
 		});
 
-		it("should not change already snake_case", () => {
+		it("does not change an already snake_case string", () => {
 			expect(camelToSnake("already_snake")).toBe("already_snake");
 		});
 	});
 
 	describe("parseSortParam", () => {
-		it("should parse descending sort parameter", () => {
+		it("parses the descending sort parameter", () => {
 			expect(parseSortParam("-due_date")).toEqual([
 				{ id: "dueDate", desc: true },
 			]);
 		});
 
-		it("should parse ascending sort parameter", () => {
+		it("parses the ascending sort parameter", () => {
 			expect(parseSortParam("created_at")).toEqual([
 				{ id: "createdAt", desc: false },
 			]);
 		});
 
-		it("should return empty array for undefined", () => {
+		it("returns an empty array for undefined", () => {
 			expect(parseSortParam(undefined)).toEqual([]);
 		});
 
-		it("should return empty array for empty string", () => {
+		it("returns an empty array for an empty string", () => {
 			expect(parseSortParam("")).toEqual([]);
 		});
 
-		it("should handle single word column", () => {
+		it("handles a single word column", () => {
 			expect(parseSortParam("-title")).toEqual([{ id: "title", desc: true }]);
 		});
 	});
 
 	describe("toSortParam", () => {
-		it("should convert descending sort to parameter", () => {
+		it("converts descending sort to a parameter", () => {
 			expect(toSortParam([{ id: "dueDate", desc: true }])).toBe("-due_date");
 		});
 
-		it("should convert ascending sort to parameter", () => {
+		it("converts ascending sort to a parameter", () => {
 			expect(toSortParam([{ id: "createdAt", desc: false }])).toBe(
 				"created_at",
 			);
 		});
 
-		it("should return undefined for empty array", () => {
+		it("returns undefined for an empty array", () => {
 			expect(toSortParam([])).toBeUndefined();
 		});
 
-		it("should handle single word column", () => {
+		it("handles a single word column", () => {
 			expect(toSortParam([{ id: "title", desc: false }])).toBe("title");
 		});
 
-		it("should only use first sorting element", () => {
+		it("only uses the first sorting element", () => {
 			expect(
 				toSortParam([
 					{ id: "dueDate", desc: true },
@@ -107,14 +107,14 @@ describe("sorting utilities", () => {
 	});
 
 	describe("round-trip conversion", () => {
-		it("should maintain data through parse and toSortParam", () => {
+		it("maintains data through parse and toSortParam", () => {
 			const original = "-due_date";
 			const parsed = parseSortParam(original);
 			const result = toSortParam(parsed);
 			expect(result).toBe(original);
 		});
 
-		it("should maintain data for ascending sort", () => {
+		it("maintains data for ascending sort", () => {
 			const original = "created_at";
 			const parsed = parseSortParam(original);
 			const result = toSortParam(parsed);
