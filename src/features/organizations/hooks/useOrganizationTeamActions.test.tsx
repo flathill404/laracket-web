@@ -25,7 +25,7 @@ const createWrapper = () => {
 describe("useOrganizationTeamActions", () => {
 	const organizationId = "org-1";
 
-	it("createTeam calls api and invalidates queries on success", async () => {
+	it("calls the API and invalidates queries when creating a team succeeds", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const { result } = renderHook(() => useOrganizationTeamActions(), {
 			wrapper,
