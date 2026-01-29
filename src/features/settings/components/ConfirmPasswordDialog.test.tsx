@@ -29,21 +29,21 @@ describe("ConfirmPasswordDialog", () => {
 		expect(defaultProps.onPasswordChange).toHaveBeenCalledWith("new-password");
 	});
 
-	it("calls onConfirm when clicking confirm button", () => {
+	it("calls onConfirm when clicking the confirm button", () => {
 		render(<ConfirmPasswordDialog {...defaultProps} password="password123" />);
 		const confirmButton = screen.getByRole("button", { name: "Confirm" });
 		fireEvent.click(confirmButton);
 		expect(defaultProps.onConfirm).toHaveBeenCalled();
 	});
 
-	it("calls onConfirm when pressing Enter key", () => {
+	it("calls onConfirm when pressing the Enter key", () => {
 		render(<ConfirmPasswordDialog {...defaultProps} password="password123" />);
 		const input = screen.getByPlaceholderText("Password");
 		fireEvent.keyDown(input, { key: "Enter" });
 		expect(defaultProps.onConfirm).toHaveBeenCalled();
 	});
 
-	it("disables confirm button when isConfirming is true", () => {
+	it("disables the confirm button when isConfirming is true", () => {
 		render(
 			<ConfirmPasswordDialog
 				{...defaultProps}
@@ -55,7 +55,7 @@ describe("ConfirmPasswordDialog", () => {
 		expect(confirmButton).toBeDisabled();
 	});
 
-	it("disables confirm button when password is empty", () => {
+	it("disables the confirm button when the password is empty", () => {
 		render(<ConfirmPasswordDialog {...defaultProps} password="" />);
 		const confirmButton = screen.getByRole("button", { name: "Confirm" });
 		expect(confirmButton).toBeDisabled();
