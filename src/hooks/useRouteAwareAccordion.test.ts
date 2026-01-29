@@ -22,7 +22,7 @@ describe("useRouteAwareAccordion", () => {
 		"/organizations": "organizations",
 	};
 
-	it("should return default value initially", () => {
+	it("returns the default value initially", () => {
 		mocks.useLocation.mockReturnValue({ pathname: "/" });
 		const { result } = renderHook(() =>
 			useRouteAwareAccordion(mapping, ["default"]),
@@ -30,14 +30,14 @@ describe("useRouteAwareAccordion", () => {
 		expect(result.current[0]).toEqual(["default"]);
 	});
 
-	it("should add section when path starts with keyword", () => {
+	it("adds a section when the path starts with a keyword", () => {
 		mocks.useLocation.mockReturnValue({ pathname: "/projects/123" });
 		const { result } = renderHook(() => useRouteAwareAccordion(mapping));
 
 		expect(result.current[0]).toContain("projects");
 	});
 
-	it("should NOT add section when path matches strictness but is nested (false positive check)", () => {
+	it("does not add a section when the path matches strictness but is nested (false positive check)", () => {
 		// Example: /organizations/123/projects should NOT trigger 'projects' (which expects /projects)
 		mocks.useLocation.mockReturnValue({
 			pathname: "/organizations/123/projects",
@@ -48,7 +48,7 @@ describe("useRouteAwareAccordion", () => {
 		expect(result.current[0]).not.toContain("projects"); // Should NOT match /projects prefix
 	});
 
-	it("should persist existing open sections", () => {
+	it("persists existing open sections", () => {
 		mocks.useLocation.mockReturnValue({ pathname: "/projects" });
 		const { result } = renderHook(() =>
 			useRouteAwareAccordion(mapping, ["existing"]),
@@ -59,7 +59,7 @@ describe("useRouteAwareAccordion", () => {
 		);
 	});
 
-	it("should react to path updates", () => {
+	it("reacts to path updates", () => {
 		mocks.useLocation.mockReturnValue({ pathname: "/" });
 		const { result, rerender } = renderHook(() =>
 			useRouteAwareAccordion(mapping),
