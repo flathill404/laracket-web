@@ -8,7 +8,7 @@ import {
 
 describe("members API", () => {
 	describe("fetchProjectMembers", () => {
-		it("should fetch project members", async () => {
+		it("fetches project members", async () => {
 			const result = await fetchProjectMembers("project-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -17,7 +17,7 @@ describe("members API", () => {
 	});
 
 	describe("addProjectMember", () => {
-		it("should add member", async () => {
+		it("adds a member", async () => {
 			const result = await addProjectMember("project-123", {
 				userId: "user-123",
 			});
@@ -27,7 +27,7 @@ describe("members API", () => {
 	});
 
 	describe("removeProjectMember", () => {
-		it("should remove member", async () => {
+		it("removes a member", async () => {
 			await expect(
 				removeProjectMember("project-123", "user-123"),
 			).resolves.not.toThrow();
