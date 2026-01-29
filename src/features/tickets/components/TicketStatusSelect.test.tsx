@@ -17,7 +17,7 @@ vi.mock("@/features/tickets/utils", () => ({
 // But here we are using full render.
 
 describe("TicketStatusSelect", () => {
-	it("renders trigger with value", () => {
+	it("renders the trigger with the value", () => {
 		const onValueChange = vi.fn();
 		render(<TicketStatusSelect value="open" onValueChange={onValueChange} />);
 
