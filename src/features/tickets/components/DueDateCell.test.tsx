@@ -12,19 +12,19 @@ describe("DueDateCell", () => {
 		vi.useRealTimers();
 	});
 
-	it("should render dash when dueDate is null", () => {
+	it("renders a dash when dueDate is null", () => {
 		render(<DueDateCell dueDate={null} />);
 
 		expect(screen.getByText("—")).toBeInTheDocument();
 	});
 
-	it("should render dash when dueDate is undefined", () => {
+	it("renders a dash when dueDate is undefined", () => {
 		render(<DueDateCell dueDate={undefined} />);
 
 		expect(screen.getByText("—")).toBeInTheDocument();
 	});
 
-	it("should render formatted date for future due date", () => {
+	it("renders a formatted date for a future due date", () => {
 		render(<DueDateCell dueDate="2024-12-31T12:00:00Z" />);
 
 		// The exact format depends on locale, just check it renders a date span
@@ -35,7 +35,7 @@ describe("DueDateCell", () => {
 		expect(dateSpan?.textContent).toMatch(/Dec\s+31,\s+2024/);
 	});
 
-	it("should not apply destructive class for future due date", () => {
+	it("does not apply the destructive class for a future due date", () => {
 		render(<DueDateCell dueDate="2024-12-31T12:00:00Z" />);
 
 		const dateElement = document.querySelector(
@@ -44,7 +44,7 @@ describe("DueDateCell", () => {
 		expect(dateElement).not.toHaveClass("text-destructive");
 	});
 
-	it("should apply destructive class for past due date", () => {
+	it("applies the destructive class for a past due date", () => {
 		render(<DueDateCell dueDate="2024-01-01T00:00:00Z" />);
 
 		const dateElement = screen.getByText("Jan 1, 2024");
@@ -52,7 +52,7 @@ describe("DueDateCell", () => {
 		expect(dateElement).toHaveClass("font-medium");
 	});
 
-	it("should format date correctly for various dates", () => {
+	it("formats the date correctly for various dates", () => {
 		const { rerender } = render(<DueDateCell dueDate="2024-07-04T00:00:00Z" />);
 		expect(screen.getByText("Jul 4, 2024")).toBeInTheDocument();
 
