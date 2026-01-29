@@ -11,7 +11,7 @@ describe("TeamsList", () => {
 		{ id: "2", name: "team-2", displayName: "Team 2" } as Team,
 	];
 
-	it("renders list of teams", () => {
+	it("renders a list of teams", () => {
 		render(<TeamsList teams={mockTeams} onTeamClick={vi.fn()} />);
 
 		expect(screen.getByText("Team 1")).toBeInTheDocument();
@@ -20,7 +20,7 @@ describe("TeamsList", () => {
 		expect(screen.getByText("@team-2")).toBeInTheDocument();
 	});
 
-	it("renders empty state when no teams", () => {
+	it("renders an empty state when there are no teams", () => {
 		render(<TeamsList teams={[]} onTeamClick={vi.fn()} />);
 
 		expect(screen.getByText("No teams yet")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("TeamsList", () => {
 		).toBeInTheDocument();
 	});
 
-	it("calls onTeamClick when card is clicked", async () => {
+	it("calls onTeamClick when a card is clicked", async () => {
 		const handleTeamClick = vi.fn();
 		const user = userEvent.setup();
 		render(<TeamsList teams={[mockTeams[0]]} onTeamClick={handleTeamClick} />);
