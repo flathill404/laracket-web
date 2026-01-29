@@ -8,7 +8,7 @@ import {
 
 describe("password API", () => {
 	describe("confirmPassword", () => {
-		it("should call confirm password endpoint", async () => {
+		it("calls the confirm password endpoint", async () => {
 			await expect(
 				confirmPassword({ password: "mypassword" }),
 			).resolves.not.toThrow();
@@ -16,7 +16,7 @@ describe("password API", () => {
 	});
 
 	describe("updatePassword", () => {
-		it("should call update password endpoint", async () => {
+		it("calls the update password endpoint", async () => {
 			const input = {
 				currentPassword: "oldpassword",
 				password: "newpassword123",
@@ -28,7 +28,7 @@ describe("password API", () => {
 	});
 
 	describe("forgotPassword", () => {
-		it("should call forgot password endpoint", async () => {
+		it("calls the forgot password endpoint", async () => {
 			await expect(
 				forgotPassword({ email: "test@example.com" }),
 			).resolves.not.toThrow();
@@ -36,7 +36,7 @@ describe("password API", () => {
 	});
 
 	describe("resetPassword", () => {
-		it("should call reset password endpoint", async () => {
+		it("calls the reset password endpoint", async () => {
 			const input = {
 				email: "test@example.com",
 				password: "newpassword123",
