@@ -14,13 +14,13 @@ describe("DueDateHeader", () => {
 			toggleSorting: vi.fn(),
 		}) as unknown as Column<Ticket>;
 
-	it("renders header label", () => {
+	it("renders the header label", () => {
 		const column = createMockColumn();
 		render(<DueDateHeader column={column} />);
 		expect(screen.getByText("Due Date")).toBeInTheDocument();
 	});
 
-	it("shows unsorted icon by default", () => {
+	it("shows the unsorted icon by default", () => {
 		const column = createMockColumn(false);
 		render(<DueDateHeader column={column} />);
 		// ArrowUpDown icon should be present
@@ -28,7 +28,7 @@ describe("DueDateHeader", () => {
 		expect(button).toBeInTheDocument();
 	});
 
-	it("shows ascending arrow when sorted asc", () => {
+	it("shows the ascending arrow when sorted asc", () => {
 		const column = createMockColumn("asc");
 		const { container } = render(<DueDateHeader column={column} />);
 		// Check for primary color class (indicating sorted state)
@@ -36,7 +36,7 @@ describe("DueDateHeader", () => {
 		expect(icon).toBeInTheDocument();
 	});
 
-	it("shows descending arrow when sorted desc", () => {
+	it("shows the descending arrow when sorted desc", () => {
 		const column = createMockColumn("desc");
 		const { container } = render(<DueDateHeader column={column} />);
 		// Check for primary color class
