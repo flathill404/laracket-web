@@ -26,11 +26,11 @@ const mockProject = {
 describe("projects API", () => {
 	describe("schemas", () => {
 		describe("projectSchema", () => {
-			it("should validate a valid project", () => {
+			it("validates a valid project", () => {
 				expect(() => projectSchema.parse(mockProject)).not.toThrow();
 			});
 
-			it("should reject missing required fields", () => {
+			it("rejects when required fields are missing", () => {
 				const invalid = { id: "123" };
 				expect(() => projectSchema.parse(invalid)).toThrow();
 			});
@@ -38,7 +38,7 @@ describe("projects API", () => {
 	});
 
 	describe("fetchProjects", () => {
-		it("should fetch user projects", async () => {
+		it("fetches user projects", async () => {
 			const result = await fetchProjects("user-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -47,7 +47,7 @@ describe("projects API", () => {
 	});
 
 	describe("fetchProject", () => {
-		it("should fetch single project", async () => {
+		it("fetches a single project", async () => {
 			const result = await fetchProject("project-123");
 
 			expect(result.id).toBe("project-123");
@@ -55,7 +55,7 @@ describe("projects API", () => {
 	});
 
 	describe("createProject", () => {
-		it("should create project", async () => {
+		it("creates a project", async () => {
 			const projectData = {
 				name: "test-project",
 				displayName: "Test Project",
@@ -70,7 +70,7 @@ describe("projects API", () => {
 	});
 
 	describe("updateProject", () => {
-		it("should update project", async () => {
+		it("updates the project", async () => {
 			server.use(
 				http.put(`${BASE_URL}/projects/:projectId`, async ({ request }) => {
 					const body = (await request.json()) as { name: string };
@@ -89,7 +89,7 @@ describe("projects API", () => {
 	});
 
 	describe("deleteProject", () => {
-		it("should delete project", async () => {
+		it("deletes the project", async () => {
 			await expect(deleteProject("project-123")).resolves.not.toThrow();
 		});
 	});
