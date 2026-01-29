@@ -3,7 +3,7 @@ import { render } from "@/test/utils";
 import { SidebarSkeleton } from "./SidebarSkeleton";
 
 describe("SidebarSkeleton", () => {
-	it("renders correctly", () => {
+	it("renders the skeleton structure", () => {
 		const { container } = render(<SidebarSkeleton />);
 		// It should render an aside element
 		expect(container.querySelector("aside")).toBeInTheDocument();
