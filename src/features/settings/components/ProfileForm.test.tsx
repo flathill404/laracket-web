@@ -73,7 +73,7 @@ describe("ProfileForm", () => {
 		expect(screen.getByText("johndoe")).toBeInTheDocument();
 	});
 
-	it("submits profile updates", async () => {
+	it("submits the profile updates", async () => {
 		const user = userEvent.setup();
 		render(<ProfileForm />, { wrapper: createWrapper() });
 
@@ -92,7 +92,7 @@ describe("ProfileForm", () => {
 		);
 	});
 
-	it("triggers file input when clicking Select New Photo", async () => {
+	it("triggers the file input when clicking Select New Photo", async () => {
 		render(<ProfileForm />, { wrapper: createWrapper() });
 		const selectButton = screen.getByRole("button", {
 			name: "Select New Photo",
@@ -108,7 +108,7 @@ describe("ProfileForm", () => {
 		expect(clickSpy).toHaveBeenCalled();
 	});
 
-	it("shows delete avatar confirmation dialog", async () => {
+	it("shows the delete avatar confirmation dialog", async () => {
 		const user = userEvent.setup();
 		render(<ProfileForm />, { wrapper: createWrapper() });
 
@@ -121,7 +121,7 @@ describe("ProfileForm", () => {
 		).toBeInTheDocument();
 	});
 
-	it("calls deleteAvatar mutation when confirmed", async () => {
+	it("calls the deleteAvatar mutation when confirmed", async () => {
 		const user = userEvent.setup();
 		render(<ProfileForm />, { wrapper: createWrapper() });
 
