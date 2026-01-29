@@ -33,7 +33,7 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
 });
 
 describe("TeamsCard", () => {
-	it("renders team count", () => {
+	it("renders the team count", () => {
 		render(<TeamsCard organizationId="org-1" />);
 
 		expect(screen.getByText("Teams")).toBeInTheDocument();
