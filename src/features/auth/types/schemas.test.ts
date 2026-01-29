@@ -17,7 +17,7 @@ import {
 
 describe("auth schemas", () => {
 	describe("userSchema", () => {
-		it("should validate a valid user", () => {
+		it("validates a valid user", () => {
 			const user = {
 				id: "123",
 				name: "john_doe",
@@ -30,7 +30,7 @@ describe("auth schemas", () => {
 			expect(() => userSchema.parse(user)).not.toThrow();
 		});
 
-		it("should allow null displayName", () => {
+		it("allows a null displayName", () => {
 			const user = {
 				id: "123",
 				name: "john_doe",
@@ -43,7 +43,7 @@ describe("auth schemas", () => {
 			expect(() => userSchema.parse(user)).not.toThrow();
 		});
 
-		it("should reject invalid email", () => {
+		it("rejects an invalid email", () => {
 			const user = {
 				id: "123",
 				name: "john_doe",
@@ -53,7 +53,7 @@ describe("auth schemas", () => {
 			expect(() => userSchema.parse(user)).toThrow();
 		});
 
-		it("should reject invalid twoFactorStatus", () => {
+		it("rejects an invalid twoFactorStatus", () => {
 			const user = {
 				id: "123",
 				name: "john_doe",
@@ -63,7 +63,7 @@ describe("auth schemas", () => {
 			expect(() => userSchema.parse(user)).toThrow();
 		});
 
-		it("should accept all valid twoFactorStatus values", () => {
+		it("accepts all valid twoFactorStatus values", () => {
 			for (const status of ["disabled", "pending", "enabled"]) {
 				const user = {
 					id: "123",
@@ -77,7 +77,7 @@ describe("auth schemas", () => {
 	});
 
 	describe("loginInputSchema", () => {
-		it("should validate valid login input", () => {
+		it("validates valid login input", () => {
 			const input = {
 				email: "test@example.com",
 				password: "password123",
@@ -86,7 +86,7 @@ describe("auth schemas", () => {
 			expect(() => loginInputSchema.parse(input)).not.toThrow();
 		});
 
-		it("should default remember to false", () => {
+		it("defaults remember to false", () => {
 			const input = {
 				email: "test@example.com",
 				password: "password123",
@@ -95,7 +95,7 @@ describe("auth schemas", () => {
 			expect(result.remember).toBe(false);
 		});
 
-		it("should reject password shorter than 8 characters", () => {
+		it("rejects a password shorter than 8 characters", () => {
 			const input = {
 				email: "test@example.com",
 				password: "short",
@@ -103,7 +103,7 @@ describe("auth schemas", () => {
 			expect(() => loginInputSchema.parse(input)).toThrow();
 		});
 
-		it("should reject invalid email", () => {
+		it("rejects an invalid email", () => {
 			const input = {
 				email: "invalid",
 				password: "password123",
@@ -113,18 +113,18 @@ describe("auth schemas", () => {
 	});
 
 	describe("loginOutputSchema", () => {
-		it("should validate valid login output", () => {
+		it("validates valid login output", () => {
 			expect(() => loginOutputSchema.parse({ twoFactor: true })).not.toThrow();
 			expect(() => loginOutputSchema.parse({ twoFactor: false })).not.toThrow();
 		});
 
-		it("should reject non-boolean twoFactor", () => {
+		it("rejects a non-boolean twoFactor", () => {
 			expect(() => loginOutputSchema.parse({ twoFactor: "yes" })).toThrow();
 		});
 	});
 
 	describe("registerInputSchema", () => {
-		it("should validate valid registration input", () => {
+		it("validates valid registration input", () => {
 			const input = {
 				name: "johndoe",
 				displayName: "John Doe",
@@ -135,7 +135,7 @@ describe("auth schemas", () => {
 			expect(() => registerInputSchema.parse(input)).not.toThrow();
 		});
 
-		it("should reject empty name", () => {
+		it("rejects an empty name", () => {
 			const input = {
 				name: "",
 				displayName: "John Doe",
@@ -146,7 +146,7 @@ describe("auth schemas", () => {
 			expect(() => registerInputSchema.parse(input)).toThrow();
 		});
 
-		it("should reject short password", () => {
+		it("rejects a short password", () => {
 			const input = {
 				name: "johndoe",
 				displayName: "John Doe",
@@ -159,7 +159,7 @@ describe("auth schemas", () => {
 	});
 
 	describe("updateProfileInformationInputSchema", () => {
-		it("should validate valid profile update", () => {
+		it("validates a valid profile update", () => {
 			const input = {
 				displayName: "New Name",
 				email: "new@example.com",
@@ -169,7 +169,7 @@ describe("auth schemas", () => {
 			).not.toThrow();
 		});
 
-		it("should reject invalid email", () => {
+		it("rejects an invalid email", () => {
 			const input = {
 				displayName: "New Name",
 				email: "invalid",
@@ -179,19 +179,19 @@ describe("auth schemas", () => {
 	});
 
 	describe("confirmPasswordInputSchema", () => {
-		it("should validate password confirmation", () => {
+		it("validates password confirmation", () => {
 			expect(() =>
 				confirmPasswordInputSchema.parse({ password: "anypassword" }),
 			).not.toThrow();
 		});
 
-		it("should reject missing password", () => {
+		it("rejects a missing password", () => {
 			expect(() => confirmPasswordInputSchema.parse({})).toThrow();
 		});
 	});
 
 	describe("updatePasswordInputSchema", () => {
-		it("should validate valid password update", () => {
+		it("validates a valid password update", () => {
 			const input = {
 				currentPassword: "oldpassword",
 				password: "newpassword123",
@@ -200,7 +200,7 @@ describe("auth schemas", () => {
 			expect(() => updatePasswordInputSchema.parse(input)).not.toThrow();
 		});
 
-		it("should reject short new password", () => {
+		it("rejects a short new password", () => {
 			const input = {
 				currentPassword: "oldpassword",
 				password: "short",
@@ -211,7 +211,7 @@ describe("auth schemas", () => {
 	});
 
 	describe("twoFactorQrCodeSchema", () => {
-		it("should validate QR code response", () => {
+		it("validates a QR code response", () => {
 			expect(() =>
 				twoFactorQrCodeSchema.parse({ svg: "<svg>...</svg>" }),
 			).not.toThrow();
@@ -219,18 +219,18 @@ describe("auth schemas", () => {
 	});
 
 	describe("twoFactorRecoveryCodesSchema", () => {
-		it("should validate recovery codes array", () => {
+		it("validates a recovery codes array", () => {
 			const codes = ["ABC123", "DEF456", "GHI789"];
 			expect(() => twoFactorRecoveryCodesSchema.parse(codes)).not.toThrow();
 		});
 
-		it("should allow empty array", () => {
+		it("allows an empty array", () => {
 			expect(() => twoFactorRecoveryCodesSchema.parse([])).not.toThrow();
 		});
 	});
 
 	describe("confirmTwoFactorInputSchema", () => {
-		it("should validate 2FA confirmation code", () => {
+		it("validates a 2FA confirmation code", () => {
 			expect(() =>
 				confirmTwoFactorInputSchema.parse({ code: "123456" }),
 			).not.toThrow();
@@ -238,31 +238,31 @@ describe("auth schemas", () => {
 	});
 
 	describe("twoFactorChallengeInputSchema", () => {
-		it("should validate with code", () => {
+		it("validates with a code", () => {
 			expect(() =>
 				twoFactorChallengeInputSchema.parse({ code: "123456" }),
 			).not.toThrow();
 		});
 
-		it("should validate with recovery code", () => {
+		it("validates with a recovery code", () => {
 			expect(() =>
 				twoFactorChallengeInputSchema.parse({ recoveryCode: "ABC123" }),
 			).not.toThrow();
 		});
 
-		it("should validate with both empty (schema allows optional)", () => {
+		it("validates with both empty", () => {
 			expect(() => twoFactorChallengeInputSchema.parse({})).not.toThrow();
 		});
 	});
 
 	describe("forgotPasswordInputSchema", () => {
-		it("should validate email", () => {
+		it("validates an email", () => {
 			expect(() =>
 				forgotPasswordInputSchema.parse({ email: "test@example.com" }),
 			).not.toThrow();
 		});
 
-		it("should reject invalid email", () => {
+		it("rejects an invalid email", () => {
 			expect(() =>
 				forgotPasswordInputSchema.parse({ email: "invalid" }),
 			).toThrow();
@@ -270,7 +270,7 @@ describe("auth schemas", () => {
 	});
 
 	describe("resetPasswordInputSchema", () => {
-		it("should validate valid reset password input", () => {
+		it("validates valid reset password input", () => {
 			const input = {
 				email: "test@example.com",
 				password: "newpassword123",
@@ -280,7 +280,7 @@ describe("auth schemas", () => {
 			expect(() => resetPasswordInputSchema.parse(input)).not.toThrow();
 		});
 
-		it("should reject short password", () => {
+		it("rejects a short password", () => {
 			const input = {
 				email: "test@example.com",
 				password: "short",
