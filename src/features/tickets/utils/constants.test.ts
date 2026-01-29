@@ -11,11 +11,11 @@ import {
 
 describe("ticket constants", () => {
 	describe("TICKET_STATUS_VALUES", () => {
-		it("should contain all 5 status values", () => {
+		it("contains all 5 status values", () => {
 			expect(TICKET_STATUS_VALUES).toHaveLength(5);
 		});
 
-		it("should have correct values in order", () => {
+		it("has the correct values in order", () => {
 			expect(TICKET_STATUS_VALUES).toEqual([
 				"open",
 				"in_progress",
@@ -25,7 +25,7 @@ describe("ticket constants", () => {
 			]);
 		});
 
-		it("should be readonly (as const)", () => {
+		it("is readonly (as const)", () => {
 			// TypeScript ensures this, but we can verify the values match
 			expect(TICKET_STATUS_VALUES[0]).toBe("open");
 			expect(TICKET_STATUS_VALUES[4]).toBe("closed");
@@ -33,11 +33,11 @@ describe("ticket constants", () => {
 	});
 
 	describe("TICKET_STATUSES", () => {
-		it("should have all 5 statuses", () => {
+		it("has all 5 statuses", () => {
 			expect(Object.keys(TICKET_STATUSES)).toHaveLength(5);
 		});
 
-		it("should have correct status values", () => {
+		it("has the correct status values", () => {
 			expect(TICKET_STATUSES.open).toBe("open");
 			expect(TICKET_STATUSES.in_progress).toBe("in_progress");
 			expect(TICKET_STATUSES.in_review).toBe("in_review");
@@ -47,7 +47,7 @@ describe("ticket constants", () => {
 	});
 
 	describe("STATUS_COLORS", () => {
-		it("should have a color for each status", () => {
+		it("has a color for each status", () => {
 			const statuses = Object.values(TICKET_STATUSES) as TicketStatus[];
 			for (const status of statuses) {
 				expect(STATUS_COLORS[status]).toBeDefined();
@@ -55,7 +55,7 @@ describe("ticket constants", () => {
 			}
 		});
 
-		it("should contain text and fill classes", () => {
+		it("contains text and fill classes", () => {
 			for (const color of Object.values(STATUS_COLORS)) {
 				expect(color).toMatch(/text-/);
 				expect(color).toMatch(/fill-/);
@@ -64,7 +64,7 @@ describe("ticket constants", () => {
 	});
 
 	describe("STATUS_BADGE_VARIANTS", () => {
-		it("should have a variant for each status", () => {
+		it("has a variant for each status", () => {
 			const statuses = Object.values(TICKET_STATUSES) as TicketStatus[];
 			for (const status of statuses) {
 				expect(STATUS_BADGE_VARIANTS[status]).toBeDefined();
@@ -72,7 +72,7 @@ describe("ticket constants", () => {
 			}
 		});
 
-		it("should contain required CSS classes", () => {
+		it("contains required CSS classes", () => {
 			for (const variant of Object.values(STATUS_BADGE_VARIANTS)) {
 				expect(variant).toMatch(/text-/);
 				expect(variant).toMatch(/bg-/);
@@ -84,7 +84,7 @@ describe("ticket constants", () => {
 	});
 
 	describe("STATUS_LABELS", () => {
-		it("should have a label for each status", () => {
+		it("has a label for each status", () => {
 			const statuses = Object.values(TICKET_STATUSES) as TicketStatus[];
 			for (const status of statuses) {
 				expect(STATUS_LABELS[status]).toBeDefined();
@@ -92,7 +92,7 @@ describe("ticket constants", () => {
 			}
 		});
 
-		it("should have human-readable labels", () => {
+		it("has human-readable labels", () => {
 			expect(STATUS_LABELS.open).toBe("Open");
 			expect(STATUS_LABELS.in_progress).toBe("In Progress");
 			expect(STATUS_LABELS.in_review).toBe("In Review");
@@ -102,17 +102,17 @@ describe("ticket constants", () => {
 	});
 
 	describe("ALL_STATUSES", () => {
-		it("should contain all 5 statuses", () => {
+		it("contains all 5 statuses", () => {
 			expect(ALL_STATUSES).toHaveLength(5);
 		});
 
-		it("should match TICKET_STATUSES values", () => {
+		it("matches TICKET_STATUSES values", () => {
 			const statusValues = Object.values(TICKET_STATUSES);
 			expect(ALL_STATUSES).toEqual(expect.arrayContaining(statusValues));
 			expect(statusValues).toEqual(expect.arrayContaining(ALL_STATUSES));
 		});
 
-		it("should be in the expected order", () => {
+		it("is in the expected order", () => {
 			expect(ALL_STATUSES).toEqual([
 				"open",
 				"in_progress",
@@ -124,7 +124,7 @@ describe("ticket constants", () => {
 	});
 
 	describe("consistency checks", () => {
-		it("all maps should have the same keys", () => {
+		it("ensures all maps have the same keys", () => {
 			const statusKeys = Object.keys(TICKET_STATUSES);
 			const colorKeys = Object.keys(STATUS_COLORS);
 			const badgeKeys = Object.keys(STATUS_BADGE_VARIANTS);

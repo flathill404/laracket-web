@@ -75,19 +75,19 @@ vi.mock("@tanstack/react-query", async () => {
 });
 
 describe("BoardColumn", () => {
-	it("renders column with status label", () => {
+	it("renders a column with a status label", () => {
 		render(<BoardColumn projectId="p1" status="open" />);
 		// Check for status label
 		expect(screen.getByText("Open")).toBeInTheDocument();
 	});
 
-	it("displays ticket count", () => {
+	it("displays the ticket count", () => {
 		render(<BoardColumn projectId="p1" status="open" />);
 		// Should show count of 2 tickets
 		expect(screen.getByText("2")).toBeInTheDocument();
 	});
 
-	it("renders ticket cards container", () => {
+	it("renders the ticket cards container", () => {
 		const { container } = render(<BoardColumn projectId="p1" status="open" />);
 		// Check that virtualizer container exists
 		const virtualizerContainer = container.querySelector(
@@ -96,14 +96,14 @@ describe("BoardColumn", () => {
 		expect(virtualizerContainer).toBeInTheDocument();
 	});
 
-	it("renders with correct status indicator", () => {
+	it("renders with the correct status indicator", () => {
 		const { container } = render(<BoardColumn projectId="p1" status="open" />);
 		// Check for status indicator (bg-sky-500 for open status)
 		const statusIndicator = container.querySelector(".bg-sky-500");
 		expect(statusIndicator).toBeInTheDocument();
 	});
 
-	it("renders column structure", () => {
+	it("renders the column structure", () => {
 		const { container } = render(<BoardColumn projectId="p1" status="open" />);
 		// Check for basic column structure
 		const column = container.querySelector(".min-w-\\[280px\\]");

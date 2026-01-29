@@ -18,13 +18,13 @@ describe("BoardTicketCard", () => {
 		updatedAt: "2024-01-28T10:00:00Z",
 	};
 
-	it("renders ticket title and description", () => {
+	it("renders the ticket title and description", () => {
 		render(<BoardTicketCard ticket={mockTicket} />);
 		expect(screen.getByText("Test Ticket Title")).toBeInTheDocument();
 		expect(screen.getByText("Test ticket description")).toBeInTheDocument();
 	});
 
-	it("displays truncated ticket ID", () => {
+	it("displays a truncated ticket ID", () => {
 		render(<BoardTicketCard ticket={mockTicket} />);
 		// ID is sliced to first 8 characters
 		expect(screen.getByText("ticket-1")).toBeInTheDocument();
@@ -47,13 +47,13 @@ describe("BoardTicketCard", () => {
 		expect(screen.getByText("US")).toBeInTheDocument();
 	});
 
-	it("shows empty state when no assignees", () => {
+	it("shows an empty state when there are no assignees", () => {
 		render(<BoardTicketCard ticket={mockTicket} />);
 		// Empty content with "?" should be shown
 		expect(screen.getByText("?")).toBeInTheDocument();
 	});
 
-	it("displays due date when present", () => {
+	it("displays the due date when present", () => {
 		const ticketWithDueDate = {
 			...mockTicket,
 			dueDate: "2024-12-31T23:59:59Z",
@@ -79,7 +79,7 @@ describe("BoardTicketCard", () => {
 		expect(destructiveElement).toBeInTheDocument();
 	});
 
-	it("does not highlight overdue for resolved/closed tickets", () => {
+	it("does not highlight overdue tickets when resolved or closed", () => {
 		const resolvedOverdueTicket = {
 			...mockTicket,
 			status: "resolved" as const,

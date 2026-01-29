@@ -18,13 +18,13 @@ describe("ActionsCell", () => {
 		updatedAt: "2024-01-28T10:00:00Z",
 	};
 
-	it("renders actions menu trigger", () => {
+	it("renders the actions menu trigger", () => {
 		render(<ActionsCell ticket={mockTicket} />);
 		expect(screen.getByRole("button")).toBeInTheDocument();
 		expect(screen.getByText("Open menu")).toBeInTheDocument();
 	});
 
-	it("renders with correct ticket prop", () => {
+	it("renders with the correct ticket prop", () => {
 		const onDeleteTicket = vi.fn();
 		render(<ActionsCell ticket={mockTicket} onDeleteTicket={onDeleteTicket} />);
 

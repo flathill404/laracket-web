@@ -22,7 +22,7 @@ vi.mock("./CreateTicketForm", () => ({
 }));
 
 describe("CreateTicketDrawer", () => {
-	it("renders drawer title when open", () => {
+	it("renders the drawer title when open", () => {
 		render(
 			<CreateTicketDrawer projectId="p1" open={true} onOpenChange={vi.fn()} />,
 		);
@@ -39,7 +39,7 @@ describe("CreateTicketDrawer", () => {
 		expect(screen.queryByTestId("create-ticket-form")).not.toBeInTheDocument();
 	});
 
-	it("passes projectId to form", () => {
+	it("passes the projectId to the form", () => {
 		render(
 			<CreateTicketDrawer
 				projectId="test-project"

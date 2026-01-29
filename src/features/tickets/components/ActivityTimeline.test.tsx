@@ -28,7 +28,7 @@ describe("ActivityItem", () => {
 		vi.useRealTimers();
 	});
 
-	it("should render user display name", () => {
+	it("renders user display name", () => {
 		const activity = createMockActivity({
 			user: { ...createMockActivity().user, displayName: "Jane Smith" },
 		});
@@ -37,14 +37,14 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("Jane Smith")).toBeInTheDocument();
 	});
 
-	it("should render 'created this ticket' for created type", () => {
+	it("renders 'created this ticket' for created type", () => {
 		const activity = createMockActivity({ type: "created" });
 		render(<ActivityItem activity={activity} />);
 
 		expect(screen.getByText("created this ticket")).toBeInTheDocument();
 	});
 
-	it("should render status change description for updated type with status payload", () => {
+	it("renders status change description for updated type with status payload", () => {
 		const activity = createMockActivity({
 			type: "updated",
 			payload: {
@@ -58,7 +58,7 @@ describe("ActivityItem", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render 'updated this ticket' for updated type without status payload", () => {
+	it("renders 'updated this ticket' for updated type without status payload", () => {
 		const activity = createMockActivity({
 			type: "updated",
 			payload: null,
@@ -68,7 +68,7 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("updated this ticket")).toBeInTheDocument();
 	});
 
-	it("should render relative time", () => {
+	it("renders relative time", () => {
 		const activity = createMockActivity({
 			createdAt: "2024-01-01T12:00:00Z",
 		});
@@ -77,7 +77,7 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("5 minutes ago")).toBeInTheDocument();
 	});
 
-	it("should render avatar fallback with first two letters of displayName uppercase", () => {
+	it("renders avatar fallback with first two letters of displayName uppercase", () => {
 		const activity = createMockActivity({
 			user: {
 				...createMockActivity().user,
@@ -101,7 +101,7 @@ describe("ActivityTimeline", () => {
 		vi.useRealTimers();
 	});
 
-	it("should render all activities", () => {
+	it("renders all activities", () => {
 		const activities = [
 			createMockActivity({
 				id: 1,
@@ -123,7 +123,7 @@ describe("ActivityTimeline", () => {
 		expect(screen.getByText("Charlie")).toBeInTheDocument();
 	});
 
-	it("should render empty state when no activities", () => {
+	it("renders empty state when no activities", () => {
 		render(<ActivityTimeline activities={[]} />);
 
 		// Should not throw and should render container
@@ -131,7 +131,7 @@ describe("ActivityTimeline", () => {
 		expect(container).toBeInTheDocument();
 	});
 
-	it("should render activities in order", () => {
+	it("renders activities in order", () => {
 		const activities = [
 			createMockActivity({ id: 1, type: "created" }),
 			createMockActivity({ id: 2, type: "updated", payload: null }),

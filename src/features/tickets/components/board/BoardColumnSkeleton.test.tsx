@@ -3,7 +3,7 @@ import { render } from "@/test/utils";
 import { BoardColumnSkeleton } from "./BoardColumnSkeleton";
 
 describe("BoardColumnSkeleton", () => {
-	it("renders skeleton structure", () => {
+	it("renders the skeleton structure", () => {
 		const { container } = render(<BoardColumnSkeleton />);
 		// Check for skeleton elements with animate-pulse class
 		expect(container.querySelectorAll(".animate-pulse")).not.toHaveLength(0);
@@ -16,7 +16,7 @@ describe("BoardColumnSkeleton", () => {
 		expect(skeletons.length).toBeGreaterThanOrEqual(3);
 	});
 
-	it("renders with correct layout classes", () => {
+	it("renders with the correct layout classes", () => {
 		const { container } = render(<BoardColumnSkeleton />);
 		const column = container.querySelector(".min-w-\\[280px\\]");
 		expect(column).toBeInTheDocument();

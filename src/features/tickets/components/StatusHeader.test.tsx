@@ -4,23 +4,23 @@ import { render } from "@/test/utils";
 import { StatusHeader } from "./StatusHeader";
 
 describe("StatusHeader", () => {
-	it("renders Status label", () => {
+	it("renders the Status label", () => {
 		render(<StatusHeader selectedStatuses={[]} />);
 		expect(screen.getByText("Status")).toBeInTheDocument();
 	});
 
-	it("shows filter count badge when statuses are selected", () => {
+	it("shows the filter count badge when statuses are selected", () => {
 		render(<StatusHeader selectedStatuses={["open", "in_progress"]} />);
 		expect(screen.getByText("2")).toBeInTheDocument();
 	});
 
-	it("does not show badge when no statuses selected", () => {
+	it("does not show the badge when no statuses are selected", () => {
 		render(<StatusHeader selectedStatuses={[]} />);
 		const badge = screen.queryByText(/\d+/);
 		expect(badge).not.toBeInTheDocument();
 	});
 
-	it("opens popover on trigger click", async () => {
+	it("opens the popover on trigger click", async () => {
 		render(<StatusHeader selectedStatuses={[]} />);
 
 		const trigger = screen.getByRole("button");
@@ -31,7 +31,7 @@ describe("StatusHeader", () => {
 		expect(screen.getByText("In Progress")).toBeInTheDocument();
 	});
 
-	it("calls onStatusChange when status is selected", async () => {
+	it("calls onStatusChange when a status is selected", async () => {
 		const onStatusChange = vi.fn();
 		render(
 			<StatusHeader selectedStatuses={[]} onStatusChange={onStatusChange} />,
@@ -47,7 +47,7 @@ describe("StatusHeader", () => {
 		expect(onStatusChange).toHaveBeenCalledWith(["open"]);
 	});
 
-	it("shows clear filters option when statuses are selected", async () => {
+	it("shows the clear filters option when statuses are selected", async () => {
 		render(<StatusHeader selectedStatuses={["open"]} />);
 
 		// Open popover
