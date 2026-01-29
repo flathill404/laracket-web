@@ -1,8 +1,9 @@
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Folder } from "lucide-react";
 import { describe, expect, it, vi } from "vitest";
 import { Accordion } from "@/components/ui/accordion";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { SidebarSection } from "./SidebarSection";
 
 describe("SidebarSection", () => {

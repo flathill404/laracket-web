@@ -1,6 +1,7 @@
 import type { Column } from "@tanstack/react-table";
+import { fireEvent, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import type { Ticket } from "../types";
 import { DueDateHeader } from "./DueDateHeader";
 

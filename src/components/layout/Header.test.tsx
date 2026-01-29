@@ -1,7 +1,8 @@
+import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { User } from "@/features/auth/types";
-import { fireEvent, render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { Header } from "./Header";
 
 // Mock useNavigate

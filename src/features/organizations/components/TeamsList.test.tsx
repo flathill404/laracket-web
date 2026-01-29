@@ -1,7 +1,8 @@
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { Team } from "@/features/teams/types";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { TeamsList } from "./TeamsList";
 
 describe("TeamsList", () => {

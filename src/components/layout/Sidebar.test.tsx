@@ -1,10 +1,11 @@
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { Organization } from "@/features/organizations/types";
 import type { Project } from "@/features/projects/types";
 import type { Team } from "@/features/teams/types";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { Sidebar } from "./Sidebar";
 
 // Mock dependencies

@@ -1,8 +1,9 @@
 import type { LinkProps } from "@tanstack/react-router";
+import { screen } from "@testing-library/react";
 import { Folder } from "lucide-react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { SidebarLink } from "./SidebarLink";
 
 // Mock Link

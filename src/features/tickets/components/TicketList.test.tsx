@@ -1,6 +1,7 @@
+import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { Ticket } from "@/features/tickets/types";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { TicketList } from "./TicketList";
 
 // Mock columns to avoid complex dependencies

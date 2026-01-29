@@ -1,5 +1,6 @@
+import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { ProjectsCard } from "./ProjectsCard";
 
 // Mock queries

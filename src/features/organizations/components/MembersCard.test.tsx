@@ -1,6 +1,7 @@
+import { screen } from "@testing-library/react";
 import { Suspense } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@/test/utils";
+import { render } from "@/test/utils";
 import { MembersCard } from "./MembersCard";
 
 // Mock queries
