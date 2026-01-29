@@ -8,7 +8,7 @@ import {
 
 describe("profile API", () => {
 	describe("updateProfileInformation", () => {
-		it("should call update profile endpoint", async () => {
+		it("calls the update profile endpoint", async () => {
 			const input = {
 				displayName: "New Name",
 				email: "new@example.com",
@@ -19,7 +19,7 @@ describe("profile API", () => {
 	});
 
 	describe("updateAvatar", () => {
-		it("should convert file to base64 and upload", async () => {
+		it("converts the file to base64 and uploads it", async () => {
 			const mockFileContent = "test-image-content";
 			const mockFile = new File([mockFileContent], "avatar.png", {
 				type: "image/png",
@@ -30,7 +30,7 @@ describe("profile API", () => {
 	});
 
 	describe("deleteAvatar", () => {
-		it("should call delete avatar endpoint", async () => {
+		it("calls the delete avatar endpoint", async () => {
 			await expect(deleteAvatar()).resolves.not.toThrow();
 		});
 	});
