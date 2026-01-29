@@ -4,7 +4,7 @@ import { addProjectTeam, removeProjectTeam } from "./teams";
 
 describe("teams API", () => {
 	describe("addProjectTeam", () => {
-		it("should add team", async () => {
+		it("adds a team", async () => {
 			await expect(
 				addProjectTeam("project-123", { teamId: "team-123" }),
 			).resolves.not.toThrow();
@@ -12,7 +12,7 @@ describe("teams API", () => {
 	});
 
 	describe("removeProjectTeam", () => {
-		it("should remove team", async () => {
+		it("removes a team", async () => {
 			await expect(
 				removeProjectTeam("project-123", "team-123"),
 			).resolves.not.toThrow();
