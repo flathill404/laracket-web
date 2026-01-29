@@ -32,13 +32,13 @@ describe("ticket schemas", () => {
 			}
 		});
 
-		it("throws on invalid status", () => {
+		it("throws when the status is invalid", () => {
 			expect(() => ticketStatusSchema.parse("invalid")).toThrow();
 		});
 	});
 
 	describe("ticketUserSchema", () => {
-		it("validates valid user", () => {
+		it("validates a valid user", () => {
 			const valid = {
 				id: "u1",
 				name: "user1",
@@ -47,7 +47,7 @@ describe("ticket schemas", () => {
 			expect(ticketUserSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates user with null avatarUrl", () => {
+		it("validates a user with a null avatarUrl", () => {
 			const valid = {
 				id: "u1",
 				name: "user1",
@@ -57,7 +57,7 @@ describe("ticket schemas", () => {
 			expect(ticketUserSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates user with avatarUrl", () => {
+		it("validates a user with an avatarUrl", () => {
 			const valid = {
 				id: "u1",
 				name: "user1",
@@ -82,12 +82,12 @@ describe("ticket schemas", () => {
 			updatedAt: "2024-01-28T10:00:00Z",
 		};
 
-		it("validates valid ticket", () => {
+		it("validates a valid ticket", () => {
 			const result = ticketSchema.safeParse(validTicket);
 			expect(result.success).toBe(true);
 		});
 
-		it("validates ticket with optional fields", () => {
+		it("validates a ticket with optional fields", () => {
 			const result = ticketSchema.safeParse({
 				...validTicket,
 				dueDate: "2024-12-31T23:59:59Z",
@@ -101,7 +101,7 @@ describe("ticket schemas", () => {
 			expect(result.success).toBe(true);
 		});
 
-		it("validates ticket with assignees and reviewers", () => {
+		it("validates a ticket with assignees and reviewers", () => {
 			const result = ticketSchema.safeParse({
 				...validTicket,
 				assignees: [
@@ -114,7 +114,7 @@ describe("ticket schemas", () => {
 			expect(result.success).toBe(true);
 		});
 
-		it("throws on missing required fields", () => {
+		it("throws when required fields are missing", () => {
 			const result = ticketSchema.safeParse({
 				id: "t1",
 				title: "Test",
@@ -122,7 +122,7 @@ describe("ticket schemas", () => {
 			expect(result.success).toBe(false);
 		});
 
-		it("throws on invalid status", () => {
+		it("throws when the status is invalid", () => {
 			const result = ticketSchema.safeParse({
 				...validTicket,
 				status: "invalid",
@@ -130,7 +130,7 @@ describe("ticket schemas", () => {
 			expect(result.success).toBe(false);
 		});
 
-		it("throws on invalid date format", () => {
+		it("throws when the date format is invalid", () => {
 			const result = ticketSchema.safeParse({
 				...validTicket,
 				createdAt: "invalid-date",
@@ -140,7 +140,7 @@ describe("ticket schemas", () => {
 	});
 
 	describe("ticketsSchema", () => {
-		it("validates array of tickets", () => {
+		it("validates an array of tickets", () => {
 			const valid = [
 				{
 					id: "t1",
@@ -158,13 +158,13 @@ describe("ticket schemas", () => {
 			expect(ticketsSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates empty array", () => {
+		it("validates an empty array", () => {
 			expect(ticketsSchema.parse([])).toEqual([]);
 		});
 	});
 
 	describe("paginatedTicketsSchema", () => {
-		it("validates paginated response", () => {
+		it("validates a paginated response", () => {
 			const valid = {
 				data: [],
 				links: {
@@ -183,7 +183,7 @@ describe("ticket schemas", () => {
 			expect(paginatedTicketsSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates paginated response with data and cursors", () => {
+		it("validates a paginated response with data and cursors", () => {
 			const valid = {
 				data: [
 					{
@@ -218,7 +218,7 @@ describe("ticket schemas", () => {
 	});
 
 	describe("activitySchema", () => {
-		it("validates activity with created type", () => {
+		it("validates an activity with the created type", () => {
 			const valid = {
 				id: 1,
 				type: "created" as const,
@@ -234,7 +234,7 @@ describe("ticket schemas", () => {
 			expect(activitySchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates activity with status change payload", () => {
+		it("validates an activity with a status change payload", () => {
 			const valid = {
 				id: 1,
 				type: "updated" as const,
@@ -255,7 +255,7 @@ describe("ticket schemas", () => {
 			expect(activitySchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates activity with generic payload", () => {
+		it("validates an activity with a generic payload", () => {
 			const valid = {
 				id: 1,
 				type: "updated" as const,
@@ -274,7 +274,7 @@ describe("ticket schemas", () => {
 	});
 
 	describe("activitiesSchema", () => {
-		it("validates array of activities", () => {
+		it("validates an array of activities", () => {
 			const valid = [
 				{
 					id: 1,
@@ -292,13 +292,13 @@ describe("ticket schemas", () => {
 			expect(activitiesSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates empty array", () => {
+		it("validates an empty array", () => {
 			expect(activitiesSchema.parse([])).toEqual([]);
 		});
 	});
 
 	describe("commentSchema", () => {
-		it("validates valid comment", () => {
+		it("validates a valid comment", () => {
 			const valid = {
 				id: "c1",
 				content: "Test comment",
@@ -314,7 +314,7 @@ describe("ticket schemas", () => {
 			expect(commentSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on missing fields", () => {
+		it("throws when required fields are missing", () => {
 			expect(() =>
 				commentSchema.parse({
 					id: "c1",
@@ -325,7 +325,7 @@ describe("ticket schemas", () => {
 	});
 
 	describe("commentsSchema", () => {
-		it("validates array of comments", () => {
+		it("validates an array of comments", () => {
 			const valid = [
 				{
 					id: "c1",
@@ -343,7 +343,7 @@ describe("ticket schemas", () => {
 			expect(commentsSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates empty array", () => {
+		it("validates an empty array", () => {
 			expect(commentsSchema.parse([])).toEqual([]);
 		});
 	});
@@ -367,15 +367,15 @@ describe("ticket schemas", () => {
 			expect(createTicketInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on empty title", () => {
+		it("throws when the title is empty", () => {
 			expect(() => createTicketInputSchema.parse({ title: "" })).toThrow();
 		});
 
-		it("throws on missing title", () => {
+		it("throws when the title is missing", () => {
 			expect(() => createTicketInputSchema.parse({})).toThrow();
 		});
 
-		it("throws on invalid status", () => {
+		it("throws when the status is invalid", () => {
 			const result = createTicketInputSchema.safeParse({
 				title: "Test",
 				status: "invalid",
@@ -390,7 +390,7 @@ describe("ticket schemas", () => {
 			expect(updateTicketInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates empty object", () => {
+		it("validates an empty object", () => {
 			expect(updateTicketInputSchema.parse({})).toEqual({});
 		});
 
@@ -405,18 +405,18 @@ describe("ticket schemas", () => {
 	});
 
 	describe("updateTicketStatusInputSchema", () => {
-		it("validates valid status", () => {
+		it("validates a valid status", () => {
 			const valid = { status: "in_progress" as const };
 			expect(updateTicketStatusInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on invalid status", () => {
+		it("throws when the status is invalid", () => {
 			expect(() =>
 				updateTicketStatusInputSchema.parse({ status: "invalid" }),
 			).toThrow();
 		});
 
-		it("throws on missing status", () => {
+		it("throws when the status is missing", () => {
 			expect(() => updateTicketStatusInputSchema.parse({})).toThrow();
 		});
 	});
@@ -427,7 +427,7 @@ describe("ticket schemas", () => {
 			expect(ticketAssigneeInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on missing userId", () => {
+		it("throws when userId is missing", () => {
 			expect(() => ticketAssigneeInputSchema.parse({})).toThrow();
 		});
 	});
@@ -438,27 +438,27 @@ describe("ticket schemas", () => {
 			expect(ticketReviewerInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on missing userId", () => {
+		it("throws when userId is missing", () => {
 			expect(() => ticketReviewerInputSchema.parse({})).toThrow();
 		});
 	});
 
 	describe("ticketOrderInputSchema", () => {
-		it("validates valid order", () => {
+		it("validates a valid order", () => {
 			const valid = { order: 1 };
 			expect(ticketOrderInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("validates order with zero", () => {
+		it("validates an order with zero", () => {
 			const valid = { order: 0 };
 			expect(ticketOrderInputSchema.parse(valid)).toEqual(valid);
 		});
 
-		it("throws on missing order", () => {
+		it("throws when order is missing", () => {
 			expect(() => ticketOrderInputSchema.parse({})).toThrow();
 		});
 
-		it("throws on non-number order", () => {
+		it("throws when order is a non-number", () => {
 			expect(() => ticketOrderInputSchema.parse({ order: "1" })).toThrow();
 		});
 	});
