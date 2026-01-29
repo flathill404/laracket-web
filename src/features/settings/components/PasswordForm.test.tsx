@@ -32,14 +32,14 @@ const createWrapper = () => {
 };
 
 describe("PasswordForm", () => {
-	it("renders form fields", () => {
+	it("renders the form fields", () => {
 		render(<PasswordForm />, { wrapper: createWrapper() });
 		expect(screen.getByLabelText("Current Password")).toBeInTheDocument();
 		expect(screen.getByLabelText("New Password")).toBeInTheDocument();
 		expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
 	});
 
-	it("shows validation error for short password", async () => {
+	it("shows a validation error for a short password", async () => {
 		const user = userEvent.setup();
 		render(<PasswordForm />, { wrapper: createWrapper() });
 
@@ -54,7 +54,7 @@ describe("PasswordForm", () => {
 		).toBeInTheDocument();
 	});
 
-	it("shows validation error for password mismatch", async () => {
+	it("shows a validation error for a password mismatch", async () => {
 		const user = userEvent.setup();
 		render(<PasswordForm />, { wrapper: createWrapper() });
 
@@ -99,7 +99,7 @@ describe("PasswordForm", () => {
 		expect(toast.success).toHaveBeenCalledWith("Password updated");
 	});
 
-	it("handles server error", async () => {
+	it("handles a server error", async () => {
 		const user = userEvent.setup();
 		vi.mocked(api.updatePassword).mockRejectedValue(new Error("Server error"));
 
