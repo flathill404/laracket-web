@@ -42,17 +42,17 @@ const mockStatusChangeActivity = {
 describe("activities API", () => {
 	describe("schemas", () => {
 		describe("activitySchema", () => {
-			it("should validate a created activity", () => {
+			it("validates a created activity", () => {
 				expect(() => activitySchema.parse(mockActivity)).not.toThrow();
 			});
 
-			it("should validate a status change activity", () => {
+			it("validates a status change activity", () => {
 				expect(() =>
 					activitySchema.parse(mockStatusChangeActivity),
 				).not.toThrow();
 			});
 
-			it("should allow null avatarUrl", () => {
+			it("allows a null avatarUrl", () => {
 				const activity = {
 					...mockActivity,
 					user: { ...mockActivity.user, avatarUrl: null },
@@ -60,34 +60,34 @@ describe("activities API", () => {
 				expect(() => activitySchema.parse(activity)).not.toThrow();
 			});
 
-			it("should reject invalid type", () => {
+			it("rejects an invalid type", () => {
 				const activity = { ...mockActivity, type: "invalid" };
 				expect(() => activitySchema.parse(activity)).toThrow();
 			});
 		});
 
 		describe("activitiesSchema", () => {
-			it("should validate array of activities", () => {
+			it("validates an array of activities", () => {
 				expect(() =>
 					activitiesSchema.parse([mockActivity, mockStatusChangeActivity]),
 				).not.toThrow();
 			});
 
-			it("should allow empty array", () => {
+			it("allows an empty array", () => {
 				expect(() => activitiesSchema.parse([])).not.toThrow();
 			});
 		});
 	});
 
 	describe("fetchTicketActivities", () => {
-		it("should fetch and parse activities", async () => {
+		it("fetches and parses activities", async () => {
 			const result = await fetchTicketActivities("ticket-123");
 
 			expect(result).toBeInstanceOf(Array);
 			expect(result.length).toBeGreaterThan(0);
 		});
 
-		it("should return empty array when no activities", async () => {
+		it("returns an empty array when there are no activities", async () => {
 			server.use(
 				http.get(`${BASE_URL}/tickets/:ticketId/activities`, () => {
 					return HttpResponse.json({ data: [] });
