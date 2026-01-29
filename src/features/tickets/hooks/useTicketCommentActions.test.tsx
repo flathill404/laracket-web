@@ -26,7 +26,7 @@ const createWrapper = () => {
 };
 
 describe("useTicketCommentActions", () => {
-	it("create mutation calls API and invalidates comments and activities", async () => {
+	it("calls the API and invalidates comments and activities when creating a comment", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const { result } = renderHook(() => useTicketCommentActions(), { wrapper });
