@@ -23,7 +23,7 @@ vi.mock("@/features/organizations/hooks/useOrganizationActions", () => ({
 }));
 
 describe("CreateOrganizationDialog", () => {
-	it("renders dialog trigger and content", async () => {
+	it("renders the dialog trigger and content", async () => {
 		const user = userEvent.setup();
 		render(
 			<CreateOrganizationDialog
@@ -42,7 +42,7 @@ describe("CreateOrganizationDialog", () => {
 		expect(screen.getByLabelText("Display Name")).toBeInTheDocument();
 	});
 
-	it("shows validation errors for invalid input", async () => {
+	it("shows validation errors when input is invalid", async () => {
 		const user = userEvent.setup();
 		render(
 			<CreateOrganizationDialog
@@ -63,7 +63,7 @@ describe("CreateOrganizationDialog", () => {
 		});
 	});
 
-	it("submits form with valid data", async () => {
+	it("submits the form with valid data", async () => {
 		const user = userEvent.setup();
 
 		// Mock successful mutation
