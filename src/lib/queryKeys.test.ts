@@ -3,13 +3,13 @@ import { queryKeys } from "./queryKeys";
 
 describe("queryKeys", () => {
 	describe("user", () => {
-		it("returns correct key", () => {
+		it("returns the correct key", () => {
 			expect(queryKeys.user()).toEqual(["user"]);
 		});
 	});
 
 	describe("projects", () => {
-		it("returns correct keys structure", () => {
+		it("returns the correct keys structure", () => {
 			expect(queryKeys.projects.all()).toEqual(["projects"]);
 			expect(queryKeys.projects.list("123")).toEqual(["projects", "123"]);
 			expect(queryKeys.projects.detail("456")).toEqual(["projects", "456"]);
@@ -27,7 +27,7 @@ describe("queryKeys", () => {
 	});
 
 	describe("tickets", () => {
-		it("returns correct keys structure", () => {
+		it("returns the correct keys structure", () => {
 			expect(queryKeys.tickets.all()).toEqual(["tickets"]);
 			expect(queryKeys.tickets.detail("789")).toEqual(["tickets", "789"]);
 			expect(queryKeys.tickets.activities("789")).toEqual([
@@ -44,7 +44,7 @@ describe("queryKeys", () => {
 	});
 
 	describe("teams", () => {
-		it("returns correct keys structure", () => {
+		it("returns the correct keys structure", () => {
 			expect(queryKeys.teams.all()).toEqual(["teams"]);
 			expect(queryKeys.teams.list("user1")).toEqual(["teams", "user1"]);
 			expect(queryKeys.teams.detail("team1")).toEqual(["teams", "team1"]);
@@ -62,7 +62,7 @@ describe("queryKeys", () => {
 	});
 
 	describe("organizations", () => {
-		it("returns correct keys structure", () => {
+		it("returns the correct keys structure", () => {
 			expect(queryKeys.organizations.all()).toEqual(["organizations"]);
 			expect(queryKeys.organizations.list()).toEqual(["organizations", "list"]);
 			expect(queryKeys.organizations.detail("org1")).toEqual([
@@ -88,7 +88,7 @@ describe("queryKeys", () => {
 	});
 
 	describe("users", () => {
-		it("returns correct keys structure", () => {
+		it("returns the correct keys structure", () => {
 			expect(queryKeys.users.tickets("user1")).toEqual([
 				"users",
 				"user1",
