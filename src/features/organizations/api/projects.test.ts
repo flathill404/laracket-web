@@ -7,7 +7,7 @@ import {
 
 describe("projects API", () => {
 	describe("fetchOrganizationProjects", () => {
-		it("should fetch projects", async () => {
+		it("fetches the projects", async () => {
 			const result = await fetchOrganizationProjects("org-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -16,7 +16,7 @@ describe("projects API", () => {
 	});
 
 	describe("createOrganizationProject", () => {
-		it("should create project", async () => {
+		it("creates a project", async () => {
 			const data = {
 				name: "test",
 				displayName: "Test Project",
