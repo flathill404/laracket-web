@@ -40,7 +40,7 @@ const createWrapper = () => {
 };
 
 describe("useProfileActions", () => {
-	it("should call updateProfileInformation and invalidate user query on success", async () => {
+	it("calls updateProfileInformation and invalidates the user query on success", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const mockData = { displayName: "New Name", email: "new@example.com" };
@@ -59,7 +59,7 @@ describe("useProfileActions", () => {
 		expect(invalidateSpy).toHaveBeenCalledWith(authQueries.user());
 	});
 
-	it("should call updateAvatar and invalidate user query on success", async () => {
+	it("calls updateAvatar and invalidates the user query on success", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		const mockFile = new File([""], "avatar.png", { type: "image/png" });
@@ -75,7 +75,7 @@ describe("useProfileActions", () => {
 		expect(invalidateSpy).toHaveBeenCalledWith(authQueries.user());
 	});
 
-	it("should call deleteAvatar and invalidate user query on success", async () => {
+	it("calls deleteAvatar and invalidates the user query on success", async () => {
 		const { queryClient, wrapper } = createWrapper();
 		const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
 		vi.mocked(deleteAvatar).mockResolvedValue(
