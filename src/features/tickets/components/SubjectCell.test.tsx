@@ -18,14 +18,14 @@ const createMockTicket = (overrides: Partial<Ticket> = {}): Ticket => ({
 });
 
 describe("SubjectCell", () => {
-	it("should render ticket title", () => {
+	it("renders the ticket title", () => {
 		const ticket = createMockTicket({ title: "Fix login bug" });
 		render(<SubjectCell ticket={ticket} />);
 
 		expect(screen.getByText(/Fix login bug/)).toBeInTheDocument();
 	});
 
-	it("should render ticket ID prefix with last 8 characters", () => {
+	it("renders the ticket ID prefix with the last 8 characters", () => {
 		const ticket = createMockTicket({
 			id: "abcd1234",
 		});
@@ -34,7 +34,7 @@ describe("SubjectCell", () => {
 		expect(screen.getByText(/\[T-abcd1234\]/)).toBeInTheDocument();
 	});
 
-	it("should render ticket description", () => {
+	it("renders the ticket description", () => {
 		const ticket = createMockTicket({
 			description: "Users cannot log in with valid credentials",
 		});
@@ -45,7 +45,7 @@ describe("SubjectCell", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render empty description", () => {
+	it("renders an empty description", () => {
 		const ticket = createMockTicket({ description: "" });
 		render(<SubjectCell ticket={ticket} />);
 
@@ -53,7 +53,7 @@ describe("SubjectCell", () => {
 		expect(descriptionElement).toBeInTheDocument();
 	});
 
-	it("should combine ID and title in same element", () => {
+	it("combines the ID and title in the same element", () => {
 		const ticket = createMockTicket({
 			id: "abcd1234-5678-9012-3456-789012345678",
 			title: "Important Feature",
