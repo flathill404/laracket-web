@@ -38,7 +38,7 @@ describe("useIsMobile", () => {
 		changeHandler = null;
 	});
 
-	it("should return false initially when width is above breakpoint", () => {
+	it("returns false initially when the width is above the breakpoint", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 1024,
@@ -49,7 +49,7 @@ describe("useIsMobile", () => {
 		expect(result.current).toBe(false);
 	});
 
-	it("should return true when width is below breakpoint", () => {
+	it("returns true when the width is below the breakpoint", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 600,
@@ -60,7 +60,7 @@ describe("useIsMobile", () => {
 		expect(result.current).toBe(true);
 	});
 
-	it("should return false when width is exactly at breakpoint", () => {
+	it("returns false when the width is exactly at the breakpoint", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 768,
@@ -71,7 +71,7 @@ describe("useIsMobile", () => {
 		expect(result.current).toBe(false);
 	});
 
-	it("should add event listener on mount", () => {
+	it("adds an event listener on mount", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 1024,
@@ -85,7 +85,7 @@ describe("useIsMobile", () => {
 		);
 	});
 
-	it("should remove event listener on unmount", () => {
+	it("removes the event listener on unmount", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 1024,
@@ -100,7 +100,7 @@ describe("useIsMobile", () => {
 		);
 	});
 
-	it("should update when window is resized", () => {
+	it("updates when the window is resized", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 1024,
@@ -123,7 +123,7 @@ describe("useIsMobile", () => {
 		expect(result.current).toBe(true);
 	});
 
-	it("should use correct breakpoint value", () => {
+	it("uses the correct breakpoint value", () => {
 		Object.defineProperty(window, "innerWidth", {
 			writable: true,
 			value: 767, // Just below 768
