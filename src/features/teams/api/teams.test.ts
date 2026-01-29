@@ -17,25 +17,25 @@ const mockTeam = {
 describe("teams API", () => {
 	describe("schemas", () => {
 		describe("teamSchema", () => {
-			it("should validate a valid team", () => {
+			it("validates a valid team", () => {
 				expect(() => teamSchema.parse(mockTeam)).not.toThrow();
 			});
 
-			it("should reject missing required fields", () => {
+			it("rejects when required fields are missing", () => {
 				expect(() => teamSchema.parse({ id: "123" })).toThrow();
 			});
 		});
 	});
 
 	describe("fetchTeams", () => {
-		it("should fetch user teams", async () => {
+		it("fetches the user teams", async () => {
 			const result = await fetchTeams("user-123");
 
 			expect(result).toBeInstanceOf(Array);
 			expect(result.length).toBeGreaterThan(0);
 		});
 
-		it("should return empty array when no teams", async () => {
+		it("returns an empty array when there are no teams", async () => {
 			server.use(
 				http.get(`${BASE_URL}/users/:userId/teams`, () => {
 					return HttpResponse.json({ data: [] });
@@ -49,7 +49,7 @@ describe("teams API", () => {
 	});
 
 	describe("fetchTeam", () => {
-		it("should fetch single team", async () => {
+		it("fetches a single team", async () => {
 			const result = await fetchTeam("team-123");
 
 			expect(result.id).toBe("team-123");
@@ -57,7 +57,7 @@ describe("teams API", () => {
 	});
 
 	describe("updateTeam", () => {
-		it("should update team", async () => {
+		it("updates the team", async () => {
 			server.use(
 				http.put(`${BASE_URL}/teams/:teamId`, async ({ request }) => {
 					const body = (await request.json()) as { name: string };
@@ -76,7 +76,7 @@ describe("teams API", () => {
 	});
 
 	describe("deleteTeam", () => {
-		it("should delete team", async () => {
+		it("deletes the team", async () => {
 			await expect(deleteTeam("team-123")).resolves.not.toThrow();
 		});
 	});
