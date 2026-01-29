@@ -61,7 +61,7 @@ vi.mock("@/features/organizations/utils/queries", () => ({
 }));
 
 describe("SuspenseSidebar", () => {
-	it("fetches data and passes it to Sidebar", () => {
+	it("fetches data and passes it to the Sidebar", () => {
 		render(<SuspenseSidebar userId="user-1" />);
 
 		expect(screen.getByTestId("sidebar")).toBeInTheDocument();
