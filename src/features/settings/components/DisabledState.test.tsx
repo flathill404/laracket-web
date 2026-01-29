@@ -17,7 +17,7 @@ const defaultProps = {
 };
 
 describe("DisabledState", () => {
-	it("should render disabled message", () => {
+	it("renders the disabled message", () => {
 		render(<DisabledState {...defaultProps} />);
 
 		expect(
@@ -25,7 +25,7 @@ describe("DisabledState", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render description about Google Authenticator", () => {
+	it("renders the description about Google Authenticator", () => {
 		render(<DisabledState {...defaultProps} />);
 
 		expect(
@@ -33,13 +33,13 @@ describe("DisabledState", () => {
 		).toBeInTheDocument();
 	});
 
-	it("should render Enable button when not pending", () => {
+	it("renders the Enable button when not pending", () => {
 		render(<DisabledState {...defaultProps} isPending={false} />);
 
 		expect(screen.getByRole("button", { name: "Enable" })).toBeInTheDocument();
 	});
 
-	it("should call onEnable when Enable button is clicked", async () => {
+	it("calls onEnable when the Enable button is clicked", async () => {
 		const user = userEvent.setup();
 		const onEnable = vi.fn();
 		render(<DisabledState {...defaultProps} onEnable={onEnable} />);
@@ -49,13 +49,13 @@ describe("DisabledState", () => {
 		expect(onEnable).toHaveBeenCalledTimes(1);
 	});
 
-	it("should disable Enable button when isEnabling is true", () => {
+	it("disables the Enable button when isEnabling is true", () => {
 		render(<DisabledState {...defaultProps} isEnabling={true} />);
 
 		expect(screen.getByRole("button", { name: "Enable" })).toBeDisabled();
 	});
 
-	it("should render QrCodeSetup when pending and qrCodeSvg is available", () => {
+	it("renders QrCodeSetup when pending and qrCodeSvg is available", () => {
 		render(
 			<DisabledState
 				{...defaultProps}
@@ -70,7 +70,7 @@ describe("DisabledState", () => {
 		).not.toBeInTheDocument();
 	});
 
-	it("should not render QrCodeSetup when pending but no qrCodeSvg", () => {
+	it("does not render QrCodeSetup when pending but no qrCodeSvg is available", () => {
 		render(
 			<DisabledState
 				{...defaultProps}
