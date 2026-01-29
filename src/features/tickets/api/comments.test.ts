@@ -19,20 +19,20 @@ const mockComment = {
 describe("comments API", () => {
 	describe("schemas", () => {
 		describe("commentSchema", () => {
-			it("should validate a valid comment", () => {
+			it("validates a valid comment", () => {
 				expect(() => commentSchema.parse(mockComment)).not.toThrow();
 			});
 		});
 
 		describe("commentsSchema", () => {
-			it("should validate array of comments", () => {
+			it("validates an array of comments", () => {
 				expect(() => commentsSchema.parse([mockComment])).not.toThrow();
 			});
 		});
 	});
 
 	describe("fetchTicketComments", () => {
-		it("should fetch ticket comments", async () => {
+		it("fetches ticket comments", async () => {
 			const result = await fetchTicketComments("ticket-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -42,7 +42,7 @@ describe("comments API", () => {
 	});
 
 	describe("createTicketComment", () => {
-		it("should create a ticket comment", async () => {
+		it("creates a ticket comment", async () => {
 			const data = { content: "Test comment" };
 			const result = await createTicketComment("ticket-123", data);
 
