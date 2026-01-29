@@ -10,7 +10,7 @@ vi.mock("../api", () => ({
 }));
 
 describe("teams queries", () => {
-	it("list", async () => {
+	it("generates list query options", async () => {
 		const userId = "user-1";
 		const options = teamQueries.list(userId);
 		expect(options.queryKey).toEqual(queryKeys.teams.list(userId));
@@ -19,7 +19,7 @@ describe("teams queries", () => {
 		expect(fetchTeams).toHaveBeenCalledWith(userId);
 	});
 
-	it("detail", async () => {
+	it("generates detail query options", async () => {
 		const teamId = "team-1";
 		const options = teamQueries.detail(teamId);
 		expect(options.queryKey).toEqual(queryKeys.teams.detail(teamId));
@@ -28,7 +28,7 @@ describe("teams queries", () => {
 		expect(fetchTeam).toHaveBeenCalledWith(teamId);
 	});
 
-	it("members", async () => {
+	it("generates members query options", async () => {
 		const teamId = "team-1";
 		const options = teamQueries.members(teamId);
 		expect(options.queryKey).toEqual(queryKeys.teams.members(teamId));
