@@ -49,7 +49,7 @@ describe("ProjectsList", () => {
 		} as Project,
 	];
 
-	it("renders list of projects", () => {
+	it("renders a list of projects", () => {
 		render(<ProjectsList projects={mockProjects} onProjectClick={vi.fn()} />);
 
 		expect(screen.getByText("Project 1")).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe("ProjectsList", () => {
 		expect(screen.getByText("Desc 2")).toBeInTheDocument();
 	});
 
-	it("renders empty state when no projects", () => {
+	it("renders an empty state when there are no projects", () => {
 		render(<ProjectsList projects={[]} onProjectClick={vi.fn()} />);
 
 		expect(screen.getByText("No projects yet")).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe("ProjectsList", () => {
 		).toBeInTheDocument();
 	});
 
-	it("calls onProjectClick when card is clicked", async () => {
+	it("calls onProjectClick when a card is clicked", async () => {
 		const handleProjectClick = vi.fn();
 		const user = userEvent.setup();
 		render(
