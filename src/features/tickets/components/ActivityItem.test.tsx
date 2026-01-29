@@ -17,7 +17,7 @@ describe("ActivityItem", () => {
 		avatarUrl: null,
 	};
 
-	it("renders created activity", () => {
+	it("renders a created activity", () => {
 		const activity: Activity = {
 			id: 1,
 			type: "created",
@@ -32,7 +32,7 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("2 hours ago")).toBeInTheDocument();
 	});
 
-	it("renders status change activity", () => {
+	it("renders a status change activity", () => {
 		const activity: Activity = {
 			id: 2,
 			type: "updated",
@@ -53,7 +53,7 @@ describe("ActivityItem", () => {
 		expect(description).toBeInTheDocument();
 	});
 
-	it("renders generic update activity", () => {
+	it("renders a generic update activity", () => {
 		const activity: Activity = {
 			id: 3,
 			type: "updated",
@@ -67,7 +67,7 @@ describe("ActivityItem", () => {
 		expect(screen.getByText("updated this ticket")).toBeInTheDocument();
 	});
 
-	it("renders user avatar", () => {
+	it("renders the user avatar", () => {
 		const activity: Activity = {
 			id: 1,
 			type: "created",
