@@ -14,7 +14,7 @@ const BASE_URL = "http://localhost:8000/api";
 
 describe("members API", () => {
 	describe("fetchOrganizationMembers", () => {
-		it("should fetch members", async () => {
+		it("fetches the members", async () => {
 			const result = await fetchOrganizationMembers("org-123");
 
 			expect(result).toBeInstanceOf(Array);
@@ -23,7 +23,7 @@ describe("members API", () => {
 	});
 
 	describe("addOrganizationMember", () => {
-		it("should add member", async () => {
+		it("adds a member", async () => {
 			const result = await addOrganizationMember("org-123", {
 				userId: "user-123",
 			});
@@ -33,7 +33,7 @@ describe("members API", () => {
 	});
 
 	describe("updateOrganizationMember", () => {
-		it("should update member", async () => {
+		it("updates a member", async () => {
 			server.use(
 				http.patch(
 					`${BASE_URL}/organizations/:organizationId/members/:userId`,
@@ -61,7 +61,7 @@ describe("members API", () => {
 	});
 
 	describe("removeOrganizationMember", () => {
-		it("should remove member", async () => {
+		it("removes a member", async () => {
 			await expect(
 				removeOrganizationMember("org-123", "user-123"),
 			).resolves.not.toThrow();
