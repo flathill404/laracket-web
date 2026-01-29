@@ -42,7 +42,7 @@ describe("TicketList", () => {
 		{ id: "2", title: "Ticket 2" },
 	] as unknown as Ticket[];
 
-	it("should render tickets in simple mode", () => {
+	it("renders tickets in simple mode", () => {
 		render(<TicketList tickets={mockTickets} onTicketClick={vi.fn()} />);
 
 		expect(screen.getByText("Ticket 1")).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe("TicketList", () => {
 		expect(screen.getByText("Showing 2 tickets")).toBeInTheDocument();
 	});
 
-	it("should render empty state", () => {
+	it("renders the empty state", () => {
 		render(
 			<TicketList
 				tickets={[]}
