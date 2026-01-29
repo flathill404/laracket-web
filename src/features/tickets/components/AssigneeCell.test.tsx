@@ -14,20 +14,20 @@ const createAssignee = (overrides: Partial<Assignee> = {}): Assignee => ({
 });
 
 describe("AssigneeCell", () => {
-	it("should render 'Unassigned' when no assignees", () => {
+	it("renders 'Unassigned' when there are no assignees", () => {
 		render(<AssigneeCell assignees={[]} />);
 
 		expect(screen.getByText("Unassigned")).toBeInTheDocument();
 	});
 
-	it("should render single assignee display name", () => {
+	it("renders a single assignee display name", () => {
 		const assignees = [createAssignee({ displayName: "Alice Smith" })];
 		render(<AssigneeCell assignees={assignees} />);
 
 		expect(screen.getByText("Alice Smith")).toBeInTheDocument();
 	});
 
-	it("should render avatar fallback with first two letters of displayName uppercase", () => {
+	it("renders the avatar fallback with the first two letters of displayName uppercase", () => {
 		const assignees = [
 			createAssignee({ displayName: "Bob Jones", avatarUrl: null }),
 		];
@@ -36,7 +36,7 @@ describe("AssigneeCell", () => {
 		expect(screen.getByText("BO")).toBeInTheDocument();
 	});
 
-	it("should render multiple assignees as avatars only", () => {
+	it("renders multiple assignees as avatars only", () => {
 		const assignees = [
 			createAssignee({ id: "1", displayName: "Alice Smith" }),
 			createAssignee({ id: "2", displayName: "Bob Jones" }),
@@ -52,7 +52,7 @@ describe("AssigneeCell", () => {
 		expect(screen.getByText("BO")).toBeInTheDocument();
 	});
 
-	it("should show max 3 avatars and +N indicator for more", () => {
+	it("shows max 3 avatars and a +N indicator for more", () => {
 		const assignees = [
 			createAssignee({ id: "1", displayName: "Alice Smith" }),
 			createAssignee({ id: "2", displayName: "Bob Jones" }),
@@ -75,7 +75,7 @@ describe("AssigneeCell", () => {
 		expect(screen.getByText("+2")).toBeInTheDocument();
 	});
 
-	it("should show +1 for exactly 4 assignees", () => {
+	it("shows +1 for exactly 4 assignees", () => {
 		const assignees = [
 			createAssignee({ id: "1", name: "alice" }),
 			createAssignee({ id: "2", name: "bob" }),
@@ -87,7 +87,7 @@ describe("AssigneeCell", () => {
 		expect(screen.getByText("+1")).toBeInTheDocument();
 	});
 
-	it("should not show +N indicator for exactly 3 assignees", () => {
+	it("does not show the +N indicator for exactly 3 assignees", () => {
 		const assignees = [
 			createAssignee({ id: "1", name: "alice" }),
 			createAssignee({ id: "2", name: "bob" }),
