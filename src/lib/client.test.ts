@@ -48,7 +48,7 @@ describe("HTTP client", () => {
 	});
 
 	describe("request function", () => {
-		it("should make a GET request with correct headers", async () => {
+		it("makes a GET request with correct headers", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: true,
 				status: 200,
@@ -72,7 +72,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should make a POST request with body", async () => {
+		it("makes a POST request with a body", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: true,
 				status: 200,
@@ -90,7 +90,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should make a PUT request with body", async () => {
+		it("makes a PUT request with a body", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: true,
 				status: 200,
@@ -108,7 +108,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should make a PATCH request with body", async () => {
+		it("makes a PATCH request with a body", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: true,
 				status: 200,
@@ -126,7 +126,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should make a DELETE request without body", async () => {
+		it("makes a DELETE request without a body", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: true,
 				status: 200,
@@ -142,19 +142,19 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should throw error if GET request has body", async () => {
+		it("throws an error if a GET request has a body", async () => {
 			await expect(
 				request("GET", "/test", { data: "invalid" }),
 			).rejects.toThrow("GET and DELETE methods cannot have a body");
 		});
 
-		it("should throw error if DELETE request has body", async () => {
+		it("throws an error if a DELETE request has a body", async () => {
 			await expect(
 				request("DELETE", "/test", { data: "invalid" }),
 			).rejects.toThrow("GET and DELETE methods cannot have a body");
 		});
 
-		it("should return response for successful request", async () => {
+		it("returns a response for a successful request", async () => {
 			const mockResponse = {
 				ok: true,
 				status: 200,
@@ -169,7 +169,7 @@ describe("HTTP client", () => {
 	});
 
 	describe("error handling", () => {
-		it("should throw UnauthorizedError for 401 response", async () => {
+		it("throws an UnauthorizedError for a 401 response", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: false,
 				status: 401,
@@ -178,7 +178,7 @@ describe("HTTP client", () => {
 			await expect(request("GET", "/test")).rejects.toThrow(UnauthorizedError);
 		});
 
-		it("should throw ForbiddenError for 403 response", async () => {
+		it("throws a ForbiddenError for a 403 response", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: false,
 				status: 403,
@@ -187,7 +187,7 @@ describe("HTTP client", () => {
 			await expect(request("GET", "/test")).rejects.toThrow(ForbiddenError);
 		});
 
-		it("should throw NotFoundError for 404 response", async () => {
+		it("throws a NotFoundError for a 404 response", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: false,
 				status: 404,
@@ -196,7 +196,7 @@ describe("HTTP client", () => {
 			await expect(request("GET", "/test")).rejects.toThrow(NotFoundError);
 		});
 
-		it("should throw ServerError for 500 response", async () => {
+		it("throws a ServerError for a 500 response", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: false,
 				status: 500,
@@ -205,7 +205,7 @@ describe("HTTP client", () => {
 			await expect(request("GET", "/test")).rejects.toThrow(ServerError);
 		});
 
-		it("should throw UnknownError for other error responses", async () => {
+		it("throws an UnknownError for other error responses", async () => {
 			mockFetch.mockResolvedValueOnce({
 				ok: false,
 				status: 418, // I'm a teapot
@@ -214,7 +214,7 @@ describe("HTTP client", () => {
 			await expect(request("GET", "/test")).rejects.toThrow(UnknownError);
 		});
 
-		it("should allow 302 redirects to pass through", async () => {
+		it("allows 302 redirects to pass through", async () => {
 			const mockResponse = {
 				ok: false,
 				status: 302,
@@ -228,7 +228,7 @@ describe("HTTP client", () => {
 	});
 
 	describe("client object", () => {
-		it("should have get method that calls request with GET", async () => {
+		it("has a get method that calls request with GET", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			await client.get("/users");
@@ -239,7 +239,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should have post method that calls request with POST", async () => {
+		it("has a post method that calls request with POST", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			const body = { name: "John" };
@@ -254,7 +254,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should have put method that calls request with PUT", async () => {
+		it("has a put method that calls request with PUT", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			const body = { name: "Updated" };
@@ -269,7 +269,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should have patch method that calls request with PATCH", async () => {
+		it("has a patch method that calls request with PATCH", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			const body = { status: "active" };
@@ -284,7 +284,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should have delete method that calls request with DELETE", async () => {
+		it("has a delete method that calls request with DELETE", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			await client.delete("/users/1");
@@ -295,7 +295,7 @@ describe("HTTP client", () => {
 			);
 		});
 
-		it("should allow post without body", async () => {
+		it("allows post without a body", async () => {
 			mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
 			await client.post("/logout");
