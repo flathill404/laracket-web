@@ -10,19 +10,19 @@ import {
 
 describe("two-factor API", () => {
 	describe("enableTwoFactor", () => {
-		it("should call enable 2FA endpoint", async () => {
+		it("calls the enable 2FA endpoint", async () => {
 			await expect(enableTwoFactor()).resolves.not.toThrow();
 		});
 	});
 
 	describe("disableTwoFactor", () => {
-		it("should call disable 2FA endpoint", async () => {
+		it("calls the disable 2FA endpoint", async () => {
 			await expect(disableTwoFactor()).resolves.not.toThrow();
 		});
 	});
 
 	describe("fetchTwoFactorQrCode", () => {
-		it("should fetch and parse QR code", async () => {
+		it("fetches and parses the QR code", async () => {
 			const result = await fetchTwoFactorQrCode();
 
 			expect(result.svg).toBe("<svg>mock-qr-code</svg>");
@@ -30,7 +30,7 @@ describe("two-factor API", () => {
 	});
 
 	describe("fetchTwoFactorRecoveryCodes", () => {
-		it("should fetch and parse recovery codes", async () => {
+		it("fetches and parses recovery codes", async () => {
 			const result = await fetchTwoFactorRecoveryCodes();
 
 			expect(result).toHaveLength(8);
@@ -39,19 +39,19 @@ describe("two-factor API", () => {
 	});
 
 	describe("confirmTwoFactor", () => {
-		it("should call confirm 2FA endpoint", async () => {
+		it("calls the confirm 2FA endpoint", async () => {
 			await expect(confirmTwoFactor({ code: "123456" })).resolves.not.toThrow();
 		});
 	});
 
 	describe("twoFactorChallenge", () => {
-		it("should call challenge endpoint with code", async () => {
+		it("calls the challenge endpoint with a code", async () => {
 			await expect(
 				twoFactorChallenge({ code: "123456" }),
 			).resolves.not.toThrow();
 		});
 
-		it("should call challenge endpoint with recovery code", async () => {
+		it("calls the challenge endpoint with a recovery code", async () => {
 			await expect(
 				twoFactorChallenge({ recoveryCode: "ABC123" }),
 			).resolves.not.toThrow();
