@@ -3,7 +3,7 @@ import { register, sendVerificationEmail } from "./registration";
 
 describe("registration API", () => {
 	describe("register", () => {
-		it("should call csrf-cookie first, then register", async () => {
+		it("calls csrf-cookie first, then registers", async () => {
 			const input = {
 				name: "johndoe",
 				displayName: "John Doe",
@@ -17,7 +17,7 @@ describe("registration API", () => {
 	});
 
 	describe("sendVerificationEmail", () => {
-		it("should call verification notification endpoint", async () => {
+		it("calls the verification notification endpoint", async () => {
 			await expect(sendVerificationEmail()).resolves.not.toThrow();
 		});
 	});
