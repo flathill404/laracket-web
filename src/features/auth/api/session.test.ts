@@ -9,7 +9,7 @@ const BASE_URL = "http://localhost:8000/api";
 
 describe("auth session API", () => {
 	describe("fetchUser", () => {
-		it("should fetch and parse user data", async () => {
+		it("fetches and parses user data", async () => {
 			const result = await fetchUser();
 
 			expect(result.id).toBe("user-123");
@@ -17,7 +17,7 @@ describe("auth session API", () => {
 			expect(result.twoFactorStatus).toBe("disabled");
 		});
 
-		it("should throw if user data is invalid", async () => {
+		it("throws if user data is invalid", async () => {
 			server.use(
 				http.get(`${BASE_URL}/user`, () => {
 					return HttpResponse.json({ data: { invalid: "data" } });
@@ -29,7 +29,7 @@ describe("auth session API", () => {
 	});
 
 	describe("login", () => {
-		it("should call csrf-cookie first, then login", async () => {
+		it("calls csrf-cookie first, then logs in", async () => {
 			const credentials = {
 				email: "test@example.com",
 				password: "password123",
@@ -41,7 +41,7 @@ describe("auth session API", () => {
 			expect(result).toEqual({ twoFactor: false });
 		});
 
-		it("should return twoFactor: true when 2FA is required", async () => {
+		it("returns twoFactor: true when 2FA is required", async () => {
 			server.use(
 				http.post(`${BASE_URL}/login`, () => {
 					return HttpResponse.json({ twoFactor: true });
@@ -61,7 +61,7 @@ describe("auth session API", () => {
 	});
 
 	describe("logout", () => {
-		it("should call logout endpoint", async () => {
+		it("calls the logout endpoint", async () => {
 			await expect(logout()).resolves.not.toThrow();
 		});
 	});
