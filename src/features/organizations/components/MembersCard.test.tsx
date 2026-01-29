@@ -18,7 +18,7 @@ vi.mock("@/features/organizations/utils/queries", () => ({
 }));
 
 describe("MembersCard", () => {
-	it("should render members count", async () => {
+	it("renders the members count", async () => {
 		render(
 			<Suspense fallback={<div>Loading...</div>}>
 				<MembersCard organizationId="org-1" />
