@@ -32,7 +32,7 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
 });
 
 describe("ProjectsCard", () => {
-	it("renders project count", () => {
+	it("renders the project count", () => {
 		render(<ProjectsCard organizationId="org-1" />);
 
 		expect(screen.getByText("Projects")).toBeInTheDocument();
