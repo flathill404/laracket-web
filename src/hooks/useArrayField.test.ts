@@ -50,7 +50,7 @@ describe("useArrayField", () => {
 		// But the callback uses `ids` from props.
 	});
 
-	it("handles toggle correctly", () => {
+	it("toggles items correctly", () => {
 		// To fully test toggle with state updates, we need a wrapper or manually update props
 		// To fully test toggle with state updates, we need a wrapper or manually update props
 		const { rerender } = renderHook(
