@@ -4,7 +4,7 @@ import { ticketQueries } from "./queries";
 
 describe("ticketQueries", () => {
 	describe("detail", () => {
-		it("generates correct query options", () => {
+		it("generates the correct query options", () => {
 			const ticketId = "123";
 			const options = ticketQueries.detail(ticketId);
 			expect(options.queryKey).toEqual(queryKeys.tickets.detail(ticketId));
@@ -18,7 +18,7 @@ describe("ticketQueries", () => {
 	});
 
 	describe("activities", () => {
-		it("generates correct query options", () => {
+		it("generates the correct query options", () => {
 			const ticketId = "123";
 			const options = ticketQueries.activities(ticketId);
 			expect(options.queryKey).toEqual(queryKeys.tickets.activities(ticketId));
@@ -32,7 +32,7 @@ describe("ticketQueries", () => {
 	});
 
 	describe("comments", () => {
-		it("generates correct query options", () => {
+		it("generates the correct query options", () => {
 			const ticketId = "123";
 			const options = ticketQueries.comments(ticketId);
 			expect(options.queryKey).toEqual(queryKeys.tickets.comments(ticketId));
